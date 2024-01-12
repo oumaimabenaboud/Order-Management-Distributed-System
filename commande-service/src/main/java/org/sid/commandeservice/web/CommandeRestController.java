@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController@AllArgsConstructor
 @RequestMapping("/commandes")
 public class CommandeRestController {
+    @Autowired
     private CommandeRepository commandeRepository;
     private CommandeLineRepository commandeLineRepository;
     @Autowired
@@ -183,5 +184,10 @@ public class CommandeRestController {
     @DeleteMapping("{id}")
     public void deleteCommande(@PathVariable String id){
         commandeRepository.deleteById(Long.valueOf(id));
+    }
+
+    @GetMapping
+    public List<Commande> professeur(){
+        return commandeRepository.findAll();
     }
 }
