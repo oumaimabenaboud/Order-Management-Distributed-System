@@ -126,37 +126,62 @@
     <div class="table-data">
       <div class="order">
         <div class="head">
-          <h3>Commandes</h3>
-          <i class='bx bx-search'></i>
-          <i class='bx bx-filter'></i>
+          <h3>Recent Orders</h3>
+          <i class='bx bx-search' ></i>
+          <i class='bx bx-filter' ></i>
         </div>
         <table>
           <thead>
           <tr>
-            <th>Professeur</th>
-            <th>Date</th>
-            <th>Statut</th>
-            <th>Prix total</th>
+            <th>User</th>
+            <th>Date Order</th>
+            <th>Status</th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let commande of commandes">
+          <tr>
             <td>
-              <!-- Use *ngIf to check if commande.professeur is defined before accessing its properties -->
-              <ng-container *ngIf="commande.professeur">
-                <p>{{ commande.professeur.nom }}</p>
-                <p>{{ commande.professeur.prenom }}</p>
-              </ng-container>
+              <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
+              <p>John Doe</p>
             </td>
-            <td>{{ commande.billingDate | date:'short' }}</td>
-            <td>{{ commande.type }}</td>
-            <td>{{ commande.prix_total_TTC }}</td>
+            <td>01-10-2023</td>
+            <td><span class="status completed">Completed</span></td>
+          </tr>
+          <tr>
+            <td>
+              <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
+              <p>John Doe</p>
+            </td>
+            <td>01-10-2023</td>
+            <td><span class="status pending">Pending</span></td>
+          </tr>
+          <tr>
+            <td>
+              <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
+              <p>John Doe</p>
+            </td>
+            <td>01-10-2023</td>
+            <td><span class="status process">Process</span></td>
+          </tr>
+          <tr>
+            <td>
+              <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
+              <p>John Doe</p>
+            </td>
+            <td>01-10-2023</td>
+            <td><span class="status pending">Pending</span></td>
+          </tr>
+          <tr>
+            <td>
+              <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
+              <p>John Doe</p>
+            </td>
+            <td>01-10-2023</td>
+            <td><span class="status completed">Completed</span></td>
           </tr>
           </tbody>
-
         </table>
       </div>
-
       <div class="todo">
         <div class="head">
           <h3>Todos</h3>

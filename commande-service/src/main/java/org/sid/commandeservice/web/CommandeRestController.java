@@ -187,7 +187,21 @@ public class CommandeRestController {
     }
 
     @GetMapping
-    public List<Commande> professeur(){
-        return commandeRepository.findAll();
+    public List<Commande> getAllCommandes() {
+        List<Commande> commandes = commandeRepository.findAll();
+
+        for (Commande commande : commandes) {
+            System.out.println(commande.getProfID());
+            Professeur professeur = professeurRestClient.getProfesseurById(commande.getProfID());
+            commande.setProfesseur(professeur);
+
+            commande.getCommandeLines().forEach(pi -> {
+                Product product = productRestClient.getProductById(pi.getId());
+                pi.setProductName(product.getNom());
+            });
+        }
+
+        return commandes;
     }
+
 }
