@@ -3,9 +3,19 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "gestion_commandes_webapp": {
+    "gestion-commande-web-app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -13,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/gestion_commandes_webapp",
+            "outputPath": "dist/gestion-commande-web-app",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -62,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "gestion_commandes_webapp:build:production"
+              "buildTarget": "gestion-commande-web-app:build:production"
             },
             "development": {
-              "buildTarget": "gestion_commandes_webapp:build:development"
+              "buildTarget": "gestion-commande-web-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "gestion_commandes_webapp:build"
+            "buildTarget": "gestion-commande-web-app:build"
           }
         },
         "test": {
@@ -98,6 +108,6 @@
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": "64c27313-0c43-4a1c-8df5-8f8b59307505"
   }
 }

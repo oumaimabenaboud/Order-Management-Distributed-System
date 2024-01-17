@@ -1,5 +1,5 @@
 {
-  "name": "gestion-commandes-webapp",
+  "name": "gestion-commande-web-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:gestion_commandes_webapp": "node dist/gestion_commandes_webapp/server/server.mjs"
+    "serve:ssr:gestion-commande-web-app": "node dist/gestion-commande-web-app/server/server.mjs"
   },
   "private": true,
   "dependencies": {
