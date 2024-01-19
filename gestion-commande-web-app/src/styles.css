@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import 'bootstrap-icons/font/bootstrap-icons.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -18,7 +20,6 @@ li {
 :root {
   --poppins: 'Poppins', sans-serif;
   --lato: 'Lato', sans-serif;
-
   --light: #F9F9F9;
   --blue: #3C91E6;
   --light-blue: #CFE8FF;

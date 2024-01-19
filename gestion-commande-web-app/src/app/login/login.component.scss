@@ -1,8 +1,10 @@
 @import '../../assets/vars.scss';
 
+.login-area {
+    background: url('D:\\GitHub\\Order-Management-Using-Distributed-Systems\\gestion-commande-web-app\\src\\assets\\images\\bg.jpg') center center/cover no-repeat;
+}
 
-
-.login-form{
+.login-form {
     padding: 50px;
     max-width: 600px;
     border-radius: 5px;
@@ -13,26 +15,28 @@
     margin-left: auto;
     margin-right: auto;
 
-    h4{
+
+    h4 {
         margin-bottom: 12px;
         font-size: 25px;
         font-weight: 500;
+        color: #004AAD;
     }
 
-    form{
+    form {
         margin-top: 5px;
 
-        .form-group{
+        .form-group {
             margin-bottom: 20px;
         }
 
-        label{
+        label {
             color: #6a6c72;
             margin-bottom: 10px;
             display: block;
         }
 
-        .form-control{
+        .form-control {
             color: #6a6c72;
             transition: all 0.5s;
             background-color: #f1f5fe;
@@ -43,92 +47,42 @@
             box-shadow: unset;
             display: block;
             height: 55px;
+            width: 100%;
             outline: 0;
-        
-        
-        }
 
-        .remember-me-wrap{
-            .form-check{
-                margin-bottom: 0;
-
-                .form-check-input{
-                    margin-top: 0.16em;
-                    box-shadow: unset!important;
-                }
-
-                .form-check-label{
-                    color: $paragraph-color;
-                    font-weight: 400;
-                    margin-bottom: 0;
-                }
-            }
-
-            
-        }
-
-        .lost-your-password-wrap{
-            text-align: end;
-
-            a{
-                color: #000;
-                display: inline-block;
-                position: relative;
-                line-height: 1.4;
-
-                &:before{
-                    left: 0;
-                    bottom: 0;
-                    width: 100%;
-                    height: 1px;
-                    content: "";
-                    position: absolute;
-                    background-color: #eee;
-                    transition: all 0.5s;
-                }
-
-                &:after{
-                    left: 0;
-                    width: 0;
-                    bottom: 0;
-                    height: 1px;
-                    content: "";
-                    position: absolute;
-                    transition: all 0.5s;
-                    background-color: $main_color;                  
-                }
-
-                &:hover::after{
-                    width: 100%;
-                    transition: all 0.5s;
-                }
+            &:focus {
+                border-color: #004AAD;
+                box-shadow: 0 0 5px rgba(#004AAD, 0.5);
             }
         }
 
-        .default-btn{
+        .default-btn {
             margin-top: 20px;
             padding-left: 35px;
             padding-right: 35px;
+            cursor: pointer;
         }
 
-        .account-text{
+        .account-text {
             margin-top: 20px;
 
-            span{
+            span {
                 color: $paragraph-color;
 
-                a{
-                    color: $main_color !important;
+                a {
+                    color: #004AAD !important;
                 }
             }
         }
     }
 
-    &:hover{
-        border-color: $main_color;
+    &:hover {
+        border-color: #004AAD;
         transition: all 0.5s;
     }
 }
+
+
 
 @media only screen and (max-width: 767px){
     .login-form{
@@ -255,7 +209,7 @@ p {
     font-weight: 500;
 
     &:hover{
-        background-color: #005879;
+        background-color:#004AAD ;
         transition: all 0.5s;
         color: #fff !important;
     }
