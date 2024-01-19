@@ -11,6 +11,8 @@
 
 a {
   text-decoration: none;
+  outline: 0!important;
+
 }
 
 li {
@@ -64,7 +66,7 @@ a {
 }
 
 p {
-  color: #6a6c72; /* Assuming $paragraph_color is defined elsewhere */
+  color: #6a6c72; 
   font-size: 16px;
   margin-bottom: 15px;
   line-height: 1.8;
