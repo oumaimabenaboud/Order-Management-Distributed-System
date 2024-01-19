@@ -5,13 +5,13 @@
     <span class="text">Admin Dashboard</span>
   </a>
   <ul class="side-menu top">
-    <li class="active">
+    <li>
       <a routerLink="/admin">
         <i class='bx bxs-dashboard' ></i>
         <span class="text">Dashboard</span>
       </a>
     </li>
-    <li>
+    <li class="active">
       <a routerLink="/prof-admin">
         <i class='bx bxs-user' ></i>
         <span class="text">Professeurs</span>
@@ -40,7 +40,6 @@
   </ul>
 </section>
 <!-- SIDEBAR -->
-
 
 
 <!-- CONTENT -->
@@ -116,68 +115,67 @@
     <div class="table-data">
       <div class="order">
         <div class="head">
-          <h3>Commandes</h3>
+          <h3>Professeurs</h3>
           <i class='bx bx-search'></i>
           <i class='bx bx-filter'></i>
         </div>
         <table>
           <thead>
           <tr>
-            <th>Professeur</th>
-            <th>Date</th>
-            <th>Statut</th>
-            <th>Prix total</th>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Détails</th>
+            <th>Supprimer</th>
           </tr>
           </thead>
-          <!--
           <tbody>
-          <tr *ngFor="let commande of commandes">
+          <tr *ngFor="let p of profs">
+            <td>{{p.prenom}}</td>
+            <td>{{p.nom}}</td>
+            <td>{{p.mail}}</td>
             <td>
-              <ng-container *ngIf="commande.professeur">
-                <p>{{ commande.professeur.nom }}</p>
-                <p>{{ commande.professeur.prenom }}</p>
-              </ng-container>
+              <button class ="btn detail-button" (click)="getProf(p.id)"> <i class="bi bi-search"></i></button>
             </td>
-            <td>{{ commande.billingDate | date:'short' }}</td>
-            <td>{{ commande.type }}</td>
-            <td>{{ commande.prix_total_TTC }}</td>
+            <td>
+              <button class="btn btn-outline-danger"(click)="deleteProf(p.id)"><i class="bi bi-trash"></i></button>
+            </td>
           </tr>
           </tbody>
-          -->
         </table>
       </div>
-
-      <div class="todo">
-        <div class="head">
-          <h3>Todos</h3>
-          <i class='bx bx-plus' ></i>
-          <i class='bx bx-filter' ></i>
-        </div>
-        <ul class="todo-list">
-          <li class="completed">
-            <p>Todo List</p>
-            <i class='bx bx-dots-vertical-rounded' ></i>
-          </li>
-          <li class="completed">
-            <p>Todo List</p>
-            <i class='bx bx-dots-vertical-rounded' ></i>
-          </li>
-          <li class="not-completed">
-            <p>Todo List</p>
-            <i class='bx bx-dots-vertical-rounded' ></i>
-          </li>
-          <li class="completed">
-            <p>Todo List</p>
-            <i class='bx bx-dots-vertical-rounded' ></i>
-          </li>
-          <li class="not-completed">
-            <p>Todo List</p>
-            <i class='bx bx-dots-vertical-rounded' ></i>
-          </li>
-        </ul>
+    </div>
+    <div class="popup card" *ngIf="isFormOpen">
+      <div class="card-body">
+        <h4>Add new professor</h4>
+        <form class="row" [formGroup]="newProfForm" (ngSubmit)="saveNewProf()">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="prenom">Prénom</label>
+              <input type="text" class="form-control" id="prenom" formControlName="prenom">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="nom">Nom</label>
+              <input type="text" class="form-control" id="nom" formControlName="nom">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="mail">Mail</label>
+              <input type="text" class="form-control" id="mail" formControlName="mail">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer bg-transparent">
+        <button class="btn btn-outline-primary" (click)="closeForm()"><i class="bi bi-x-lg"></i> Fermer</button>
+        <button class="btn btn-outline-success ms-3" (click)="saveNewProf()"><i class="bi bi-plus-circle"></i> Ajouter</button>
       </div>
     </div>
   </main>
   <!-- MAIN -->
 </section>
 <!-- CONTENT -->
+

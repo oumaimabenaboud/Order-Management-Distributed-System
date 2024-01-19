@@ -8,26 +8,9 @@ import {CommandesService} from "../services/commandes.service";
   styleUrls: ['./admin-dashboard.component.css']  // Fix the typo here
 })
 
-export class AdminDashboardComponent implements OnInit {
+export class AdminDashboardComponent {
   status = false;  // Declare status property
-  commandes: Commande[] = [];
 
-  constructor(private commandesService: CommandesService) { }
-
-  ngOnInit(): void {
-    this.getCommandes();
-  }
-
-  getCommandes() {
-    this.commandesService.getCommandes().subscribe(
-      (commandes: Commande[]) => {
-        this.commandes = commandes;
-      },
-      error => {
-        console.error('Error fetching commandes:', error);
-      }
-    );
-  }
 
   addToggle() {
     this.status = !this.status;
