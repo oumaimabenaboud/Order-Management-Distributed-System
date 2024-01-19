@@ -1,5 +1,7 @@
 package org.sid.professeur.web;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.sid.professeur.entities.professeur;
 import org.sid.professeur.repositories.ProfesseurRepo;
@@ -35,10 +37,23 @@ public class ProfesseurRESTcontroller {
     }
 
     @PostMapping
-    public professeur save(@RequestBody professeur professeur){
-        return ProfesseurRepo.save(professeur);
+    public ResponseEntity<?> save(@RequestBody professeur professeur) {
+        // Set the default value for droit_daccee to false
+        professeur.setDroit_daccee(false);
+
+        if (!isValidEmail(professeur.getMail())) {
+            return new ResponseEntity<>("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma' pour les professeurs.", HttpStatus.BAD_REQUEST);
+        }
+
+        professeur.setMdp((professeur.getNom() + "_" + professeur.getPrenom()).toLowerCase());
+        professeur savedProfesseur = ProfesseurRepo.save(professeur);
+        return new ResponseEntity<>(savedProfesseur, HttpStatus.CREATED);
     }
-    // Method to generate a unique Long ID
+    private boolean isValidEmail(String email) {
+        String emailPattern = "^[a-zA-Z]+\\.[a-zA-Z]+(@umi.ac.ma)$";
+        return email.matches(emailPattern);
+    }
+
     private static final AtomicLong idCounter = new AtomicLong(1);
     private Long generateUniqueLongId() {
         // Increment the counter and return the new value

@@ -13,12 +13,12 @@ public class ProfesseurApplication {
         SpringApplication.run(ProfesseurApplication.class, args);
     }
     @Bean
-    CommandLineRunner start(org.sid.professeur.repositories.ProfesseurRepo ProfesseurRepo, RepositoryRestConfiguration appah){
-        appah.exposeIdsFor(org.sid.professeur.entities.professeur.class);
+    CommandLineRunner start(org.sid.professeur.repositories.ProfesseurRepo ProfesseurRepo, RepositoryRestConfiguration RepoConfig){
+        RepoConfig.exposeIdsFor(org.sid.professeur.entities.professeur.class);
         return args -> {
-            ProfesseurRepo.save(new org.sid.professeur.entities.professeur(null, "Ali", "Bekri","a.bikri@edu.umi.ac.ma","4444",true));
-            ProfesseurRepo.save(new org.sid.professeur.entities.professeur(null, "Ali", "Oubelkacem","a.oubelkacem@edu.umi.ac.ma","4555",true));
-            ProfesseurRepo.save(new org.sid.professeur.entities.professeur(null, "Jalal", "9ezzouz","jalal@edu.umi.ac.ma","0000",false));
+            ProfesseurRepo.save(new org.sid.professeur.entities.professeur(null, "Bekri", "Ali","a.bikri@edu.umi.ac.ma","4444",true));
+            ProfesseurRepo.save(new org.sid.professeur.entities.professeur(null, "Oubelkacem", "Ali","a.oubelkacem@edu.umi.ac.ma","4555",true));
+            ProfesseurRepo.save(new org.sid.professeur.entities.professeur(null, "9ezzouz", "Jalal","jalal@edu.umi.ac.ma","0000",false));
             ProfesseurRepo.findAll().forEach(c ->{
                         System.out.println(c.toString());
                     }
