@@ -21,7 +21,7 @@ public class ProfesseurApplication {
         return args -> {
             ProfesseurRepo.save(new professeur(null, "Bekri", "Ali","a.bikri@umi.ac.ma", passwordEncoder.encode("4444"),true));
             ProfesseurRepo.save(new professeur(null, "Oubelkacem", "Ali","a.oubelkacem@umi.ac.ma", passwordEncoder.encode("4555"),true));
-            ProfesseurRepo.save(new professeur(null, "9ezzouz", "Jalal","jalal@umi.ac.ma", passwordEncoder.encode("0000"),false));
+            ProfesseurRepo.save(new professeur(null, "9ezzouz", "Jalal","j.9ezzouz@umi.ac.ma", passwordEncoder.encode("0000"),false));
             ProfesseurRepo.findAll().forEach(c ->{
                         System.out.println(c.toString());
                     }

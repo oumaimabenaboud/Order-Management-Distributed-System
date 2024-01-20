@@ -51,7 +51,9 @@ public newProfForm! : FormGroup;
     let prof: Professeur = this.newProfForm.value;
     this.profService.addProfessor(prof).subscribe({
       next: (newProf) => {
-        this.profs.push(newProf); // Update the local array
+        this.profs.push(newProf); 
+        window.alert("Professor added successfully!"); 
+        window.location.reload();
         this.closeForm(); // Optionally close the form
       }
     });

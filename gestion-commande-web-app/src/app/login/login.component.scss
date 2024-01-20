@@ -1,4 +1,5 @@
 @import '../../assets/vars.scss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 .login-area {
     background: url('D:\\GitHub\\Order-Management-Using-Distributed-Systems\\gestion-commande-web-app\\src\\assets\\images\\bg.jpg') center center/cover no-repeat;
@@ -85,6 +86,9 @@
 
 
 @media only screen and (max-width: 767px){
+    .login-area {
+        background: none;
+    }
     .login-form{
        padding: 0;
        max-width: 100%;
@@ -154,9 +158,7 @@
     }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
-// @import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
-// @import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
+
 body{
     font-family: 'Poppins' , sans-serif;
     margin: 0;

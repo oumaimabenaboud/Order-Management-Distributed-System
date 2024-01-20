@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { ProfAdminViewComponent } from './prof-admin-view/prof-admin-view.component';
 import { StructureAdminViewComponent } from './structure-admin-view/structure-admin-view.component';
 import { RubriqueAdminViewComponent } from './rubrique-admin-view/rubrique-admin-view.component';
@@ -17,7 +16,6 @@ import {HttpClientModule} from "@angular/common/http";
     AppComponent,
     AdminDashboardComponent,
     LoginComponent,
-    RegisterComponent,
     ProfAdminViewComponent,
     StructureAdminViewComponent,
     RubriqueAdminViewComponent
@@ -26,6 +24,7 @@ import {HttpClientModule} from "@angular/common/http";
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    BrowserModule.withServerTransition({ appId: 'my-app' }),
     HttpClientModule
   ],
   providers: [
