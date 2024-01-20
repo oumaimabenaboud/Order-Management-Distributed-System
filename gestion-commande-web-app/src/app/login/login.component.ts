@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +24,7 @@ export class LoginComponent {
   
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
+  
       console.log('Email:', email);
       console.log('Password:', password);
   
@@ -32,17 +34,34 @@ export class LoginComponent {
   
           if (response && response.success) {
             console.log('Login success:', response);
-            this.router.navigate(['/admin']);
+  
+            if (this.isAdmin(email, password)) {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/prof-admin']);
+            }
           } else {
             console.log('Login failed:', response.message);
           }
         },
         (error) => {
           console.error('Login error:', error);
+        
+          if (error instanceof HttpErrorResponse) {
+            try {
+              console.log('Server error:', JSON.parse(error.error));
+            } catch (e) {
+              console.error('Error parsing server response:', e);
+            }
+          }
         }
+        
+        
       );
     }
   }
+  
+  
     
 
   // Function to check if the user is an admin based on email and password
