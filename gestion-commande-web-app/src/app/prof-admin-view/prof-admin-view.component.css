@@ -1,20 +1,23 @@
 .popup {
   display: -moz-box;
   position: fixed;
+  height: auto;
+  width: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #ffffff;
   padding: 20px;
   border: 1px solid #ccc;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 30px;
+  box-shadow: 0 2px 5px #82b8ff;
 }
 
 .popup.open {
   display: block;
 }
 
-.custom-button:hover {
+/* .custom-button:hover {
   background-color: white;
   color: #ED3237;
   border-color: #ED3237;
@@ -28,4 +31,99 @@
 
 .justify-content-start{
   color: #FF6445;
+} */
+
+/* ////////////// */
+
+.form-control {
+  color: #6a6c72;
+  transition: all 0.5s;
+  background-color: #f1f5fe;
+  border: 1px solid #f1f5fe;
+  font-size: 16px;
+  border-radius: 8px;
+  padding: 15px 20px;
+  box-shadow: unset;
+  display: block;
+  height: 50%;
+  width: 100%;
+  outline: 0;
+
+}
+
+.form-control:focus {
+  border-color: #004AAD;
+  box-shadow: 0 0 5px rgba(#004AAD, 0.5);
+}
+
+.btn {
+  color: orange;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.81rem 0.87rem;
+  display: inline-flex;
+  transition: 0.1s;
+  border: solid;
+  border-width: 0px 0px 0px 3px;
+  border-color: orange;
+  background-color: white;
+  cursor: pointer;
+  margin-top: 2rem;
+}
+
+.btn:hover {
+  color: #004AAD;
+  border: solid;
+  border-width: 0px 0px 0px 3px;
+  border-color: #004AAD;
+  background-color: white;
+}
+
+.btnf {
+  color: orange;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.81rem 0.87rem;
+  transition: 0.1s;
+  border: solid;
+  border-width: 0px 0px 0px 3px;
+  border-color: orange;
+  background-color: white;
+  cursor: pointer;
+
+}
+
+
+
+.btnf:hover {
+  color: red;
+  border: solid;
+  border-width: 0px 0px 0px 3px;
+  border-color: red;
+  background-color: white;
+
+}
+
+
+/* .btn {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-left: 35px;
+  padding-right: 35px;
+  cursor: pointer;
+  color: #004AAD ;
+
+}
+
+.btn:hover {
+  background-color: orange;
+  border-color: orange;
+  color: #ffffff;
+} */
+
+.custom-label {
+  color: orangered;
+}
+.justify-content-start{
+  color: orange;
 }
