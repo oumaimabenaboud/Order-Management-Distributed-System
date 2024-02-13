@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
@@ -32,7 +33,7 @@ export class LoginComponent {
         (response) => {
           console.log('Login response:', response);
   
-          if (response && response.success) {
+          if (response) {
             console.log('Login success:', response);
   
             if (this.isAdmin(email, password)) {
@@ -41,7 +42,7 @@ export class LoginComponent {
               this.router.navigate(['/prof-admin']);
             }
           } else {
-            console.log('Login failed:', response.message);
+            console.log('Login failed.');
           }
         },
         (error) => {
@@ -55,15 +56,10 @@ export class LoginComponent {
             }
           }
         }
-        
-        
       );
     }
   }
   
-  
-    
-
   // Function to check if the user is an admin based on email and password
   private isAdmin(email: string, password: string): boolean {
     // Replace this logic with your actual admin check logic

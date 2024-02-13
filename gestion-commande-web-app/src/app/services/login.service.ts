@@ -12,15 +12,22 @@ export class LoginService {
   constructor(private httpClient: HttpClient) {}
 
   login(email: string, password: string): Observable<any> {
-    const loginData = { email, password };
-    return this.httpClient.post(this.apiUrl, loginData, { responseType: 'text' })
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          // Handle errors appropriately
-          console.error('Server error:', error);
-          return throwError('Login failed. Please try again.'); // You can customize the error message
-        })
-      );
+    const loginData = new URLSearchParams();
+    loginData.set('email', email);
+    loginData.set('password', password);
+
+    return this.httpClient.post(this.apiUrl, loginData.toString(), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      responseType: 'text'
+    }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // Handle errors appropriately
+        console.error('Server error:', error);
+        return throwError('Login failed. Please try again.'); // You can customize the error message
+      })
+    );
   }
   
 }
