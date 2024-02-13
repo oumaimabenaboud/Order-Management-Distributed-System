@@ -4,6 +4,7 @@ package org.sid.professeur.web;
 import org.sid.professeur.entities.professeur;
 import org.sid.professeur.repositories.ProfesseurRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,10 +30,8 @@ public class LoginController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @PostMapping()
-    public String login(@RequestBody LoginRequest loginRequest) {
-        String email = loginRequest.getEmail();
-        String password = loginRequest.getPassword();
+    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String login(@RequestParam String email, @RequestParam String password) {
         if (isAdmin(email, password)) {
             return "Admin login successful";
         }else{
