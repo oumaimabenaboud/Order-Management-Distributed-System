@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/professeurs")
-public class ProfesseurRESTcontroller {
+public class    ProfesseurRESTcontroller {
     private final ProfesseurRepo ProfesseurRepo;
 
 
