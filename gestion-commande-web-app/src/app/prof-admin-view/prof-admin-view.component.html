@@ -160,8 +160,8 @@
       </div>
       <div class="card-footer bg-transparent">
         <button class="btn btn-outline-primary" (click)="toggleEditMode()"><i class="bi bi-pencil"></i> {{ isEditMode ? 'Cancel' : 'Edit' }}</button>
-        <button *ngIf="isEditMode" class="btn btn-outline-success ms-3" (click)="saveProfessorChanges()"><i class="bi bi-save"></i> Save Changes</button>
-        <button class="btn btn-outline-secondary ms-3" (click)="closeDetailsForm()"><i class="bi bi-x-lg"></i> Fermer</button>
+        <button *ngIf="isEditMode" class="btn btn-outline-success ms-3" (click)="saveProfessorChanges()"><i class="bi bi-save" id="detail-button "></i> Save Changes</button>
+        <button class="btn btn-outline-secondary ms-3" (click)="closeDetailsForm()"><i class="bi bi-x-lg" id="detail-button "></i> Fermer</button>
       </div>
     </div>
 
@@ -169,7 +169,7 @@
     <!-- Popup card for adding a new professor -->
     <div class="popup card" *ngIf="isNewProfFormOpen">
       <div class="card-body">
-        <h4>Add new professor</h4>
+        <h4>ADD NEW PROFESSOR</h4>
         <form class="row" [formGroup]="newProfForm" (ngSubmit)="saveNewProf()">
           <div class="col-md-6">
             <div class="form-group">
@@ -192,7 +192,7 @@
         </form>
       </div>
       <div class="card-footer bg-transparent">
-        <button class="btn btn-outline-primary" (click)="closeNewProfForm()"><i class="bi bi-x-lg"></i> Fermer</button>
+        <button class="btnf btn-outline-primary" (click)="closeNewProfForm()"><i class="bi bi-x-lg"></i> Fermer</button>
         <button class="btn btn-outline-success ms-3" (click)="saveNewProf()"><i class="bi bi-plus-circle"></i> Ajouter</button>
       </div>
     </div>

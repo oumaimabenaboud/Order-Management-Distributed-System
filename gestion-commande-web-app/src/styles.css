@@ -2,22 +2,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
-/*@import '@fortawesome/fontawesome-free/css/all.css';*/
+@import '@fortawesome/fontawesome-free/css/all.css';
 
 
 
 * {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  padding: 0 ;
+  box-sizing: border-box ;
 }
 
 a {
-  text-decoration: none;
+  text-decoration: none ;
 }
 
 li {
-  list-style: none;
+  list-style: none ;
 }
 
 :root {
@@ -37,7 +37,7 @@ li {
 }
 
 html {
-  overflow-x: hidden;
+  overflow-x: hidden !important;
 }
 
 body.dark {
@@ -47,7 +47,7 @@ body.dark {
 }
 
 body {
-  background: var(--grey);
+  background: var(--grey) !important;
   overflow-x: hidden;
 }
 
@@ -405,7 +405,7 @@ body {
   color: var(--dark);
 }
 #content main .box-info li .text p {
-  color: var(--dark);
+  color: var(--dark);  
 }
 
 
@@ -594,4 +594,4 @@ body {
   #content main .table-data .todo .todo-list {
     min-width: 420px;
   }
-}
+}   
