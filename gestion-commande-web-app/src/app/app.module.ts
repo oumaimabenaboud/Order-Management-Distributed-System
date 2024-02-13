@@ -10,6 +10,7 @@ import { StructureAdminViewComponent } from './structure-admin-view/structure-ad
 import { RubriqueAdminViewComponent } from './rubrique-admin-view/rubrique-admin-view.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {HttpClientModule} from "@angular/common/http";
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserModule.withServerTransition({ appId: 'my-app' }),
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
   ],
   providers: [
     provideClientHydration()

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Professeur} from "../model/professeur.model";
 
@@ -25,5 +25,13 @@ export class ProfesseurService {
   }
   public updateProfessor(profId: any, Professeur: any) {
     return this.http.put("http://localhost:1818/PROFESSOR-SERVICE/professeurs/"+profId, Professeur)
+  }
+  public searchProfessors(searchTerm: string): Observable<Professeur[]> {
+    let params = new HttpParams();
+    if (searchTerm) {
+      params = params.set('searchTerm', searchTerm);
+    }
+
+    return this.http.get<Professeur[]>("http://localhost:1818/PROFESSOR-SERVICE/professeurs/search", { params })
   }
 }

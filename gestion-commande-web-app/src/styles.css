@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import '@fortawesome/fontawesome-free/css/all.css';
+/*@import '@fortawesome/fontawesome-free/css/all.css';*/
 
 
 
@@ -405,7 +405,7 @@ body {
   color: var(--dark);
 }
 #content main .box-info li .text p {
-  color: var(--dark);  
+  color: var(--dark);
 }
 
 
@@ -594,4 +594,4 @@ body {
   #content main .table-data .todo .todo-list {
     min-width: 420px;
   }
-}   
+}

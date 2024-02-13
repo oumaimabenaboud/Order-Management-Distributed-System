@@ -61,20 +61,50 @@ public class ProfesseurRESTcontroller {
     }
 
     @PutMapping("{id}")
-    public professeur update(@PathVariable Long id,@RequestBody professeur professeur){
-        professeur prof = ProfesseurRepo.findById(Long.valueOf(String.valueOf(id))).orElseThrow();
-        if(professeur.getNom()!=null) prof.setNom(professeur.getNom());
-        if(professeur.getPrenom()!=null) prof.setPrenom(professeur.getPrenom());
-        if(professeur.getMail()!=null) prof.setMail(professeur.getMail());
-        if(professeur.getMdp()!=null) prof.setMdp(professeur.getMdp());
-        if(professeur.isDroit_daccee()) prof.setDroit_daccee(true);
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody professeur updatedProfesseur) {
+        // Retrieve the existing professor by ID
+        professeur existingProf = ProfesseurRepo.findById(id).orElseThrow(() -> new RuntimeException("Professor not found"));
 
-        return ProfesseurRepo.save(prof);
+        // Update the properties if provided
+        if (updatedProfesseur.getNom() != null) {
+            existingProf.setNom(updatedProfesseur.getNom());
+        }
+        if (updatedProfesseur.getPrenom() != null) {
+            existingProf.setPrenom(updatedProfesseur.getPrenom());
+        }
+        if (updatedProfesseur.getMail() != null) {
+            // Validate the new email
+            if (!isValidEmail(updatedProfesseur.getMail())) {
+                return new ResponseEntity<>("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma' pour les professeurs.", HttpStatus.BAD_REQUEST);
+            }
+            existingProf.setMail(updatedProfesseur.getMail());
+        }
+        if (updatedProfesseur.getMdp() != null) {
+            existingProf.setMdp(updatedProfesseur.getMdp());
+        }
+        if (updatedProfesseur.isDroit_daccee()) {
+            existingProf.setDroit_daccee(true);
+        }
+
+        // Save the updated professor
+        professeur savedProfesseur = ProfesseurRepo.save(existingProf);
+        return new ResponseEntity<>(savedProfesseur, HttpStatus.OK);
     }
+
     @DeleteMapping("{id}")
     public void deleteAccount(@PathVariable String id){
         ProfesseurRepo.deleteById(Long.valueOf(id));
     }
 
+    @GetMapping("/search")
+    public List<professeur> searchProfesseurs(@RequestParam(required = false) String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            // Search by both prenom and nom
+            return ProfesseurRepo.findByPrenomContainingIgnoreCaseOrNomContainingIgnoreCase(searchTerm, searchTerm);
+        } else {
+            // If no search parameter provided or if it's empty, return all professeurs
+            return ProfesseurRepo.findAll();
+        }
+    }
 
 }

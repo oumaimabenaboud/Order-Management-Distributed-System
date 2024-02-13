@@ -1,1 +1,31 @@
+.popup {
+  display: -moz-box;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
 
+.popup.open {
+  display: block;
+}
+
+.custom-button:hover {
+  background-color: white;
+  color: #ED3237;
+  border-color: #ED3237;
+}
+.custom-button:active {
+  background-color: white;
+  color: #ED3237;
+  border-color: #ED3237;
+}
+
+
+.justify-content-start{
+  color: #FF6445;
+}
