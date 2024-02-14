@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/professeurs")
-@CrossOrigin(origins = "http://localhost:4200")
 public class    ProfesseurRESTcontroller {
     private final ProfesseurRepo ProfesseurRepo;
 

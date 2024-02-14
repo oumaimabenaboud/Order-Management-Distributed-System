@@ -496,7 +496,14 @@ body {
 
 
 
+::ng-deep .copy-snackbar {
+  position: absolute;
+}
 
+::ng-deep .copy-snackbar {
+  top: unset !important;
+  bottom: auto !important;
+}
 
 #content main .table-data {
   display: flex;
@@ -561,11 +568,11 @@ body {
 
 
 
-/* .table-data .order table tbody tr:hover {
-  background: var(--grey); /* Apply background color on hover 
-  border-radius: 50%; /* Apply border radius on hover 
-  border: 2px solid var(--grey); /* Apply border color on hover 
-} */
+.table-data .order table tbody tr:hover {
+  background: var(--grey);
+  border-radius: 50%;
+  border: 2px solid var(--grey);  
+}
 
 
 

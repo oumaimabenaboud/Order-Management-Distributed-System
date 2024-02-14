@@ -12,7 +12,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangePasswordComponent } from './change-password/change-password.component'; // Import BrowserAnimationsModule
-
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,8 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
     BrowserAnimationsModule, // Add BrowserAnimationsModule here
     AppRoutingModule,
     ReactiveFormsModule,
+    ClipboardModule,
+    MatSnackBarModule,
     BrowserModule.withServerTransition({ appId: 'my-app' }),
     HttpClientModule,
     FormsModule,

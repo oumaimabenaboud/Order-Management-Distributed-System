@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ProfesseurService} from "../services/professeur.service";
 import {Professeur} from "../model/professeur.model";
+import { Clipboard } from '@angular/cdk/clipboard';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-prof-admin-view',
@@ -9,6 +11,7 @@ import {Professeur} from "../model/professeur.model";
   styleUrls: ['./prof-admin-view.component.css']
 })
 export class ProfAdminViewComponent implements OnInit {
+
   profs: any;
   isDetailsFormOpen: boolean = false;
   isNewProfFormOpen: boolean = false;
@@ -21,8 +24,14 @@ export class ProfAdminViewComponent implements OnInit {
   addToggle() {
     this.status = !this.status;
   }
-  constructor(private  profService:ProfesseurService, private formBuilder: FormBuilder) { }
-
+  constructor(
+    private profService: ProfesseurService, 
+    private formBuilder: FormBuilder, 
+    private clipboard: Clipboard,
+    private snackBar: MatSnackBar // Inject the Clipboard service here
+  ) { }
+  
+  
 
   //Table of Profs
   ngOnInit(): void {
@@ -35,6 +44,21 @@ export class ProfAdminViewComponent implements OnInit {
     this.initDetailsFormBuilder();
     this.initNewProfFormBuilder();
   }
+  copyToClipboard(email: string, event: MouseEvent): void {
+    const targetElement = event.currentTarget as HTMLElement;
+    this.clipboard.copy(email);
+    this.snackBar.open('Email copied to clipboard', 'Close', {
+      duration: 2000, // Duration in milliseconds (2 seconds)
+      horizontalPosition: 'left',
+      verticalPosition: 'top',
+      panelClass: 'copy-snackbar',
+      data: { trigger: targetElement }
+    });
+}
+
+
+
+
   getProf(id: any) {
     this.profService.getProfessor(id).subscribe({
       next: (prof) => {
@@ -70,7 +94,23 @@ export class ProfAdminViewComponent implements OnInit {
   }
 
 
-  deleteProf(id: any) {
+  // deleteProf(id: any) {
+  //   if (confirm("Are you sure you want to delete this professor?")) {
+  //     this.profService.deleteProfessor(id).subscribe({
+  //       next: () => {
+  //         window.alert("Professor deleted successfully!");
+  //         window.location.reload();
+  //       },
+  //       error: err => console.log(err)
+  //     });
+  //   }
+  // }
+  deleteProf(id: any, event?: DragEvent): void {
+    if (event) {
+      // If the function is called from a drag event, prevent the default behavior
+      event.preventDefault();
+    }
+    
     if (confirm("Are you sure you want to delete this professor?")) {
       this.profService.deleteProfessor(id).subscribe({
         next: () => {
@@ -81,6 +121,16 @@ export class ProfAdminViewComponent implements OnInit {
       });
     }
   }
+  
+  
+  onDragStart(event: DragEvent, data: string): void {
+    event.dataTransfer?.setData('text/plain', data);
+  }
+  
+  allowDrop(event: DragEvent): void {
+    event.preventDefault();
+  }
+  
 
   openDetailsForm() {
     this.isDetailsFormOpen = true;

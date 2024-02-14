@@ -71,6 +71,18 @@
   align-items: center;
 }
 
+
+.mail {
+  color:#004AAD;
+  cursor: pointer;
+}
+
+.mail :focus {
+  color: green;
+  
+}
+
+
 h4 {
   margin-bottom: 12px;
   font-size: 25px;
