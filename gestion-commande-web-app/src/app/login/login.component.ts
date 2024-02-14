@@ -43,7 +43,7 @@ export class LoginComponent {
               console.log(response);
               this.loginService.getUserIdByEmail(email).subscribe(
                 (userId) => {
-                  console.log('User ID:', userId);
+                  // console.log('User ID:', userId);
                   if (userId) {
                     this.router.navigate(['/change-password', { userId: userId }]);
                   } else {

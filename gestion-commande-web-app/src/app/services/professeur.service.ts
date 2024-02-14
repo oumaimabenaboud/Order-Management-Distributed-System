@@ -26,6 +26,9 @@ export class ProfesseurService {
   public updateProfessor(profId: any, Professeur: any) {
     return this.http.put("http://localhost:1818/PROFESSOR-SERVICE/professeurs/"+profId, Professeur)
   }
+
+  
+
   public searchProfessors(searchTerm: string): Observable<Professeur[]> {
     let params = new HttpParams();
     if (searchTerm) {

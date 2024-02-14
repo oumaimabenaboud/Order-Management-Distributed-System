@@ -36,10 +36,12 @@ export class ChangePasswordComponent implements OnInit {
     if (this.passwordChangeForm.valid) {
       const newPassword = this.passwordChangeForm.value.newPassword;
       const userId = this.route.snapshot.params['userId'];
-      const updatedProfessor = { password: newPassword };
+      const updatedProfessor = { mdp: newPassword };
+      
       this.professorService.updateProfessor(userId, updatedProfessor).subscribe(
         (response) => {
           console.log('Password updated successfully:', response);
+          this.router.navigate(['/prof-admin']);
         },
         (error) => {
           console.error('Error updating password:', error);
