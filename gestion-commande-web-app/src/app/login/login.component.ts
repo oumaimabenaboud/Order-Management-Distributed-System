@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
@@ -33,9 +34,18 @@ export class LoginComponent {
   
       this.loginService.login(email, password).subscribe(
         (response) => {
+<<<<<<< HEAD
           if (response) {
             if (response === 'Admin login successful') {
               console.log(response);
+=======
+          console.log('Login response:', response);
+  
+          if (response) {
+            console.log('Login success:', response);
+  
+            if (this.isAdmin(email, password)) {
+>>>>>>> cd0a3d471022d7faaa9d4a08114dadef812be5ac
               this.router.navigate(['/admin']);
             } else if (response === 'Invalid email format' || response === 'Email and password are required') {
               this.openErrorSnackBar(response);
@@ -65,7 +75,11 @@ export class LoginComponent {
               this.openErrorSnackBar(response);
             }
           } else {
+<<<<<<< HEAD
             console.log(response);
+=======
+            console.log('Login failed.');
+>>>>>>> cd0a3d471022d7faaa9d4a08114dadef812be5ac
           }
         },
         (error) => {
@@ -85,6 +99,7 @@ export class LoginComponent {
     }
   }
   
+<<<<<<< HEAD
   openErrorSnackBar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 5000, // Adjust duration as needed
@@ -92,5 +107,11 @@ export class LoginComponent {
       verticalPosition: 'top',
       panelClass: ['error-snackbar'] // Add custom styling if needed
     });
+=======
+  // Function to check if the user is an admin based on email and password
+  private isAdmin(email: string, password: string): boolean {
+    // Replace this logic with your actual admin check logic
+    return email === 'admin' && password === 'admin';
+>>>>>>> cd0a3d471022d7faaa9d4a08114dadef812be5ac
   }
 }  

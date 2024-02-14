@@ -29,6 +29,7 @@ export class LoginService {
         return throwError('Login failed. Please try again.'); // You can customize the error message
       })
     );
+<<<<<<< HEAD
   }
 
   getUserIdByEmail(email: string): Observable<number> {
@@ -41,3 +42,8 @@ export class LoginService {
     );
   }
 }
+=======
+  }
+  
+}
+>>>>>>> cd0a3d471022d7faaa9d4a08114dadef812be5ac
