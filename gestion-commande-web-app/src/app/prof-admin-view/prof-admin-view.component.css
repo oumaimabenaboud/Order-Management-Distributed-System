@@ -1,39 +1,49 @@
-.popup {
-  display: -moz-box;
-  position: fixed;
-  height: auto;
-  width: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #ffffff;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 30px;
-  box-shadow: 0 2px 5px #82b8ff;
-}
+  .popup {
+    display: -moz-box;
+    position: fixed;
+    height: auto;
+    width: 30%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px #82b8ff;
+    z-index: 1000; /* Ensure it's above the overlay */
+
+  }
+  
+  .popup:hover {
+    border-color: #82b8ff;
+    transition: all 0.5s;
+  }
 
 .popup.open {
   display: block;
 }
 
-/* .custom-button:hover {
-  background-color: white;
-  color: #ED3237;
-  border-color: #ED3237;
-}
-.custom-button:active {
-  background-color: white;
-  color: #ED3237;
-  border-color: #ED3237;
+.front-page {
+  position: relative;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--grey); 
+  opacity: 0.7;
+  z-index: 999; /* Ensure it's above other elements */
+  display: none; /* Initially hidden */
+}
 
-.justify-content-start{
-  color: #FF6445;
-} */
 
-/* ////////////// */
+.overlay.show {
+  display: block;
+}
 
 .form-control {
   color: #6a6c72;
@@ -43,15 +53,11 @@
   font-size: 16px;
   border-radius: 8px;
   padding: 15px 20px;
-
   margin:1rem 0 1rem 0;
   box-shadow: unset;
-  display: block;
-  height: 50%;
+  height: 100%;
   width: 100%;
   outline: 0;
-
-
 }
 
 .form-control:focus {
@@ -59,93 +65,82 @@
   box-shadow: 0 0 5px rgba(#004AAD, 0.5);
 }
 
-/* .btn {
-  color: orange;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 0.81rem 0.87rem;
-  display: inline-flex;
-  transition: 0.1s;
-  border: solid;
-  border-width: 0px 0px 0px 3px;
-  border-color: orange;
-  background-color: white;
-  cursor: pointer;
-  margin-top: 2rem;
-} */
+.hh {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-.btn {
-  color: #6a6c72;
+h4 {
+  margin-bottom: 12px;
+  font-size: 25px;
+  font-weight: 500;
+  color: #004AAD;
+}
+
+
+
+
+
+
+.btn{
+  color: #004AAD;
+  cursor: pointer;
   transition: all 0.5s;
   background-color: #f1f5fe;
   border: 1px solid #f1f5fe;
   font-size: 16px;
   border-radius: 8px;
+  margin: 8px;
   padding: 15px 20px;
   box-shadow: unset;
-  display: block;
-  height: auto;
-  width: auto;
   outline: 0;
-  cursor: pointer;
 }
 
 .btn:hover {
-  color: #004AAD;
-  border: solid;
-  /* border-width: 0px 0px 0px 3px;
-  border-color: #004AAD; */
-  background-color: white;
+  border: 1px solid #004AAD;
 }
+
 
 .btnf {
-  color: #6a6c72;
+  color: red;
   cursor: pointer;
   transition: all 0.5s;
   background-color: #f1f5fe;
   border: 1px solid #f1f5fe;
   font-size: 16px;
+  margin: 8px;
   border-radius: 8px;
   padding: 15px 20px;
   box-shadow: unset;
-  display: block;
-  height: auto;
-  width: auto;
   outline: 0;
-
+  display: inline;
 }
-
-
 
 .btnf:hover {
-  color: red;
-  border: solid;
-  /* border-width: 0px 0px 0px 3px;
-  border-color: red; */
-  background-color: white;
-
+  border: 1px solid red;
 }
 
 
-/* .btn {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding-left: 35px;
-  padding-right: 35px;
-  cursor: pointer;
-  color: #004AAD ;
-
-}
-
-.btn:hover {
-  background-color: orange;
-  border-color: orange;
-  color: #ffffff;
-} */
-
-.custom-label {
-  color: orangered;
-}
-.justify-content-start{
+.btns {
   color: orange;
+  cursor: pointer;
+  transition: all 0.5s;
+  background-color: #f1f5fe;
+  border: 1px solid #f1f5fe;
+  font-size: 16px;
+  margin: 8px;
+  border-radius: 8px;
+  padding: 15px 20px;
+  box-shadow: unset;
+  outline: 0;
 }
+
+.btns:hover {
+  border: 1px solid orange;
+
+}
+
+
+
+

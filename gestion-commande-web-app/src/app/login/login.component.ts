@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
@@ -43,7 +44,7 @@ export class LoginComponent {
               console.log(response);
               this.loginService.getUserIdByEmail(email).subscribe(
                 (userId) => {
-                  console.log('User ID:', userId);
+                  // console.log('User ID:', userId);
                   if (userId) {
                     this.router.navigate(['/change-password', { userId: userId }]);
                   } else {
@@ -85,6 +86,7 @@ export class LoginComponent {
     }
   }
   
+
   openErrorSnackBar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 5000, // Adjust duration as needed
@@ -92,5 +94,4 @@ export class LoginComponent {
       verticalPosition: 'top',
       panelClass: ['error-snackbar'] // Add custom styling if needed
     });
-  }
-}  
+}}
