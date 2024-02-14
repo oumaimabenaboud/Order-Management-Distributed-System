@@ -36,25 +36,15 @@ public class StructureRestController {
         public Structure createStructure(@RequestParam Structure addedStructure) {
 
             // Fetch responsible professor from the professor service
-            Professeur responsibleProfessor = professeurRestClient.getProfesseurById(addedStructure.getRespoID());
+            Professeur responsibleProfessor = professeurRestClient.getProfesseurById(addedStructure.getResponsibleId());
 
-            // Fetch other professors for the team
-            Collection<Professeur> professors = fetchProfessorsForTeam(addedStructure.getProfesseurs());
 
             // Create a new Structure object
             Structure newStructure = new Structure();
             newStructure.setNom(addedStructure.getNom());
             newStructure.setAcronyme(addedStructure.getAcronyme());
             newStructure.setType(addedStructure.getType()); // Assuming structurestype is an enum
-
-            // Assign responsible professor to the structure
-            // Here, 'responsibleStructure' is assumed to be an instance of ResponsableStructure
-            ResponsableStructure responsibleStructure = new ResponsableStructure();
-            responsibleStructure.setProfesseur(responsibleProfessor);
-            newStructure.setResponsableStructure(responsibleStructure);
-
-            // Set other professors for the team
-            newStructure.setProfesseurs(professors);
+            newStructure.setResponsibleId(responsibleProfessor.getId());
 
             // Save or perform necessary actions with the new structure
             structureRepository.save(newStructure);
