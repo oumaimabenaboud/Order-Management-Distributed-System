@@ -14,9 +14,5 @@ import java.util.Collection;
 public class ResponsableStructure {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(mappedBy = "respo", cascade = CascadeType.ALL)
-    private Collection<Structure> structures;
-    @JsonIgnore
-    @Transient
-    private org.sid.structureservice.model.Professeur professeur;
+
 }
