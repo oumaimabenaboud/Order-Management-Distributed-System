@@ -3,6 +3,8 @@ package org.sid.professeur.web;
 
 import org.sid.professeur.entities.professeur;
 import org.sid.professeur.repositories.ProfesseurRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ import static org.bouncycastle.asn1.iana.IANAObjectIdentifiers.mail;
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/login")
 public class LoginController {
-
+    Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private ProfesseurRepo ProfesseurRepo;
 
@@ -48,7 +50,7 @@ public class LoginController {
             }
 
             Optional<professeur> optionalProf = ProfesseurRepo.findByMail(email);
-
+            logger.error(String.valueOf(optionalProf));
             if (optionalProf.isPresent()) {
                 professeur prof = optionalProf.get();
 

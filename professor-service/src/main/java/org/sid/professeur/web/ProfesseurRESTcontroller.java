@@ -1,7 +1,9 @@
 package org.sid.professeur.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.sid.professeur.entities.professeur;
 import org.sid.professeur.repositories.ProfesseurRepo;
@@ -23,6 +25,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class    ProfesseurRESTcontroller {
     private final ProfesseurRepo ProfesseurRepo;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public ProfesseurRESTcontroller (ProfesseurRepo ProfesseurRepo){
         this.ProfesseurRepo=ProfesseurRepo;
@@ -82,7 +86,7 @@ public class    ProfesseurRESTcontroller {
             existingProf.setMail(updatedProfesseur.getMail());
         }
         if (updatedProfesseur.getMdp() != null) {
-            existingProf.setMdp(updatedProfesseur.getMdp());
+            existingProf.setMdp(passwordEncoder.encode(updatedProfesseur.getMdp()));
         }
         if (updatedProfesseur.isDroit_daccee()) {
             existingProf.setDroit_daccee(true);

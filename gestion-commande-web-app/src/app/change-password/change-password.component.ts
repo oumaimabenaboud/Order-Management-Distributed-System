@@ -41,7 +41,8 @@ export class ChangePasswordComponent implements OnInit {
       this.professorService.updateProfessor(userId, updatedProfessor).subscribe(
         (response) => {
           console.log('Password updated successfully:', response);
-          this.router.navigate(['/prof-admin']);
+          this.router.navigateByUrl('/prof-admin');
+
         },
         (error) => {
           console.error('Error updating password:', error);
