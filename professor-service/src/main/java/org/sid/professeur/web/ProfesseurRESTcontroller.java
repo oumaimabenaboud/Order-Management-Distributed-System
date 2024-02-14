@@ -21,8 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/professeurs")
-@CrossOrigin(origins = "http://localhost:4200")
-public class    ProfesseurRESTcontroller {
+public class ProfesseurRESTcontroller {
     private final ProfesseurRepo ProfesseurRepo;
 
     @Autowired
@@ -50,8 +49,7 @@ public class    ProfesseurRESTcontroller {
         if (!isValidEmail(professeur.getMail())) {
             return new ResponseEntity<>("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma' pour les professeurs.", HttpStatus.BAD_REQUEST);
         }
-
-        professeur.setMdp((professeur.getNom() + "_" + professeur.getPrenom()).toLowerCase());
+        professeur.setMdp(passwordEncoder.encode((professeur.getNom() + "_" + professeur.getPrenom()).toLowerCase()));
         professeur savedProfesseur = ProfesseurRepo.save(professeur);
         return new ResponseEntity<>(savedProfesseur, HttpStatus.CREATED);
     }

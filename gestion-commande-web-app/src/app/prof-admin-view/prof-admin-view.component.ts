@@ -30,7 +30,7 @@ export class ProfAdminViewComponent implements OnInit {
       { next:(data)=>{
           this.profs = data;
         },
-        error : (err)=>{}
+        error : (err)=>console.error(err)
       });
     this.initDetailsFormBuilder();
     this.initNewProfFormBuilder();

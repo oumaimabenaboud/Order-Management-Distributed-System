@@ -3,18 +3,6 @@
         <div class="login-form">
             <h4>Login Here</h4>
             <p style="color: #F09B0D;">Welcome back, login to your account!</p>
-            <!-- <form >
-                <div class="form-group">
-                    <label>Email</label>
-                    <input id="user-box" type="text" placeholder="Your email academic address" class="form-control" name="email"  required>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input  type="password" placeholder="Your password" class="form-control" name="password" minlength="4" maxlength="20" required>
-                </div>
-                <button type="submit" class="default-btn">Login Now</button>
-            </form> -->
-
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <div class="form-group">
                     <label>Email</label>
