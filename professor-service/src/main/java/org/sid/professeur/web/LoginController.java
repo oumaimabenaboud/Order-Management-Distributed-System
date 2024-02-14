@@ -53,7 +53,6 @@ public class LoginController {
             logger.error(String.valueOf(optionalProf));
             if (optionalProf.isPresent()) {
                 professeur prof = optionalProf.get();
-
                 // Check if the provided password matches the stored hashed password
                 if (passwordEncoder.matches(password, prof.getMdp())) {
                     if (prof.isFirst_cnx()) {
