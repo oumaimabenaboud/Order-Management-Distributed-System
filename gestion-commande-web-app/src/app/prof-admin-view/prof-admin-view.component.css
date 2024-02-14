@@ -2,7 +2,7 @@
     display: -moz-box;
     position: fixed;
     height: auto;
-    width: 50%;
+    width: 30%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -55,13 +55,21 @@
   padding: 15px 20px;
   margin:1rem 0 1rem 0;
   box-shadow: unset;
-  /* display: block; */
   height: 100%;
-  width: 160%;
-  /* outline: 0; */
+  width: 100%;
+  outline: 0;
 }
 
+.form-control:focus {
+  border-color: #004AAD;
+  box-shadow: 0 0 5px rgba(#004AAD, 0.5);
+}
 
+.hh {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 h4 {
   margin-bottom: 12px;
@@ -72,10 +80,7 @@ h4 {
 
 
 
-.form-control:focus {
-  border-color: #004AAD;
-  box-shadow: 0 0 5px rgba(#004AAD, 0.5);
-}
+
 
 
 .btn{
@@ -139,9 +144,3 @@ h4 {
 
 
 
-.custom-label {
-  color: orangered;
-}
-.justify-content-start{
-  color: orange;
-}

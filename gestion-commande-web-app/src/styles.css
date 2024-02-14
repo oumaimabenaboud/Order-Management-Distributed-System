@@ -240,6 +240,7 @@ body {
   outline: none;
   width: 100%;
   color: var(--dark);
+
 }
 #content nav form .form-input button {
   width: 36px;
@@ -548,6 +549,7 @@ body {
   align-items: center;
   grid-gap: 12px;
   padding-left: 6px;
+  height: 98.9px;
 }
 #content main .table-data .order table td img {
   width: 36px;
@@ -555,9 +557,19 @@ body {
   border-radius: 50%;
   object-fit: cover;
 }
-#content main .table-data .order table tbody tr:hover {
-  background: var(--grey);
-}
+
+
+
+
+/* .table-data .order table tbody tr:hover {
+  background: var(--grey); /* Apply background color on hover 
+  border-radius: 50%; /* Apply border radius on hover 
+  border: 2px solid var(--grey); /* Apply border color on hover 
+} */
+
+
+
+
 #content main .table-data .order table tr td .status {
   font-size: 10px;
   padding: 6px 16px;

@@ -43,8 +43,11 @@
         <span class="text">Logout</span>
       </a>
     </li>
+
   </ul>
+
 </section>
+
 <!-- SIDEBAR -->
 
 
@@ -101,13 +104,11 @@
     <div class="table-data">
       <div class="order">
         <div class="head">
-          <!-- <i class="fa-solid fa-user-tie"></i> -->
-          <!-- <i class='bx bx-search'></i>
-          <i class='bx bx-filter'></i> -->
+
         </div>
-        <table>
+        <table c>
           <thead>
-          <tr>
+          <tr >
             <th>Prénom</th>
             <th>Nom</th>
             <th>Email</th>
@@ -119,7 +120,8 @@
           <tr *ngFor="let p of profs">
             <td>{{p.prenom}}</td>
             <td>{{p.nom}}</td>
-            <td>{{p.mail}}</td>
+            <td style="text-decoration: none; color:#004AAD;"><i class="fa-solid fa-envelope"></i> {{p.mail}}</td>
+
             <td>
               <button class ="btn detail-button" (click)="getProf(p.id)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
             </td>
@@ -136,7 +138,12 @@
     <!-- Popup card for details -->
     <div class="popup card" *ngIf="isDetailsFormOpen">
       <div class="card-body">
-        <h4>Professor Details</h4>
+        
+        <div class="hh">
+          <h4>Professor Details</h4>
+          <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()"> <i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
+          
+        </div>
         <form class="row" [formGroup]="detailsForm">
           <div class="col-md-6">
             <div class="form-group">
@@ -162,17 +169,18 @@
       <div class="card-footer bg-transparent">
         <button class="btn btn-outline-primary" (click)="toggleEditMode()"><i class="fa-solid fa-pen-to-square"></i> {{ isEditMode ? 'Cancel' : 'Edit' }}</button>
         <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="saveProfessorChanges()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Save Changes</button>
-        <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()"> <i class="fa-solid fa-circle-xmark" id="detail-button "></i> Fermer</button>
       </div>
     </div>
-     <!-- Overlay for the front page -->
 <div class="overlay" [ngClass]="{'show': isDetailsFormOpen}"></div>
 
 
     <!-- Popup card for adding a new professor -->
     <div class="popup card" *ngIf="isNewProfFormOpen">
       <div class="card-body">
-        <h4>Add New Professor</h4>
+        <div class="hh">
+          <h4>Add New Professor</h4>
+          <button class="btnf btn-outline-primary" (click)="closeNewProfForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
+  </div>
           <form class="row" [formGroup]="newProfForm" (ngSubmit)="saveNewProf()">
           <div class="col-md-6">
             <div class="form-group">
@@ -195,7 +203,6 @@
         </form>
       </div>
       <div class="card-footer bg-transparent">
-        <button class="btnf btn-outline-primary" (click)="closeNewProfForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i> Fermer</button>
         <button class="btn btn-outline-success ms-3" (click)="saveNewProf()"><i class="fa-solid fa-plus" id="detail-button "></i> Ajouter</button>
       </div>
 
