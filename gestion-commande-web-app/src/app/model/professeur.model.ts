@@ -5,4 +5,5 @@ export interface Professeur {
   mail: string;
   mdp: string;
   droit_daccee: boolean;
+  first_cnx: boolean;
 }

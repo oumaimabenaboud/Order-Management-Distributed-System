@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.bouncycastle.asn1.iana.IANAObjectIdentifiers.mail;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -34,8 +36,7 @@ public class LoginController {
     public String login(@RequestParam String email, @RequestParam String password) {
         if (isAdmin(email, password)) {
             return "Admin login successful";
-        }else{
-
+        } else {
             // Check if email follows the specified pattern
             if (!isValidEmailPattern(email)) {
                 return "Invalid email format";
@@ -53,15 +54,27 @@ public class LoginController {
 
                 // Check if the provided password matches the stored hashed password
                 if (passwordEncoder.matches(password, prof.getMdp())) {
-                    return "Login successful";
+                    if (prof.isFirst_cnx()) {
+                        // If it's the first connection, set first_cnx to false and return appropriate message
+                        prof.setFirst_cnx(false);
+                        ProfesseurRepo.save(prof);
+                        return "User connected for the first time";
+                    } else {
+                        // If it's not the first connection, return regular login successful message
+                        return "Login successful";
+                    }
                 } else {
                     return "Invalid credentials";
                 }
             } else {
-                return "Professeur not found";
+                return "Professor not found";
             }
-
         }
+    }
+    @GetMapping("/getUserByEmail")
+    public Long getUserIdByEmail(@RequestParam String email) {
+        Optional<professeur> optionalProf = ProfesseurRepo.findByMail(email);
+        return optionalProf.map(professeur::getId).orElse(null);
     }
 
     private boolean isValidEmailPattern(String email) {
@@ -92,10 +105,10 @@ public class LoginController {
     }
 
     private static final Map<String, String> adminCredentials = new HashMap<>();
-    static {
-        adminCredentials.put("admin", "admin");
-        //adminCredentials.put("admin2@example.com", "adminpassword");
-        // Add more admins as needed
+        static {
+            adminCredentials.put("admin", "admin");
+            //adminCredentials.put("admin2@example.com", "adminpassword");
+            // Add more admins as needed
     }
     private boolean isAdmin(String email, String password) {
         // Check if the provided credentials match any admin in the map

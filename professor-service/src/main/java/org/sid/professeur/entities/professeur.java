@@ -26,6 +26,7 @@ public class professeur {
     private String mail;
     private String mdp;
     private boolean droit_daccee;
+    private boolean first_cnx;
 
 }
 

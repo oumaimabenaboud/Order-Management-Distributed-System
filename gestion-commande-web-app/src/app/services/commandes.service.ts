@@ -27,4 +27,6 @@ export class CommandesService {
     return this.http.put("http://localhost:1818/COMMANDE-SERVICE/commandes/"+commandeId, Commande)
   }
 
+  
+
 }

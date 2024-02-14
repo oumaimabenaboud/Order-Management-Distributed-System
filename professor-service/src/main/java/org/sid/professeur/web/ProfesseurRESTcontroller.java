@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/professeurs")
+@CrossOrigin(origins = "http://localhost:4200")
 public class    ProfesseurRESTcontroller {
     private final ProfesseurRepo ProfesseurRepo;
 
@@ -40,6 +41,7 @@ public class    ProfesseurRESTcontroller {
     public ResponseEntity<?> save(@RequestBody professeur professeur) {
         // Set the default value for droit_daccee to false
         professeur.setDroit_daccee(false);
+        professeur.setFirst_cnx(true);
 
         if (!isValidEmail(professeur.getMail())) {
             return new ResponseEntity<>("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma' pour les professeurs.", HttpStatus.BAD_REQUEST);
@@ -86,6 +88,9 @@ public class    ProfesseurRESTcontroller {
             existingProf.setDroit_daccee(true);
         }
 
+        if (updatedProfesseur.isFirst_cnx()) {
+            existingProf.setDroit_daccee(true);
+        }
         // Save the updated professor
         professeur savedProfesseur = ProfesseurRepo.save(existingProf);
         return new ResponseEntity<>(savedProfesseur, HttpStatus.OK);

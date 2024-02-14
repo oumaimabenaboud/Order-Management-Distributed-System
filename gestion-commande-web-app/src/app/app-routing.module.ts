@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import {ProfAdminViewComponent} from "./prof-admin-view/prof-admin-view.component";
 import {StructureAdminViewComponent} from "./structure-admin-view/structure-admin-view.component";
 import {RubriqueAdminViewComponent} from "./rubrique-admin-view/rubrique-admin-view.component";
+import {ChangePasswordComponent} from "./change-password/change-password.component";
 
 
 
@@ -14,7 +15,8 @@ const routes: Routes = [
   {path:'login' , component:LoginComponent},
   {path:'prof-admin' , component:ProfAdminViewComponent},
   {path:'structure-admin' , component:StructureAdminViewComponent},
-  {path:'rubrique-admin' , component:RubriqueAdminViewComponent}
+  {path:'rubrique-admin' , component:RubriqueAdminViewComponent},
+  {path:'change-password' , component:ChangePasswordComponent}
 ];
 
 @NgModule({

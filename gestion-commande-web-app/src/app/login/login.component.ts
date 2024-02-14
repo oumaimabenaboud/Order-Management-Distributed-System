@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
+//npm install @angular/material
 
 @Component({
   selector: 'app-login',
@@ -12,41 +14,63 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class LoginComponent {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private loginService: LoginService,
+    private router: Router,
+    private snackBar: MatSnackBar // Inject MatSnackBar here
+  ) {
     this.loginForm = fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     });
+    
   }
 
   onSubmit(): void {
-    console.log('Form submitted:', this.loginForm.valid);
-  
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
   
-      console.log('Email:', email);
-      console.log('Password:', password);
-  
       this.loginService.login(email, password).subscribe(
         (response) => {
-          console.log('Login response:', response);
-  
-          if (response && response.success) {
-            console.log('Login success:', response);
-  
-            if (this.isAdmin(email, password)) {
+          if (response) {
+            if (response === 'Admin login successful') {
+              console.log(response);
               this.router.navigate(['/admin']);
-            } else {
+            } else if (response === 'Invalid email format' || response === 'Email and password are required') {
+              this.openErrorSnackBar(response);
+            } else if (response === 'User connected for the first time') {
+              console.log(response);
+              this.loginService.getUserIdByEmail(email).subscribe(
+                (userId) => {
+                  console.log('User ID:', userId);
+                  if (userId) {
+                    this.router.navigate(['/change-password', { userId: userId }]);
+                  } else {
+                    console.error('User ID not found for email:', email);
+                    this.openErrorSnackBar('User ID not found for email');
+                  }
+                },
+                (error) => {
+                  console.error('Error fetching user ID:', error);
+                  this.openErrorSnackBar('Error fetching user ID');
+                }
+              );
+            } else if (response === 'Login successful') {
+              console.log(response);
               this.router.navigate(['/prof-admin']);
+            } else if (response === 'Invalid credentials') {
+              this.openErrorSnackBar(response);
+            } else if (response === 'Professeur not found') {
+              this.openErrorSnackBar(response);
             }
           } else {
-            console.log('Login failed:', response.message);
+            console.log(response);
           }
         },
         (error) => {
           console.error('Login error:', error);
-        
+          
           if (error instanceof HttpErrorResponse) {
             try {
               console.log('Server error:', JSON.parse(error.error));
@@ -54,19 +78,19 @@ export class LoginComponent {
               console.error('Error parsing server response:', e);
             }
           }
+          
+          this.openErrorSnackBar('An unexpected error occurred');
         }
-        
-        
       );
     }
   }
   
-  
-    
-
-  // Function to check if the user is an admin based on email and password
-  private isAdmin(email: string, password: string): boolean {
-    // Replace this logic with your actual admin check logic
-    return email === 'admin' && password === 'admin';
+  openErrorSnackBar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000, // Adjust duration as needed
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar'] // Add custom styling if needed
+    });
   }
-}
+}  
