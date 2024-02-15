@@ -114,20 +114,39 @@
             <th>Email</th>
             <th>Détails</th>
             <th>Supprimer</th>
+            <th>Modifier Accès</th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let p of profs">
-            <td>{{p.prenom}}</td>
-            <td>{{p.nom}}</td>
-            <td style="text-decoration: none; color:#004AAD;"><i class="fa-solid fa-envelope"></i> {{p.mail}}</td>
+          <tr class="mail" *ngFor="let p of profs">
+            <td draggable="true" (dragstart)="onDragStart($event, p.prenom)">{{p.prenom}}</td>
+            <td draggable="true" (dragstart)="onDragStart($event, p.nom)">{{p.nom}}</td>
+            <td (click)="copyToClipboard(p.mail, $event)" draggable="true" (dragstart)="onDragStart($event, p.mail)" ><i class="fa-solid fa-envelope"></i> {{p.mail}}</td>
 
             <td>
-              <button class ="btn detail-button" (click)="getProf(p.id)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
+              <button class ="btn detail-button" (click)="getProf(p.id)" (drop)="getProf(p.id, $event)" (dragover)="allowDrop($event)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
             </td>
             <td>
-              <button class="btnf btn-outline-danger"(click)="deleteProf(p.id)"><i class="fa-solid fa-trash"></i></button>
+              <button class="btnf btn-outline-danger"(click)="deleteProf(p.id)" (drop)="deleteProf(p.id, $event)" (dragover)="allowDrop($event)"><i class="fa-solid fa-trash"></i></button>
             </td>
+            <td>
+              <button class="btn" [class.active]="p.droit_daccee" (click)="toggleAccess(p)">
+                <ng-container *ngIf="p.droit_daccee; else enableIcon">
+                  
+                  <i class="fa-solid fa-square-xmark" style="color: red;"></i>
+                </ng-container>
+                <ng-template #enableIcon>
+                  <i class="fa-solid fa-square-check" style="color: green;"></i>
+                  
+                </ng-template>
+                <label class="label" > {{ p.droit_daccee ? 'Disable ' : 'Enable' }} </label>
+              </button>
+              
+            </td>
+            
+            <!-- <td colspan="5">
+             <app-react-wrapper></app-react-wrapper>
+            </td> -->
           </tr>
           </tbody>
         </table>

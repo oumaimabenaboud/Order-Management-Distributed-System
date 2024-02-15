@@ -56,10 +56,45 @@ export class ProfAdminViewComponent implements OnInit {
     });
 }
 
+loadProfessors(): void {
+  this.profService.getProfessors().subscribe(
+    (data) => {
+      this.profs = data;
+    },
+    (error) => {
+      console.error('Error loading professors:', error);
+    }
+  );
+}
+
+toggleAccess(prof: Professeur): void {
+  const updatedAccess = !prof.droit_daccee; // Toggle the access
+  this.profService.updateProfessorAccess(prof.id, updatedAccess).subscribe(
+    () => {
+      console.log('Access updated successfully');
+      // Update the local object's access
+      prof.droit_daccee = updatedAccess;
+    },
+    (error) => {
+      console.error('Error updating access:', error);
+      // If the backend call fails, update the local object's access anyway
+      prof.droit_daccee = updatedAccess;
+    }
+  );
+}
 
 
 
-  getProf(id: any) {
+
+
+
+
+
+  getProf(id: any, event?: DragEvent): void  {
+    if (event) {
+      // If the function is called from a drag event, prevent the default behavior
+      event.preventDefault();
+    }
     this.profService.getProfessor(id).subscribe({
       next: (prof) => {
         this.selectedProf = prof;

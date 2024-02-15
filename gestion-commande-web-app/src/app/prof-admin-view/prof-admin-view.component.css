@@ -77,9 +77,11 @@
   cursor: pointer;
 }
 
-.mail :focus {
-  color: green;
-  
+.btn.active {
+ color: red;
+}
+.label.active {
+  color: red;
 }
 
 

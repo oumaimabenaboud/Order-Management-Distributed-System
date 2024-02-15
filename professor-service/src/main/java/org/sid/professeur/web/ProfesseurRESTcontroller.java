@@ -93,6 +93,12 @@ public class ProfesseurRESTcontroller {
         if (updatedProfesseur.isFirst_cnx()) {
             existingProf.setDroit_daccee(true);
         }
+        // Only update droit_daccee if it's provided and different from the current value
+        if (updatedProfesseur.isFirst_cnx() && !existingProf.isDroit_daccee()) {
+            existingProf.setDroit_daccee(true);
+        } else if (!updatedProfesseur.isFirst_cnx()) {
+            existingProf.setDroit_daccee(updatedProfesseur.isDroit_daccee());
+        }
         // Save the updated professor
         professeur savedProfesseur = ProfesseurRepo.save(existingProf);
         return new ResponseEntity<>(savedProfesseur, HttpStatus.OK);
