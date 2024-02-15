@@ -15,6 +15,21 @@
     z-index: 1000; /* Ensure it's above the overlay */
 
   }
+  /* CSS for status indicator dots */
+.dot {
+  height: 18px;
+  width: 18px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  justify-content: center;
+  background-color: red; 
+}
+
+.dot.true {
+  background-color: green; 
+}
+
   
   .popup:hover {
     border-color: #82b8ff;

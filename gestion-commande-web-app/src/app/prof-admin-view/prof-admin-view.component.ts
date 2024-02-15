@@ -5,6 +5,7 @@ import {Professeur} from "../model/professeur.model";
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+
 @Component({
   selector: 'app-prof-admin-view',
   templateUrl: './prof-admin-view.component.html',
@@ -37,6 +38,7 @@ export class ProfAdminViewComponent implements OnInit {
 
   //Table of Profs
   ngOnInit(): void {
+    
     this.profService.getProfessors().subscribe(
       { next:(data)=>{
           this.profs = data;
