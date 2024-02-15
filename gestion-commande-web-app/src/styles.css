@@ -501,6 +501,20 @@ body {
   border-radius: 20px;
   padding: 20px;
 }
+.popup {
+  background-image: url('assets/images/bg_popup.png');
+    background-size: cover; 
+  background-position: center; 
+  
+}
+
+.login-form {
+  background-image: url('assets/images/bg_popup.png');
+    background-size: cover; 
+  background-position: center; 
+ 
+
+}
 .login-area {
 
   background-image: url('assets/images/bg.jpg');

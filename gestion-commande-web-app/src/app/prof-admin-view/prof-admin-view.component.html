@@ -187,7 +187,8 @@
       <div class="card-body">
         
         <div class="hh">
-          <h4>Professor Details</h4>
+          
+          <h4><i class="fa-solid fa-magnifying-glass-plus"></i> Professor Details</h4>
           <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()"> <i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
           
         </div>
@@ -225,7 +226,7 @@
     <div class="popup card" *ngIf="isNewProfFormOpen">
       <div class="card-body">
         <div class="hh">
-          <h4>Add New Professor</h4>
+          <h4><i class="fa-solid fa-user-plus" id="detail-button "></i> Add New Professor</h4>
           <button class="btnf btn-outline-primary" (click)="closeNewProfForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
   </div>
           <form class="row" [formGroup]="newProfForm" (ngSubmit)="saveNewProf()">

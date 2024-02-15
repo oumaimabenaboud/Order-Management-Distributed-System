@@ -90,71 +90,81 @@
     .login-area {
         background: none;
     }
-    .login-form{
-       padding: 0;
-       max-width: 100%;
-       border: none!important;
-       box-shadow: unset!important;
-       background-color: transparent;
-
-        h4{
-         margin-bottom: 10px;
-         font-size: 20px;
+    .login-form {
+        padding: 50px;
+        max-width: 600px;
+        border-radius: 5px;
+        transition: all 0.5s;
+        background-color: #fff;
+        border: 1px solid #fff;
+        box-shadow: 0 0 1.25rem #6c76861a;
+        margin-left: auto;
+        margin-right: auto;
+    
+    
+        h4 {
+            margin-bottom: 12px;
+            font-size: 25px;
+            font-weight: 500;
+            color: #004AAD;
         }
-
-        form{
-            margin-top: 0;
-
-            .form-group{
-                margin-bottom: 15px;
-
-                label{
-                    font-size: 14px;
-                }
-
-                .form-control{
-                    font-size: 14px;
-                    padding: 15px;
-                    height: 50px;
+    
+        form {
+            margin-top: 5px;
+    
+            .form-group {
+                margin-bottom: 20px;
+            }
+    
+            label {
+                color: #6a6c72;
+                margin-bottom: 10px;
+                display: block;
+            }
+    
+            .form-control {
+                color: #6a6c72;
+                transition: all 0.5s;
+                background-color: #f1f5fe;
+                border: 1px solid #f1f5fe;
+                font-size: 16px;
+                border-radius: 8px;
+                padding: 15px 20px;
+                box-shadow: unset;
+                display: block;
+                height: 55px;
+                width: 100%;
+                outline: 0;
+    
+                &:focus {
+                    border-color: #004AAD;
+                    box-shadow: 0 0 5px rgba(#004AAD, 0.5);
                 }
             }
-
-            .remember-me-wrap{
-                .form-check{
-                    margin-bottom: 0;
-
-                    .form-check-input{
-                        margin-top: 0.16em;
-                        box-shadow: unset!important;
+    
+            .default-btn {
+                margin-top: 20px;
+                padding-left: 35px;
+                padding-right: 35px;
+                cursor: pointer;
+            }
+    
+            .account-text {
+                margin-top: 20px;
+    
+                span {
+                    color: $paragraph-color;
+    
+                    a {
+                        color: #004AAD !important;
                     }
-
-                    .form-check-label{
-                        color: $paragraph-color;
-                        font-weight: 400;
-                        margin-bottom: 0;
-                    }
                 }
             }
-
-            .lost-your-password-wrap{
-                text-align: start;
-                margin-top: 10px;
-
-                a{
-                    color: #000;
-                    display: inline-block;
-                    position: relative;
-                    line-height: 1.4;
-                }
-            }
-
-            .default-btn{
-                margin-top: 15px;
-            }
-
-            .account-text{
-                margin-top: 15px;
-            }
+        }
+    
+        &:hover {
+            border-color: #004AAD;
+            transition: all 0.5s;
         }
     }
 }

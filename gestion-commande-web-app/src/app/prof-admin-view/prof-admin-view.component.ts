@@ -18,6 +18,7 @@ export class ProfAdminViewComponent implements OnInit {
   selectedProf: any;
   searchTerm: string = '';
   enabled: boolean = false; // Define the enabled property
+  
 
   //NavBar
   status = false;
