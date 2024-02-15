@@ -102,6 +102,7 @@
     </div>
 
     <div class="table-data">
+
       <div class="order">
         <div class="head">
 
@@ -109,12 +110,31 @@
         <table>
           <thead>
           <tr >
-            <th>Prénom</th>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Détails</th>
-            <th>Supprimer</th>
-            <th>Modifier Accès</th>
+            <th>
+              <i class="fa-solid fa-user-tie"></i>
+               Prénom
+              </th>
+            <th>
+              <i class="fa-solid fa-user-tie"></i>
+              Nom
+
+            </th>
+            <th>            
+              <i class="fa-solid fa-envelope"></i> 
+                Email
+              </th>
+            <th>
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              Détails
+            </th>
+            <th>
+              <i class="fa-solid fa-trash"></i>
+               Supprimer
+            </th>
+            <th>
+              <i class="fa-solid fa-sliders"></i>
+               Modifier Accès
+            </th>
           </tr>
           </thead>
           <tbody>
@@ -124,13 +144,13 @@
             <td (click)="copyToClipboard(p.mail, $event)" draggable="true" (dragstart)="onDragStart($event, p.mail)" ><i class="fa-solid fa-envelope"></i> {{p.mail}}</td>
 
             <td>
-              <button class ="btn detail-button" (click)="getProf(p.id)" (drop)="getProf(p.id, $event)" (dragover)="allowDrop($event)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
+              <button class ="btnd detail-button" (click)="getProf(p.id)" (drop)="getProf(p.id, $event)" (dragover)="allowDrop($event)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
             </td>
             <td>
               <button class="btnf btn-outline-danger"(click)="deleteProf(p.id)" (drop)="deleteProf(p.id, $event)" (dragover)="allowDrop($event)"><i class="fa-solid fa-trash"></i></button>
             </td>
             <td>
-              <button class="btn" [class.active]="p.droit_daccee" (click)="toggleAccess(p)">
+              <button class="btnd" [class.active]="p.droit_daccee" (click)="toggleAccess(p)">
                 <ng-container *ngIf="p.droit_daccee; else enableIcon">
                   
                   <i class="fa-solid fa-square-xmark" style="color: red;"></i>
@@ -143,6 +163,14 @@
               </button>
               
             </td>
+            <!-- <td>
+              <div class="py-16">
+                <label class="switch">
+                  <input type="checkbox" [(ngModel)]="p.droit_daccee" (change)="toggleAccess(p)">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </td> -->
             
             <!-- <td colspan="5">
              <app-react-wrapper></app-react-wrapper>

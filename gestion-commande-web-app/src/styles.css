@@ -494,7 +494,22 @@ body {
   color: var(--dark);  
 }
 
+.table-data {
+  background-image: url('assets/images/bg_table.jpg');
+    background-size: cover; 
+  background-position: center; 
+  border-radius: 20px;
+  padding: 20px;
+}
+.login-area {
 
+  background-image: url('assets/images/bg.jpg');
+    background-size: cover; 
+  background-position: center; 
+  border-radius: 20px;
+  padding: 20px;
+
+}
 
 
 

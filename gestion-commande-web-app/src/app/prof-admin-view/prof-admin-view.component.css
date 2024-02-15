@@ -79,6 +79,7 @@
 
 .btn.active {
  color: red;
+ cursor: pointer;
 }
 .label.active {
   color: red;
@@ -115,13 +116,33 @@ h4 {
   border: 1px solid #004AAD;
 }
 
+.btnd{
+  color: #004AAD;
+  cursor: pointer;
+  transition: all 0.5s;
+  /* background-color: #f1f5fe;
+  border: 1px solid #f1f5fe; */
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  border-radius: 8px;
+  margin: 8px;
+  padding: 15px 20px;
+  box-shadow: unset;
+  outline: 0;
+}
+
+/* .btnd:hover {
+  border: 1px solid #004AAD;
+  background-color: #f1f5fe;
+} */
 
 .btnf {
   color: red;
   cursor: pointer;
   transition: all 0.5s;
-  background-color: #f1f5fe;
-  border: 1px solid #f1f5fe;
+  border: none;
+  background: transparent;
   font-size: 16px;
   margin: 8px;
   border-radius: 8px;
@@ -129,10 +150,57 @@ h4 {
   box-shadow: unset;
   outline: 0;
   display: inline;
+  position: relative;
 }
 
-.btnf:hover {
-  border: 1px solid red;
+.btnf i {
+  transition: transform 0.5s;
+
+}
+
+
+
+.btnf:hover i {
+  transform: translateY(-3px); /* Déplacer l'icône vers l'avant de 5 pixels lorsqu'elle est survolée */
+  }
+
+
+.btnd i {
+  transition: transform 0.5s;
+}
+
+
+/* Style pour le tableau */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 20px; /* Ajouter un rayon de bordure de 30px */
+  overflow: hidden; /* Pour que le rayon de bordure soit visible */
+
+}
+
+/* Style pour l'en-tête du tableau */
+th {
+  padding: 12px;
+  background-color: #004AAD;
+  color: white;
+  text-align: left;
+}
+
+/* Style pour les cellules du tableau */
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Style pour les lignes impaires du tableau */
+tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+
+.btnd:hover i {
+  transform: translateY(-3px); /* Déplacer l'icône vers le haut de 5 pixels lorsqu'elle est survolée */
 }
 
 
