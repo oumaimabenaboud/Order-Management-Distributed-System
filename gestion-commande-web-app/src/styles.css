@@ -47,7 +47,7 @@ body.dark {
 }
 
 body {
-  background: var(--grey) !important;
+  background: var(--grey);
   overflow-x: hidden;
 }
 
@@ -67,6 +67,13 @@ body {
   overflow-x: hidden;
   scrollbar-width: none;
 }
+/* #sidebar {
+    background-image: url('assets/images/shape.png');
+      background-size: cover; 
+    background-position: center; 
+
+} */
+
 #sidebar::--webkit-scrollbar {
   display: none;
 }
@@ -513,11 +520,10 @@ body {
   padding: 20px;
 }
 .popup {
-  background-image: url('assets/images/bg_popup.png');
+  background-image: url('assets/images/shape.png');
     background-size: cover; 
   background-position: center; 
-  border-radius: 20px;
-  padding: 20px;
+    
   
 }
 
@@ -525,10 +531,10 @@ table {
   background-image: url('assets/images/bg_popup.png');
     background-size: cover; 
   background-position: center; 
-  border-radius: 20px;
-  padding: 20px;
+
 
 }
+
 .search-box {
   position: relative;
   width: 100%;
@@ -650,7 +656,7 @@ table {
 #search::-moz-selection {color: #FFFFFF; background: rgba(0,0,0,0.25);}
 #search::selection {color: #FFFFFF; background: rgba(0,0,0,0.25);}
 .login-form {
-  background-image: url('assets/images/bg_popup.png');
+  background-image: url('assets/images/shape.png');
     background-size: cover; 
   background-position: center; 
  

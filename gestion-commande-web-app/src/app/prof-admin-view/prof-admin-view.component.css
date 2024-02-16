@@ -148,11 +148,21 @@ h4 {
   outline: 0;
 }
 
-/* .btnd:hover {
-  border: 1px solid #004AAD;
-  background-color: #f1f5fe;
-} */
-
+.btna{
+  color: #004AAD;
+  cursor: pointer;
+  transition: all 0.5s;
+  /* background-color: #f1f5fe;
+  border: 1px solid #f1f5fe; */
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  border-radius: 8px;
+  margin: 8px;
+  padding: 15px 20px;
+  box-shadow: unset;
+  outline: 0;
+}
 .btnf {
   color: red;
   cursor: pointer;
@@ -174,11 +184,17 @@ h4 {
 
 }
 
+.btna i {
+  transition: transform 0.5s;
 
+}
 
-.btnf:hover i {
-  transform: translateY(-3px); /* Déplacer l'icône vers l'avant de 5 pixels lorsqu'elle est survolée */
-  }
+.popup .btnf {
+  position: absolute;
+  top: 5px; /* Adjust top and right values as needed */
+  right: 5px;
+}
+
 
 
 .btnd i {
@@ -216,8 +232,20 @@ tr:nth-child(odd) {
 
 
 .btnd:hover i {
-  transform: translateY(-3px); /* Déplacer l'icône vers le haut de 5 pixels lorsqu'elle est survolée */
+  transform: scale(1.8);
+
 }
+
+.btnf:hover i {
+
+  transform: scale(1.3);
+
+ }
+ .btna:hover i {
+
+  transform: scale(1.3);
+
+ }
 
 
 .btns {

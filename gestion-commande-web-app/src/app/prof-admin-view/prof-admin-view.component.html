@@ -144,7 +144,7 @@
                 </button>
               </td>
               <td>
-                <button class="btnd" [class.active]="p.droit_daccee" (click)="toggleAccess(p)">
+                <button class="btna" [class.active]="p.droit_daccee" (click)="toggleAccess(p)">
                   <ng-container *ngIf="p.droit_daccee; else enableIcon">
                     <i class="fa-solid fa-square-xmark" style="color: red;"></i>
                   </ng-container>
@@ -195,7 +195,12 @@
         </form>
       </div>
       <div class="card-footer bg-transparent">
-        <button class="btn btn-outline-primary" (click)="toggleEditMode()"><i class="fa-solid fa-pen-to-square"></i> {{ isEditMode ? 'Cancel' : 'Edit' }}</button>
+        <!-- <button class="btn btn-outline-primary" (click)="toggleEditMode()"><i class="fa-solid fa-pen-to-square"></i> {{ isEditMode ? 'Cancel' : 'Edit' }}</button> -->
+        <button class="btn btn-outline-primary" (click)="toggleEditMode()">
+          <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
+          {{ isEditMode ? 'Cancel' : 'Edit' }}
+        </button>
+        
         <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="saveProfessorChanges()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Save Changes</button>
       </div>
     </div>
@@ -235,7 +240,7 @@
       </div>
 
       
-
+      
     </div>
     <!-- Overlay for the front page -->
 <div class="overlay" [ngClass]="{'show': isNewProfFormOpen}"></div>
