@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @RestController@AllArgsConstructor
 @RequestMapping("/structures")
 public class StructureRestController {
+    @Autowired
     private StructureRepository structureRepository;
-    private ResponsableStructureRepository responsableStructureRepository;
     @Autowired
     private ProfesseurRestClient professeurRestClient;
     @Autowired
@@ -32,11 +32,11 @@ public class StructureRestController {
             this.budgetRestClient = budgetRestClient;
         }
 
-        @PostMapping("/structures")
-        public Structure createStructure(@RequestParam Structure addedStructure) {
+        @PostMapping
+        public Structure createStructure(@RequestBody Structure addedStructure) {
 
             // Fetch responsible professor from the professor service
-            Professeur responsibleProfessor = professeurRestClient.getProfesseurById(addedStructure.getResponsibleId());
+            Professeur responsibleProfessor = professeurRestClient.getProfesseurById(addedStructure.getIdResponsable());
 
 
             // Create a new Structure object
@@ -44,7 +44,8 @@ public class StructureRestController {
             newStructure.setNom(addedStructure.getNom());
             newStructure.setAcronyme(addedStructure.getAcronyme());
             newStructure.setType(addedStructure.getType()); // Assuming structurestype is an enum
-            newStructure.setResponsibleId(responsibleProfessor.getId());
+            newStructure.setIdResponsable(responsibleProfessor.getId());
+            newStructure.setNomResponsable(responsibleProfessor.getPrenom()+' '+responsibleProfessor.getNom());
 
             // Save or perform necessary actions with the new structure
             structureRepository.save(newStructure);
@@ -52,7 +53,44 @@ public class StructureRestController {
             return newStructure;
         }
 
+    @GetMapping
+    public List<Structure> getAllStructures(){
+        List<Structure> structures = structureRepository.findAll();
+        populateEquipeProfesseurs(structures); // Populate equipeProfesseurs for each structure
+        return structures;
+    }
 
+    private void populateEquipeProfesseurs(List<Structure> structures) {
+        for (Structure structure : structures) {
+            List<String> equipeProfNames = new ArrayList<>();
+            if (structure.getEquipe_prof_ids() != null) {
+                for (Long profId : structure.getEquipe_prof_ids()) {
+                    Professeur fetchedProfesseur = professeurRestClient.getProfesseurById(profId);
+                    if (fetchedProfesseur != null) {
+                        String profName = fetchedProfesseur.getPrenom() + " " + fetchedProfesseur.getNom();
+                        equipeProfNames.add(profName);
+                    } else {
+                        System.out.println("Failed to fetch professeur with ID: " + profId);
+                    }
+                }
+            } else {
+                System.out.println("Equipe prof IDs is null for structure with ID: " + structure.getId());
+            }
+            structure.setEquipe_prof_names(equipeProfNames);
+        }
+    }
+
+
+    @GetMapping("{id}")
+    public Structure getStructureById(@PathVariable Long id){
+        return structureRepository.findById(id)
+                .orElseThrow(()->new RuntimeException(String.format("Structure %s not found",id)));
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteStructure(@PathVariable String id){
+        structureRepository.deleteById(Long.valueOf(id));
+    }
     private List<Professeur> fetchProfessorsForTeam(Collection<Professeur> professors) {
         List<Professeur> updatedProfessors = new ArrayList<>();
 
