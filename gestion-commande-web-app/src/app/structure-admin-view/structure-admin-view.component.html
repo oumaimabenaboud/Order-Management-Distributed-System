@@ -226,12 +226,13 @@
 
           <div class="col-md-6">
             <div class="form-group">
-              <select class="form-control" id="type" formControlName="type">
-                <option value="" disabled selected hidden>Type de Structure</option> <!-- Placeholder option -->
-                <option *ngFor="let type of structureTypes" [ngValue]="type">{{ type }}</option>
-              </select>
+              <input type="text" class="form-control" id="type" formControlName="type" list="structureTypeList" placeholder="Type de Structure">
+              <datalist id="structureTypeList">
+                <option *ngFor="let type of structureTypes" [value]="type">{{ type }}</option>
+              </datalist>
             </div>
           </div>
+
           <div class="col-md-6">
             <div class="form-group">
               <!-- <label for="nom">Nom</label> -->
@@ -240,25 +241,28 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <select class="form-control" id="idResponsable" formControlName="idResponsable">
-                <option value="" disabled selected hidden>Nom du Responsable</option> <!-- Placeholder option -->
-                <option *ngFor="let responsable of listprof" [value]="responsable.id">{{responsable.prenom}} {{ responsable.nom }}</option>
-              </select>
+              <input type="text" class="form-control" id="idResponsable" formControlName="idResponsable" list="professorList" placeholder="Nom du Responsable">
+              <datalist id="professorList">
+                <option *ngFor="let responsable of listprof" [value]="responsable.id" [attr.data-name]="responsable.prenom + ' ' + responsable.nom">{{responsable.prenom}} {{ responsable.nom }}</option>
+              </datalist>
             </div>
           </div>
+
           <!-- HTML Template -->
           <label for="nom">Membres de la structure</label>
           <div class="col-md-6" *ngFor="let dropdown of dropdowns; let i = index">
             <div class="form-group">
-              <select class="form-control" [id]="'equipe_prof_ids_' + i" formControlName="equipe_prof_ids_{{ i }}">
-                <option *ngFor="let prof of listprof" [value]="prof.id">{{ prof.prenom }} {{ prof.nom }}</option>
-              </select>
+              <input type="text" class="form-control" [id]="'equipe_prof_ids_' + i" formControlName="equipe_prof_ids_{{ i }}" list="professorList" placeholder="Membre {{ i + 1 }}">
+              <datalist id="profList_{{i}}">
+                <option *ngFor="let prof of listprof" [value]="prof.prenom + ' ' + prof.nom">{{ prof.prenom }} {{ prof.nom }}</option>
+              </datalist>
             </div>
           </div>
 
           <div class="col-md-6">
             <button type="button" class="btn btn-primary" (click)="addDropdown()">+ Plus</button>
           </div>
+
 
         </form>
       </div>

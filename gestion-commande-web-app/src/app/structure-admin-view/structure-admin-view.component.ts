@@ -19,9 +19,8 @@ export class StructureAdminViewComponent implements OnInit{
   structureTypes: string[] = Object.values(structurestype);
   listprof: any[] = [];
   dropdowns: number[][] = [[]];
-
-
-
+  public newStructureForm! : FormGroup;
+  detailsForm!: FormGroup;
 
   //NavBar
   status = false;
@@ -89,8 +88,6 @@ export class StructureAdminViewComponent implements OnInit{
       }
     });
   }*/
-
-
   deleteStructure(id: any) {
     if (confirm("Êtes-vous sûr de vouloir supprimer cette structure ?")) {
       this.structureService.deleteStructure(id).subscribe({
@@ -123,8 +120,7 @@ export class StructureAdminViewComponent implements OnInit{
 
 
 
-  public newStructureForm! : FormGroup;
-  detailsForm!: FormGroup;
+
 
 
   private initnewStructureFormBuilder() {
@@ -156,7 +152,6 @@ export class StructureAdminViewComponent implements OnInit{
   }
 
 
-  // Method to save the new structure
   // Method to save the new structure
   saveNewStructure() {
     const structure = this.newStructureForm.value;
@@ -202,9 +197,6 @@ export class StructureAdminViewComponent implements OnInit{
       }
     );
   }
-
-
-
 
 
   // Map Angular enum value to Java enum value
