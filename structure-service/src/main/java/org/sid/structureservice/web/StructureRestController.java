@@ -80,8 +80,10 @@ public class StructureRestController {
         newStructure.setEquipe_prof_ids(addedStructure.getEquipe_prof_ids());
         newStructure.setEquipe_prof_names(equipeProfNames);
 
+
         // Save or perform necessary actions with the new structure
         structureRepository.save(newStructure);
+
 
         return ResponseEntity.ok("Structure créée avec succès !");
     }

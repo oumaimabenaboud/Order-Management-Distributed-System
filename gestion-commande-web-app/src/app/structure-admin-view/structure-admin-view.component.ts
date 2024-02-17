@@ -4,6 +4,9 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Professeur} from "../model/professeur.model";
 import {StructuresService} from "../services/structures.service";
 import { Structure, structurestype } from "../model/structure.model";
+import { Clipboard } from '@angular/cdk/clipboard';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-structure-admin-view',
@@ -31,7 +34,9 @@ export class StructureAdminViewComponent implements OnInit{
   constructor(
     private structureService: StructuresService,
     private profService: ProfesseurService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private clipboard: Clipboard,
+    private snackBar: MatSnackBar // Inject the Clipboard service here
   ) {}
 
   ngOnInit(): void {
@@ -88,7 +93,11 @@ export class StructureAdminViewComponent implements OnInit{
       }
     });
   }*/
-  deleteStructure(id: any) {
+  deleteStructure(id: any, event?: DragEvent): void {
+    if (event) {
+      // If the function is called from a drag event, prevent the default behavior
+      event.preventDefault();
+    }
     if (confirm("Êtes-vous sûr de vouloir supprimer cette structure ?")) {
       this.structureService.deleteStructure(id).subscribe({
         next: () => {
@@ -150,9 +159,38 @@ export class StructureAdminViewComponent implements OnInit{
     // Add the new form control
     this.newStructureForm.addControl(formControlName, this.formBuilder.control(''));
   }
+  removeDropdown() {
+    if (this.dropdowns.length > 0) {
+      this.dropdowns.pop(); // Remove the last dropdown from the array
+  
+      // Remove the corresponding form control from the FormGroup
+      const formControlName = `equipe_prof_ids_${this.dropdowns.length}`;
+      this.newStructureForm.removeControl(formControlName);
+    }
+  }
+  copyToClipboard(email: string, event: MouseEvent): void {
+    const targetElement = event.currentTarget as HTMLElement;
+    this.clipboard.copy(email);
+    this.snackBar.open('Email copié dans le presse-papiers', 'Close', {
+      duration: 2000, // Duration in milliseconds (2 seconds)
+      horizontalPosition: 'left',
+      verticalPosition: 'top',
+      panelClass: 'copy-snackbar',
+      data: { trigger: targetElement }
+    });
+}
+onDragStart(event: DragEvent, data: string): void {
+  event.dataTransfer?.setData('text/plain', data);
+}
+
+allowDrop(event: DragEvent): void {
+  event.preventDefault();
+}
+
 
 
   // Method to save the new structure
+
   saveNewStructure() {
     const structure = this.newStructureForm.value;
     structure.type = this.mapStructureType(structure.type);
@@ -258,6 +296,8 @@ export class StructureAdminViewComponent implements OnInit{
       }
     });
   }*/
+
+  
 
 
 

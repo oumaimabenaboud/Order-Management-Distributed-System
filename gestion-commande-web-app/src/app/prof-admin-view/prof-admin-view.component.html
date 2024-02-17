@@ -131,7 +131,7 @@
                 <i class="fa-solid fa-envelope"></i> {{p.mail}}
               </td>
               <td>
-                <button class="btnd detail-button" (click)="getProf(p.id)" (drop)="getProf(p.id, $event)" (dragover)="allowDrop($event)">
+                <button class="btnd detail-button" (click)="getProf(p.id)" >
                   <i class="fa-solid fa-magnifying-glass-plus"></i>
                 </button>
               </td>
@@ -170,7 +170,7 @@
 
         </div>
         <form class="row" [formGroup]="detailsForm">
-          <div class="col-md-6">Détails du professeur
+          <div class="col-md-6">
             <div class="form-group">
               <!-- <label for="prenom">Prénom</label> -->
               <input type="text" class="form-control" id="prenom" formControlName="prenom" [readonly]="!isEditMode">

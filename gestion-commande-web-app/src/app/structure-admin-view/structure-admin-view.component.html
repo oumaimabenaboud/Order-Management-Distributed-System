@@ -97,7 +97,7 @@
           </form-->
         </ul>
       </div>
-      <button class="btn btn-outline-danger"(click)="openNewStructureForm()"><i class="fa-solid fa-user-plus" id="detail-button "></i>Ajouter une structure</button>
+      <button class="btn btn-outline-danger"(click)="openNewStructureForm()"><i class="fa-solid fa-building"></i> Ajouter une structure</button>
       <!-- <button  (click)="openNewProfForm()" class="btn-download" ><i class="fa-solid fa-user-plus"></i>Add Professor</button> -->
     </div>
 
@@ -107,27 +107,27 @@
         <table>
           <thead>
           <tr >
-            <th>Acronyme</th>
-            <th>Nom</th>
-            <th>Type de Structure</th>
-            <th>Responsable</th>
-            <th>Budget Annuel</th>
-            <th>Détails</th>
-            <th>Supprimer</th>
+            <th><i class="fa-solid fa-signature"></i> Acronyme</th>
+            <th><i class="fa-solid fa-building"></i> Nom</th>
+            <th><i class="fa-solid fa-building"></i> Type de Structure</th>
+            <th><i class="fa-solid fa-user-tie"></i> Responsable</th>  
+            <th><i class="fa-solid fa-credit-card"></i> Budget Annuel</th>
+            <th><i class="fa-solid fa-magnifying-glass-plus"></i> Détails</th>
+            <th><i class="fa-solid fa-trash"></i> Supprimer</th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let s of structures">
-            <td>{{s.acronyme}}</td>
-            <td>{{s.nom}}</td>
-            <td>{{s.type.toString()}}</td>
-            <td style="text-decoration: none; color:#004AAD;"><i class="fa-solid fa-envelope"></i> {{s.nomResponsable}}</td>
-            <td style="text-decoration: none; color:#004AAD;"><i class="fa-solid fa-envelope"></i> {{s.budget}} DHs</td>
+            <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.mail)">{{s.acronyme}}</td>
+            <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.nom)">{{s.nom}}</td>
+            <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.type)">{{s.type.toString()}}</td>
+            <td style="text-decoration: none; color:#004AAD;" (click)="copyToClipboard(s.mail, $event)" draggable="true" (dragstart)="onDragStart($event, s.mail)"><i class="fa-solid fa-envelope"></i> {{s.nomResponsable}}</td>
+            <td style="text-decoration: none; color:#004AAD;"> {{s.budget}} DHs</td>
             <td>
-              <button class ="btn detail-button" (click)="getStructureById(s.id)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
+              <button class ="btnd detail-button" (click)="getStructureById(s.id)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
             </td>
             <td>
-              <button class="btnf btn-outline-danger"(click)="deleteStructure(s.id)"><i class="fa-solid fa-trash"></i></button>
+              <button class="btnf btn-outline-danger"(click)="deleteStructure(s.id)" (drop)="deleteStructure(s.id, $event)" (dragover)="allowDrop($event)"><i class="fa-solid fa-trash"></i></button>
             </td>
           </tr>
           </tbody>
@@ -140,7 +140,7 @@
       <div class="card-body">
         <!-- Form header -->
         <div class="hh">
-          <h4>Détails de la structure</h4>
+          <h4><i class="fa-solid fa-magnifying-glass-plus"></i> Détails de la structure</h4>
           <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()">
             <i class="fa-solid fa-circle-xmark" id="detail-button "></i>
           </button>
@@ -207,7 +207,7 @@
     <div class="popup card" *ngIf="isNewStructureFormOpen">
       <div class="card-body">
         <div class="hh">
-          <h4>Ajouter une nouvelle structure</h4>
+          <h4> <i class="fa-solid fa-building"></i> Ajouter une nouvelle structure</h4>
           <button class="btnf btn-outline-primary" (click)="closeNewStructureForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
         </div>
         <form class="row" [formGroup]="newStructureForm" (ngSubmit)="saveNewStructure()">
@@ -243,13 +243,19 @@
             <div class="form-group">
               <input type="text" class="form-control" id="idResponsable" formControlName="idResponsable" list="professorList" placeholder="Nom du Responsable">
               <datalist id="professorList">
-                <option *ngFor="let responsable of listprof" [value]="responsable.id" [attr.data-name]="responsable.prenom + ' ' + responsable.nom">{{responsable.prenom}} {{ responsable.nom }}</option>
+                <option class="test" *ngFor="let responsable of listprof" [value]="responsable.id" >{{responsable.prenom}} {{ responsable.nom }}</option> 
               </datalist>
             </div>
           </div>
-
+                    
           <!-- HTML Template -->
-          <label for="nom">Membres de la structure</label>
+          <div class="col-md-6">
+            <div class="hh">
+              <!-- <label for="nom" style="color:#004AAD; margin-left:4px">Membres de la structure</label> -->
+              <button type="button" class="btnp btn-primary" (click)="addDropdown()"> Ajouter<i class="fa-solid fa-user-plus"></i></button>
+            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeDropdown()"> Retarancher<i class="fa-solid fa-user-minus"></i> </button>
+          </div>
+            </div>
           <div class="col-md-6" *ngFor="let dropdown of dropdowns; let i = index">
             <div class="form-group">
               <input type="text" class="form-control" [id]="'equipe_prof_ids_' + i" formControlName="equipe_prof_ids_{{ i }}" list="professorList" placeholder="Membre {{ i + 1 }}">
@@ -258,12 +264,6 @@
               </datalist>
             </div>
           </div>
-
-          <div class="col-md-6">
-            <button type="button" class="btn btn-primary" (click)="addDropdown()">+ Plus</button>
-          </div>
-
-
         </form>
       </div>
       <div class="card-footer bg-transparent">

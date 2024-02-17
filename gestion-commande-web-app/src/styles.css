@@ -519,6 +519,13 @@ body {
   border-radius: 20px;
   padding: 20px;
 }
+.table-data1 {
+  background-image: url('assets/images/registration.jpg');
+    background-size: cover; 
+  background-position: center; 
+  border-radius: 20px;
+  padding: 20px;
+}
 .popup {
   background-image: url('assets/images/shape.png');
     background-size: cover; 
@@ -733,18 +740,6 @@ table {
   border-radius: 50%;
   object-fit: cover;
 }
-
-
-
-
-/* .table-data .order table tbody tr:hover {
-  background: var(--grey);
-  border-radius: 50%;
-  border: 2px solid var(--grey);  
-} */
-
-
-
 
 #content main .table-data .order table tr td .status {
   font-size: 10px;
