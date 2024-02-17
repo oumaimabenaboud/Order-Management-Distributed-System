@@ -43,9 +43,9 @@ public class StructureServiceApplication {
 			Long professorId4 = 4L;
 
 			// Add example structures
-			Structure structure1 = addStructure(structureRepository, "Labo MIAAD", "LabodeRecherche", 10000.0, professorId1, "Ali Bekri", List.of(professorId2, professorId3, professorId4), professeurRestClient);
+			Structure structure1 = addStructure(structureRepository, "Labo MIAAD", "LabodeRecherche", 10000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId3, professorId4), professeurRestClient);
 			Structure structure2 = addStructure(structureRepository, "Equipe AI", "EquipedeRecherche", 15000.0, professorId2, "Ali Oubelkacem", List.of(professorId1, professorId3), professeurRestClient);
-			Structure structure3 = addStructure(structureRepository, "Projet FSM", "ProjetdeRecherche", 20000.0, professorId1, "Ali Bekri", List.of(professorId2, professorId4), professeurRestClient);
+			Structure structure3 = addStructure(structureRepository, "Projet FSM", "ProjetdeRecherche", 20000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId4), professeurRestClient);
 
 			// Fetch all structures
 			List<Structure> allStructures = structureRepository.findAll();

@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ProfesseurService} from "../services/professeur.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Professeur} from "../model/professeur.model";
 import {StructuresService} from "../services/structures.service";
-import {Structure} from "../model/structure.model";
+import { Structure, structurestype } from "../model/structure.model";
 
 @Component({
   selector: 'app-structure-admin-view',
@@ -16,6 +16,12 @@ export class StructureAdminViewComponent implements OnInit{
   isNewStructureFormOpen: boolean = false;
   selectedStructure: any;
   searchTerm: string = '';
+  structureTypes: string[] = Object.values(structurestype);
+  listprof: any[] = [];
+  dropdowns: number[][] = [[]];
+
+
+
 
   //NavBar
   status = false;
@@ -23,17 +29,27 @@ export class StructureAdminViewComponent implements OnInit{
   addToggle() {
     this.status = !this.status;
   }
-  constructor(private  structureService:StructuresService, private proService:ProfesseurService, private formBuilder: FormBuilder) { }
+  constructor(
+    private structureService: StructuresService,
+    private profService: ProfesseurService,
+    private formBuilder: FormBuilder
+  ) {}
 
-
-  //Table of Profs
   ngOnInit(): void {
+
     this.structureService.getAllStructures().subscribe(
       { next:(data)=>{
           this.structures = data;
         },
         error : (err)=>console.error(err)
       });
+    // Fetch professors and assign them to listprof
+    this.profService.getProfessors().subscribe(
+      (data) => {
+        this.listprof = data;
+      },
+      (error) => console.error(error)
+    );
     this.initDetailsFormBuilder();
     this.initnewStructureFormBuilder();
   }
@@ -46,7 +62,10 @@ export class StructureAdminViewComponent implements OnInit{
         this.detailsForm.patchValue({
           acronyme: structure.acronyme,
           nom: structure.nom,
-          responsable: structure.nomResponsable
+          type:structure.type,
+          responsable: structure.nomResponsable,
+          budget: structure.budget,
+          membres: structure.equipe_prof_names
         });
 
         this.openDetailsForm();
@@ -73,10 +92,10 @@ export class StructureAdminViewComponent implements OnInit{
 
 
   deleteStructure(id: any) {
-    if (confirm("Are you sure you want to delete this professor?")) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette structure ?")) {
       this.structureService.deleteStructure(id).subscribe({
         next: () => {
-          window.alert("Structure deleted successfully!");
+          window.alert("Structure supprimée avec succès !");
           window.location.reload();
         },
         error: err => console.log(err)
@@ -110,34 +129,121 @@ export class StructureAdminViewComponent implements OnInit{
 
   private initnewStructureFormBuilder() {
     this.newStructureForm = this.formBuilder.group({
-      prenom: this.formBuilder.control('', [Validators.required]),
-      nom: this.formBuilder.control('', [Validators.required]),
-      mail: this.formBuilder.control('', [Validators.required])
+      acronyme: ['', [Validators.required]],
+      nom: ['', [Validators.required]],
+      idResponsable: ['', [Validators.required]],
+      budget: [null, [Validators.required]],
+      type: ['', [Validators.required]],
+      equipe_prof_ids: [[]], // Initialize as an empty array
     });
+
+    // Initialize form controls for each dropdown box dynamically
+    for (let i = 0; i < this.dropdowns.length; i++) {
+      this.newStructureForm.addControl(`equipe_prof_ids_${i}`, this.formBuilder.control(null));
+    }
   }
 
+
+  addDropdown() {
+    this.dropdowns.push([]);
+    const formControlName = `equipe_prof_ids_${this.dropdowns.length - 1}`;
+
+    // Remove the previously added form control, if exists
+    this.newStructureForm.removeControl(formControlName);
+
+    // Add the new form control
+    this.newStructureForm.addControl(formControlName, this.formBuilder.control(''));
+  }
+
+
+  // Method to save the new structure
+  // Method to save the new structure
   saveNewStructure() {
-    let structure: Structure = this.newStructureForm.value;
-    this.structureService.addStructure(structure).subscribe({
-      next: (newProf) => {
-        this.structures.push(newProf);
-        window.alert("Professor added successfully!");
-        window.location.reload();
-        this.closeNewStructureForm(); // Optionally close the form
-      },
-      error: (error) => {
-        console.error("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma'", error);
-        window.alert("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma' ");
+    const structure = this.newStructureForm.value;
+    structure.type = this.mapStructureType(structure.type);
+
+    // Extract selected professor IDs from form
+    const selectedIds: number[] = [];
+    for (let i = 0; i < this.dropdowns.length; i++) {
+      const dropdownControlName = `equipe_prof_ids_${i}`;
+      const selectedId = this.newStructureForm.get(dropdownControlName)?.value;
+      if (selectedId) {
+        selectedIds.push(selectedId);
       }
-    });
+    }
+
+    structure.equipe_prof_ids = selectedIds;
+
+    // Remove individual equipe_prof_ids from the structure object
+    for (let i = 0; i < this.dropdowns.length; i++) {
+      delete structure[`equipe_prof_ids_${i}`];
+    }
+
+    // Call service to add the structure
+    this.structureService.addStructure(structure).subscribe(
+      () => {
+        window.alert('Structure ajoutée avec succès !');
+        window.location.reload();
+        this.closeNewStructureForm();
+      },
+      error => {
+        console.error("Une erreur s'est produite lors de l'ajout de la structure.", error);
+        if (error.status === 200) {
+          window.alert('Structure ajoutée avec succès !');
+          window.location.reload();
+          this.closeNewStructureForm();
+        } else if (error.status === 400) {
+          // Bad request, display error message from server
+          window.alert(error.error);
+        } else {
+          // Other errors, display generic error message
+          window.alert("Une erreur s'est produite lors de l'ajout de la structure. Veuillez réessayer plus tard.");
+        }
+      }
+    );
   }
 
-  private initDetailsFormBuilder() {
+
+
+
+
+  // Map Angular enum value to Java enum value
+  mapStructureType(structureType: string): string {
+    switch (structureType) {
+      case 'Laboratoire de Recherche':
+        return 'LabodeRecherche';
+      case 'Equipe de Recherche':
+        return 'EquipedeRecherche';
+      case 'Projet de Recherche':
+        return 'ProjetdeRecherche';
+      default:
+        return '';
+    }
+  }
+
+  /*private initDetailsFormBuilder() {
     this.detailsForm = this.formBuilder.group({
       acronyme: this.formBuilder.control('', [Validators.required]),
       nom: this.formBuilder.control('', [Validators.required]),
-      responsable: this.formBuilder.control('', [Validators.required])
+      responsable: this.formBuilder.control('', [Validators.required]),
+      type:this.formBuilder.control('', [Validators.required]),
+      budget: this.formBuilder.control('', [Validators.required]),
+      membres: this.formBuilder.control('', [Validators.required])
+
     });
+  }*/
+
+
+  private initDetailsFormBuilder() {
+    this.detailsForm = this.formBuilder.group({
+      acronyme: ['', [Validators.required]],
+      nom: ['', [Validators.required]],
+      idResponsable: ['', [Validators.required]],
+      budget: [null, [Validators.required]],
+      type: ['', [Validators.required]],
+      equipe_prof_ids: ['', [Validators.required]], // Initialize as an empty array
+    });
+
   }
   isEditMode: boolean = false;
 

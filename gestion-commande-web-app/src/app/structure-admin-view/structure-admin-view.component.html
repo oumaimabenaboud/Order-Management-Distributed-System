@@ -108,8 +108,10 @@
           <thead>
           <tr >
             <th>Acronyme</th>
-            <th>Name</th>
+            <th>Nom</th>
+            <th>Type de Structure</th>
             <th>Responsable</th>
+            <th>Budget Annuel</th>
             <th>Détails</th>
             <th>Supprimer</th>
           </tr>
@@ -118,8 +120,9 @@
           <tr *ngFor="let s of structures">
             <td>{{s.acronyme}}</td>
             <td>{{s.nom}}</td>
+            <td>{{s.type.toString()}}</td>
             <td style="text-decoration: none; color:#004AAD;"><i class="fa-solid fa-envelope"></i> {{s.nomResponsable}}</td>
-
+            <td style="text-decoration: none; color:#004AAD;"><i class="fa-solid fa-envelope"></i> {{s.budget}} DHs</td>
             <td>
               <button class ="btn detail-button" (click)="getStructureById(s.id)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
             </td>
@@ -133,57 +136,85 @@
     </div>
     <!-- Other HTML code remains unchanged -->
 
-    <!-- Popup card for details -->
     <div class="popup card" *ngIf="isDetailsFormOpen">
       <div class="card-body">
-
+        <!-- Form header -->
         <div class="hh">
           <h4>Détails de la structure</h4>
-          <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()"> <i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
-
+          <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()">
+            <i class="fa-solid fa-circle-xmark" id="detail-button "></i>
+          </button>
         </div>
+
+        <!-- Structure details form -->
         <form class="row" [formGroup]="detailsForm">
+          <!-- Input fields for structure details -->
           <div class="col-md-6">
             <div class="form-group">
-              <!-- <label for="prenom">Prénom</label> -->
               <input type="text" class="form-control" id="acronyme" formControlName="acronyme" [readonly]="!isEditMode">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <!-- <label for="nom">Nom</label> -->
               <input type="text" class="form-control" id="nom" formControlName="nom" [readonly]="!isEditMode">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <!-- <label for="mail">Mail</label> -->
-              <input type="text" class="form-control" id="responsable" formControlName="responsable" [readonly]="!isEditMode">
+              <select class="form-control" id="type" formControlName="type" [disabled]="!isEditMode">
+                <option value="" disabled selected hidden>type</option>
+                <option *ngFor="let type of structureTypes" [ngValue]="type">{{ type }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <select class="form-control" id="responsable" formControlName="responsable" [disabled]="!isEditMode">
+                <option *ngFor="let responsable of listprof" [value]="responsable.id">{{responsable.prenom}} {{ responsable.nom }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <input type="number" class="form-control" id="budget" formControlName="budget" [readonly]="!isEditMode">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <!-- Display structure's members as dropdowns -->
+              <select class="form-control" id="equipe_prof_ids" formControlName="equipe_prof_ids" [disabled]="!isEditMode">
+                <!-- Iterate over each member in the structure and display them as options in the dropdown -->
+                <option *ngFor="let member of selectedStructure.equipe_prof_ids" [value]="member.id">{{ member.prenom }} {{ member.nom }}</option>
+              </select>
             </div>
           </div>
           <!-- Add more form controls as needed -->
         </form>
       </div>
       <div class="card-footer bg-transparent">
-        <button class="btn btn-outline-primary" (click)="toggleEditMode()"><i class="fa-solid fa-pen-to-square"></i> {{ isEditMode ? 'Cancel' : 'Edit' }}</button>
-        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" ><i class="fa-solid fa-bookmark" id="detail-button "></i> Save Changes</button>
+        <!-- Toggle edit mode button -->
+        <button class="btn btn-outline-primary" (click)="toggleEditMode()">
+          <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
+          {{ isEditMode ? 'Annuler' : 'Modifier' }}
+        </button>
+        <!-- Save changes button (visible in edit mode) -->
+        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" ><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer les modifications</button>
       </div>
     </div>
     <div class="overlay" [ngClass]="{'show': isDetailsFormOpen}"></div>
 
-
-    <!-- Popup card for adding a new professor -->
+    <!-- Popup card for adding a new structure -->
     <div class="popup card" *ngIf="isNewStructureFormOpen">
       <div class="card-body">
         <div class="hh">
-          <h4>Add New Professor</h4>
+          <h4>Ajouter une nouvelle structure</h4>
           <button class="btnf btn-outline-primary" (click)="closeNewStructureForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
         </div>
         <form class="row" [formGroup]="newStructureForm" (ngSubmit)="saveNewStructure()">
           <div class="col-md-6">
             <div class="form-group">
               <!-- <label for="prenom">Prénom</label> -->
-              <input type="text" class="form-control" id="prenom" formControlName="prenom" placeholder="Prénom">
+              <input type="text" class="form-control" id="acronyme" formControlName="acronyme" placeholder="Acronyme">
             </div>
           </div>
           <div class="col-md-6">
@@ -192,12 +223,43 @@
               <input type="text" class="form-control" id="nom" formControlName="nom" placeholder="Nom">
             </div>
           </div>
+
           <div class="col-md-6">
             <div class="form-group">
-              <!-- <label for="mail">Mail</label> -->
-              <input type="text" class="form-control" id="mail" formControlName="mail" placeholder="Mail">
+              <select class="form-control" id="type" formControlName="type">
+                <option value="" disabled selected hidden>Type de Structure</option> <!-- Placeholder option -->
+                <option *ngFor="let type of structureTypes" [ngValue]="type">{{ type }}</option>
+              </select>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <!-- <label for="nom">Nom</label> -->
+              <input type="number" class="form-control" id="budget" formControlName="budget" placeholder="Budget Annuel">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <select class="form-control" id="idResponsable" formControlName="idResponsable">
+                <option value="" disabled selected hidden>Nom du Responsable</option> <!-- Placeholder option -->
+                <option *ngFor="let responsable of listprof" [value]="responsable.id">{{responsable.prenom}} {{ responsable.nom }}</option>
+              </select>
+            </div>
+          </div>
+          <!-- HTML Template -->
+          <label for="nom">Membres de la structure</label>
+          <div class="col-md-6" *ngFor="let dropdown of dropdowns; let i = index">
+            <div class="form-group">
+              <select class="form-control" [id]="'equipe_prof_ids_' + i" formControlName="equipe_prof_ids_{{ i }}">
+                <option *ngFor="let prof of listprof" [value]="prof.id">{{ prof.prenom }} {{ prof.nom }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <button type="button" class="btn btn-primary" (click)="addDropdown()">+ Plus</button>
+          </div>
+
         </form>
       </div>
       <div class="card-footer bg-transparent">

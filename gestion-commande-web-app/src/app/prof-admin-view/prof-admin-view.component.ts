@@ -19,7 +19,7 @@ export class ProfAdminViewComponent implements OnInit {
   selectedProf: any;
   searchTerm: string = '';
   enabled: boolean = false; // Define the enabled property
-  
+
 
   //NavBar
   status = false;
@@ -28,17 +28,17 @@ export class ProfAdminViewComponent implements OnInit {
     this.status = !this.status;
   }
   constructor(
-    private profService: ProfesseurService, 
-    private formBuilder: FormBuilder, 
+    private profService: ProfesseurService,
+    private formBuilder: FormBuilder,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar // Inject the Clipboard service here
   ) { }
-  
-  
+
+
 
   //Table of Profs
   ngOnInit(): void {
-    
+
     this.profService.getProfessors().subscribe(
       { next:(data)=>{
           this.profs = data;
@@ -51,7 +51,7 @@ export class ProfAdminViewComponent implements OnInit {
   copyToClipboard(email: string, event: MouseEvent): void {
     const targetElement = event.currentTarget as HTMLElement;
     this.clipboard.copy(email);
-    this.snackBar.open('Email copied to clipboard', 'Close', {
+    this.snackBar.open('Email copié dans le presse-papiers', 'Close', {
       duration: 2000, // Duration in milliseconds (2 seconds)
       horizontalPosition: 'left',
       verticalPosition: 'top',
@@ -66,7 +66,7 @@ loadProfessors(): void {
       this.profs = data;
     },
     (error) => {
-      console.error('Error loading professors:', error);
+      console.error('Erreur de chargement des professeurs:', error);
     }
   );
 }
@@ -75,12 +75,12 @@ toggleAccess(prof: Professeur): void {
   const updatedAccess = !prof.droit_daccee; // Toggle the access
   this.profService.updateProfessorAccess(prof.id, updatedAccess).subscribe(
     () => {
-      console.log('Access updated successfully');
+      console.log("L'accès a été mis à jour avec succès");
       // Update the local object's access
       prof.droit_daccee = updatedAccess;
     },
     (error) => {
-      console.error('Error updating access:', error);
+      console.error("Erreur de mise à jour de l'accès :", error);
       // If the backend call fails, update the local object's access anyway
       prof.droit_daccee = updatedAccess;
     }
@@ -149,27 +149,27 @@ toggleAccess(prof: Professeur): void {
       // If the function is called from a drag event, prevent the default behavior
       event.preventDefault();
     }
-    
-    if (confirm("Are you sure you want to delete this professor?")) {
+
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce professeur ?")) {
       this.profService.deleteProfessor(id).subscribe({
         next: () => {
-          window.alert("Professor deleted successfully!");
+          window.alert("Professeur supprimé avec succès !");
           window.location.reload();
         },
         error: err => console.log(err)
       });
     }
   }
-  
-  
+
+
   onDragStart(event: DragEvent, data: string): void {
     event.dataTransfer?.setData('text/plain', data);
   }
-  
+
   allowDrop(event: DragEvent): void {
     event.preventDefault();
   }
-  
+
 
   openDetailsForm() {
     this.isDetailsFormOpen = true;
@@ -208,7 +208,7 @@ public newProfForm! : FormGroup;
     this.profService.addProfessor(prof).subscribe({
       next: (newProf) => {
         this.profs.push(newProf);
-        window.alert("Professor added successfully!");
+        window.alert("Professeur ajouté avec succès !");
         window.location.reload();
         this.closeNewProfForm(); // Optionally close the form
       },
@@ -236,14 +236,14 @@ public newProfForm! : FormGroup;
     const updatedProf: Professeur = this.detailsForm.value;
     this.profService.updateProfessor(this.selectedProf.id, updatedProf).subscribe({
       next: () => {
-        window.alert("Professor updated successfully!");
+        window.alert("Professeur mis à jour avec succès !");
         window.location.reload();
         this.isEditMode = false; // Disable edit mode after saving changes
       },
       error: err => {
-        console.error('An error occurred while updating professor:', err);
+        console.error("Une erreur s'est produite lors de la mise à jour du professeur:", err);
         // Optionally, display an error message to the user
-        window.alert("An error occurred while updating professor. Please try again later.");
+        window.alert("Une erreur s'est produite lors de la mise à jour du professeur. Veuillez réessayer plus tard.");
       }
     });
   }

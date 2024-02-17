@@ -82,7 +82,7 @@
         <h1 >Professeurs</h1>
         <ul class="breadcrumb">
           <li>
-            <a href="#">Home</a>
+            <a href="#">Accueil</a>
           </li>
 
           <li><i class='bx bx-chevron-right' ></i></li>
@@ -91,13 +91,13 @@
           </li>
           <form (submit)="search()" class="search-form">
             <div class="form-input">
-            <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm" class="search-input">
+            <input type="text" placeholder="Rechercher..." [(ngModel)]="searchTerm" name="searchTerm" class="search-input" (input)="search()">
             <button type="submit" class="search-button"><i class='bx bx-search' ></i></button>
-            </div>            
+            </div>
           </form>
         </ul>
       </div>
-      <button class="btn btn-outline-danger"(click)="openNewProfForm()"><i class="fa-solid fa-user-plus" id="detail-button "></i> Add Professor</button>
+      <button class="btn btn-outline-danger"(click)="openNewProfForm()"><i class="fa-solid fa-user-plus" id="detail-button "></i> Ajouter un professeur</button>
       <!-- <button  (click)="openNewProfForm()" class="btn-download" ><i class="fa-solid fa-user-plus"></i>Add Professor</button> -->
     </div>
 
@@ -107,14 +107,14 @@
         <table>
           <thead>
             <tr>
-              <th><i class="fa-solid fa-circle-dot"></i> Online</th> 
+              <th><i class="fa-solid fa-circle-dot"></i> En ligne</th>
               <th><i class="fa-solid fa-user-tie"></i> Prénom</th>
               <th><i class="fa-solid fa-user-tie"></i> Nom</th>
               <th><i class="fa-solid fa-envelope"></i> Email</th>
               <th><i class="fa-solid fa-magnifying-glass-plus"></i> Détails</th>
               <th><i class="fa-solid fa-trash"></i> Supprimer</th>
-              <th><i class="fa-solid fa-sliders"></i> Modifier Accès</th>
-              
+              <th><i class="fa-solid fa-sliders"></i> Modifier l'accès</th>
+
             </tr>
           </thead>
           <tbody>
@@ -123,7 +123,7 @@
               <td>              <span class="dot" [ngClass]="{'true': !p.first_cnx}"></span>
               </td>
 
-        
+
               <!-- Other table data -->
               <td draggable="true" (dragstart)="onDragStart($event, p.prenom)">{{p.prenom}}</td>
               <td draggable="true" (dragstart)="onDragStart($event, p.nom)">{{p.nom}}</td>
@@ -154,7 +154,7 @@
             </tr>
           </tbody>
         </table>
-        
+
       </div>
     </div>
     <!-- Other HTML code remains unchanged -->
@@ -162,15 +162,15 @@
     <!-- Popup card for details -->
     <div class="popup card" *ngIf="isDetailsFormOpen">
       <div class="card-body">
-        
+
         <div class="hh">
-          
-          <h4><i class="fa-solid fa-magnifying-glass-plus"></i> Professor Details</h4>
+
+          <h4><i class="fa-solid fa-magnifying-glass-plus"></i> Détails du professeur</h4>
           <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()"> <i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
-          
+
         </div>
         <form class="row" [formGroup]="detailsForm">
-          <div class="col-md-6">
+          <div class="col-md-6">Détails du professeur
             <div class="form-group">
               <!-- <label for="prenom">Prénom</label> -->
               <input type="text" class="form-control" id="prenom" formControlName="prenom" [readonly]="!isEditMode">
@@ -195,10 +195,10 @@
         <!-- <button class="btn btn-outline-primary" (click)="toggleEditMode()"><i class="fa-solid fa-pen-to-square"></i> {{ isEditMode ? 'Cancel' : 'Edit' }}</button> -->
         <button class="btn btn-outline-primary" (click)="toggleEditMode()">
           <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
-          {{ isEditMode ? 'Cancel' : 'Edit' }}
+          {{ isEditMode ? 'Annuler' : 'Modifier' }}
         </button>
-        
-        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="saveProfessorChanges()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Save Changes</button>
+
+        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="saveProfessorChanges()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer les modifications</button>
       </div>
     </div>
 <div class="overlay" [ngClass]="{'show': isDetailsFormOpen}"></div>
@@ -208,7 +208,7 @@
     <div class="popup card" *ngIf="isNewProfFormOpen">
       <div class="card-body">
         <div class="hh">
-          <h4><i class="fa-solid fa-user-plus" id="detail-button "></i> Add New Professor</h4>
+          <h4><i class="fa-solid fa-user-plus" id="detail-button "></i> Ajouter un nouveau professeur</h4>
           <button class="btnf btn-outline-primary" (click)="closeNewProfForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
   </div>
           <form class="row" [formGroup]="newProfForm" (ngSubmit)="saveNewProf()">
@@ -236,8 +236,8 @@
         <button class="btn btn-outline-success ms-3" (click)="saveNewProf()"><i class="fa-solid fa-plus" id="detail-button "></i> Ajouter</button>
       </div>
 
-      
-      
+
+
     </div>
     <!-- Overlay for the front page -->
 <div class="overlay" [ngClass]="{'show': isNewProfFormOpen}"></div>

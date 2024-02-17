@@ -6,7 +6,7 @@ export interface Structure {
   nomResponsable: string;
   budget: number;
   parentLabId: number;
-  type: string; // Assuming structurestype is a string enum
+  type: structurestype; // Assuming structurestype is a string enum
 
   equipe_prof_ids: number[]; // List of professor IDs
   equipe_prof_names: string[]; // List of professor names
@@ -14,6 +14,9 @@ export interface Structure {
 
 
 
-enum structurestype {
-  LabodeRecherche,EquipedeRecherche, ProjetdeRecherche
+export enum structurestype {
+  LabodeRecherche = 'Laboratoire de Recherche',
+  EquipedeRecherche = 'Equipe de Recherche',
+  ProjetdeRecherche = 'Projet de Recherche'
 }
+

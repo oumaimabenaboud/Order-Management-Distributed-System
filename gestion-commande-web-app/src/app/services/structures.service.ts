@@ -18,7 +18,7 @@ export class StructuresService {
     return this.http.get<Structure>("http://localhost:1818/STRUCTURE-SERVICE/structures/"+id)
   }
   public addStructure(Structure: any) {
-    return this.http.post("http://localhost:1818/STRUCTURE-SERVICE/structures/", Structure)
+    return this.http.post("http://localhost:1818/STRUCTURE-SERVICE/structures", Structure)
   }
 
   public deleteStructure(id: any) {

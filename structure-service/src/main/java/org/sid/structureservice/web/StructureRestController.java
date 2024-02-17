@@ -3,17 +3,17 @@ package org.sid.structureservice.web;
 import lombok.AllArgsConstructor;
 import org.sid.structureservice.entities.Structure;
 import org.sid.structureservice.entities.ResponsableStructure;
+import org.sid.structureservice.enums.structurestype;
 import org.sid.structureservice.feign.BudgetRestClient;
 import org.sid.structureservice.feign.ProfesseurRestClient;
 import org.sid.structureservice.model.Professeur;
 import org.sid.structureservice.repository.StructureRepository;
 import org.sid.structureservice.repository.ResponsableStructureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController@AllArgsConstructor
@@ -32,26 +32,61 @@ public class StructureRestController {
             this.budgetRestClient = budgetRestClient;
         }
 
-        @PostMapping
-        public Structure createStructure(@RequestBody Structure addedStructure) {
+    @PostMapping
+    public ResponseEntity<?> createStructure(@RequestBody Structure addedStructure) {
+        // Fetch responsible professor from the professor service
+        Professeur responsibleProfessor = professeurRestClient.getProfesseurById(addedStructure.getIdResponsable());
 
-            // Fetch responsible professor from the professor service
-            Professeur responsibleProfessor = professeurRestClient.getProfesseurById(addedStructure.getIdResponsable());
-
-
-            // Create a new Structure object
-            Structure newStructure = new Structure();
-            newStructure.setNom(addedStructure.getNom());
-            newStructure.setAcronyme(addedStructure.getAcronyme());
-            newStructure.setType(addedStructure.getType()); // Assuming structurestype is an enum
-            newStructure.setIdResponsable(responsibleProfessor.getId());
-            newStructure.setNomResponsable(responsibleProfessor.getPrenom()+' '+responsibleProfessor.getNom());
-
-            // Save or perform necessary actions with the new structure
-            structureRepository.save(newStructure);
-
-            return newStructure;
+        // Vérifier que le responsable n'est pas membre de l'équipe
+        if (addedStructure.getEquipe_prof_ids().contains(addedStructure.getIdResponsable())) {
+            return ResponseEntity.badRequest().body("Le responsable ne peut pas être membre de l'équipe.");
         }
+
+        // Vérifier le nombre de membres pour le type 'EquipedeRecherche'
+        if (addedStructure.getType() == structurestype.EquipedeRecherche) {
+            if (addedStructure.getEquipe_prof_ids().size() < 4) {
+                return ResponseEntity.badRequest().body("Pour le type 'Equipe de Recherche', il faut au moins 4 membres.");
+            }
+        }
+
+        // Vérifier s'il y a des membres dupliqués
+        Set<Long> uniqueIds = new HashSet<>();
+        for (Long profId : addedStructure.getEquipe_prof_ids()) {
+            // Si l'identifiant est déjà présent, c'est un membre en double
+            if (!uniqueIds.add(profId)) {
+                return ResponseEntity.badRequest().body("Des membres en double ont été détectés dans l'équipe.");
+            }
+        }
+
+        // Create a list to store equipe_prof_names
+        List<String> equipeProfNames = new ArrayList<>();
+
+        // Fetch details of each professor in the equipe and populate equipeProfNames
+        for (Long profId : addedStructure.getEquipe_prof_ids()) {
+            Professeur prof = professeurRestClient.getProfesseurById(profId);
+            if (prof != null) {
+                equipeProfNames.add(prof.getPrenom() + " " + prof.getNom());
+            }
+        }
+
+        // Create a new Structure object
+        Structure newStructure = new Structure();
+        newStructure.setNom(addedStructure.getNom());
+        newStructure.setAcronyme(addedStructure.getAcronyme());
+        newStructure.setType(addedStructure.getType());
+        newStructure.setBudget(addedStructure.getBudget());
+        newStructure.setIdResponsable(responsibleProfessor.getId());
+        newStructure.setNomResponsable(responsibleProfessor.getPrenom() + ' ' + responsibleProfessor.getNom());
+        newStructure.setEquipe_prof_ids(addedStructure.getEquipe_prof_ids());
+        newStructure.setEquipe_prof_names(equipeProfNames);
+
+        // Save or perform necessary actions with the new structure
+        structureRepository.save(newStructure);
+
+        return ResponseEntity.ok("Structure créée avec succès !");
+    }
+
+
 
     @GetMapping
     public List<Structure> getAllStructures(){
