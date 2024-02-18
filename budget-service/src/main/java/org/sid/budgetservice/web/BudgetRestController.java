@@ -32,6 +32,8 @@ public class BudgetRestController {
         budget.setRubriques(new ArrayList<>()); // Default with 0 rubriques
         return budgetRepository.save(budget);
     }
+
+
     @GetMapping("/{id}")
     public Budget getBudgetById(@PathVariable Long id) {
         return budgetRepository.findById(id)
@@ -51,19 +53,38 @@ public class BudgetRestController {
     public Rubrique saveRubrique(@RequestBody Rubrique newRubrique) {
         return rubriqueRepository.save(newRubrique);
     }
+    @PutMapping("/rubriques/{id}")
+    public Rubrique updateRubrique(@PathVariable Long id, @RequestBody Rubrique updatedRubrique) {
+        Rubrique existingRubrique = rubriqueRepository.findById(id).orElseThrow(() -> new RuntimeException("Rubrique not found"));
 
+        // Update the properties if provided
+        if (updatedRubrique.getNom() != null) {
+            existingRubrique.setNom(updatedRubrique.getNom());
+    }
+        return rubriqueRepository.save(existingRubrique);
+    }
     // List all rubriques in a budget
-    @GetMapping("/budgets/{budgetId}/rubriques")
+    /*@GetMapping("/budgets/{budgetId}/rubriques")
     public List<Rubrique> getRubriquesInBudget(@PathVariable Long budgetId) {
         return rubriqueRepository.findByBudgetId(budgetId);
-    }
+    }*/
     @PostMapping("/budgets/{budgetId}/rubriques")
     public Rubrique addRubriqueToBudget(@PathVariable Long budgetId, @RequestBody Rubrique rubrique) {
         Budget budget = budgetRepository.findById(budgetId)
                 .orElseThrow(() -> new RuntimeException("Budget not found with id: " + budgetId));
-        rubrique.setBudget(budget);
+        rubrique.setBudget_id(budget.getId());
         return rubriqueRepository.save(rubrique);
     }
+
+    @GetMapping("/rubriques/search")
+    public List<Rubrique> searchRubriques(@RequestParam(required = false) String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return rubriqueRepository.findByNomContainingIgnoreCase(searchTerm);
+        } else {
+            return rubriqueRepository.findAll();
+        }
+    }
+
     // Delete a rubrique
     @DeleteMapping("/rubriques/{rubriqueId}")
     public void deleteRubrique(@PathVariable Long rubriqueId) {

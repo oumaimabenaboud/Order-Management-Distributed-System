@@ -19,8 +19,5 @@ public class Rubrique {
     private Long id;
     private String nom;
     private double allocatedAmount;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Budget budget;
+    private Long budget_id;
 }

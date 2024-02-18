@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ProfesseurService} from "../services/professeur.service";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Professeur} from "../model/professeur.model";
 import {StructuresService} from "../services/structures.service";
 import { Structure, structurestype } from "../model/structure.model";
@@ -24,6 +24,7 @@ export class StructureAdminViewComponent implements OnInit{
   dropdowns: number[][] = [[]];
   public newStructureForm! : FormGroup;
   detailsForm!: FormGroup;
+  equipe_prof_names: any[] = []; // Assuming any type for the members, you can replace any with a specific type if available
 
   //NavBar
   status = false;
@@ -57,26 +58,6 @@ export class StructureAdminViewComponent implements OnInit{
     this.initDetailsFormBuilder();
     this.initnewStructureFormBuilder();
   }
-  getStructureById(id: any) {
-    this.structureService.getStructureById(id).subscribe({
-      next: (structure) => {
-        this.selectedStructure = structure;
-
-        // Pre-fill the detailsForm with the selected professor's information
-        this.detailsForm.patchValue({
-          acronyme: structure.acronyme,
-          nom: structure.nom,
-          type:structure.type,
-          responsable: structure.nomResponsable,
-          budget: structure.budget,
-          membres: structure.equipe_prof_names
-        });
-
-        this.openDetailsForm();
-      },
-      error: (err) => console.error(err)
-    });
-  }
 
   /*search() {
     // If both prenom and nom are empty, reset the table to show all professors
@@ -93,20 +74,38 @@ export class StructureAdminViewComponent implements OnInit{
       }
     });
   }*/
-  deleteStructure(id: any, event?: DragEvent): void {
-    if (event) {
-      // If the function is called from a drag event, prevent the default behavior
-      event.preventDefault();
-    }
-    if (confirm("Êtes-vous sûr de vouloir supprimer cette structure ?")) {
-      this.structureService.deleteStructure(id).subscribe({
-        next: () => {
-          window.alert("Structure supprimée avec succès !");
-          window.location.reload();
-        },
-        error: err => console.log(err)
-      });
-    }
+
+  // GET STRUCTURE BY ID , PUT
+  getStructureById(id: any) {
+    this.structureService.getStructureById(id).subscribe({
+      next: (structure) => {
+        this.selectedStructure = structure;
+        this.equipe_prof_names = [];
+        // Pre-fill the detailsForm with the selected structure's information
+        this.detailsForm.patchValue({
+          acronyme: structure.acronyme,
+          nom: structure.nom,
+          type: structure.type,
+          nomResponsable: structure.nomResponsable,
+          budget: structure.budget,
+        });
+
+
+        // Add each member to the membres FormArray
+        structure.equipe_prof_names.forEach(member => {
+          this.addMembre(member);
+        });
+
+        this.openDetailsForm();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+
+
+  addMembre(member: string) {
+    this.equipe_prof_names.push(this.formBuilder.control(member));
   }
 
   openDetailsForm() {
@@ -116,22 +115,81 @@ export class StructureAdminViewComponent implements OnInit{
 
   closeDetailsForm() {
     this.isDetailsFormOpen = false;
-  }
 
-  openNewStructureForm() {
-    this.isNewStructureFormOpen = true;
-    this.isDetailsFormOpen = false;
-  }
-
-  closeNewStructureForm() {
-    this.isNewStructureFormOpen = false;
   }
 
 
+  private initDetailsFormBuilder() {
+    this.detailsForm = this.formBuilder.group({
+      acronyme: ['', [Validators.required]],
+      nom: ['', [Validators.required]],
+      nomResponsable: ['', [Validators.required]],
+      budget: [null, [Validators.required]],
+      type: ['', [Validators.required]],
+      equipe_prof_names: this.formBuilder.array([]), // Initialize as a FormArray
+    });
+
+
+
+  }
+
+  isEditMode: boolean = false;
+  toggleEditMode() {
+    this.isEditMode = !this.isEditMode;
+  }
+
+  saveStructureChanges() {
+    const updatedStructure: Structure = this.detailsForm.value;
+
+    // Map structure type if needed
+    // updatedStructure.type = this.mapStructureType(updatedStructure.type);
+
+    // Extract selected responsible person's ID
+    const selectedResponsableName = this.detailsForm.get('nomResponsable')?.value;
+    const selectedResponsable = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedResponsableName);
+    if (selectedResponsable) {
+      updatedStructure.idResponsable = selectedResponsable.id;
+    }
+
+    // Extract selected member names and find corresponding IDs
+    const selectedMemberNames: string[] = [];
+    for (let i = 0; i < this.equipe_prof_names.length; i++) {
+      const control = this.equipe_prof_names.at(i);
+      selectedMemberNames.push(control.value);
+    }
+
+    // Map member names to their corresponding IDs
+    const selectedMemberIds: number[] = [];
+    selectedMemberNames.forEach(memberName => {
+      const selectedMember = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === memberName);
+      if (selectedMember) {
+        selectedMemberIds.push(selectedMember.id);
+      }
+    });
+
+    // Update the structure with the selected member names and IDs
+    updatedStructure.equipe_prof_names = selectedMemberNames;
+    updatedStructure.equipe_prof_ids = selectedMemberIds;
+
+    // Update the structure with the selected member names
+    this.structureService.updateStructure(this.selectedStructure.id, updatedStructure).subscribe({
+      next: () => {
+        window.alert("Structure updated successfully!");
+        window.location.reload();
+        this.isEditMode = false; // Disable edit mode after saving changes
+      },
+      error: err => {
+        console.error('An error occurred while updating structure:', err);
+        // Optionally, display an error message to the user
+        window.alert("An error occurred while updating structure. Please try again later.");
+      }
+    });
+  }
 
 
 
 
+  // NEW STRUCTURE
   private initnewStructureFormBuilder() {
     this.newStructureForm = this.formBuilder.group({
       acronyme: ['', [Validators.required]],
@@ -147,8 +205,14 @@ export class StructureAdminViewComponent implements OnInit{
       this.newStructureForm.addControl(`equipe_prof_ids_${i}`, this.formBuilder.control(null));
     }
   }
+  openNewStructureForm() {
+    this.isNewStructureFormOpen = true;
+    this.isDetailsFormOpen = false;
+  }
 
-
+  closeNewStructureForm() {
+    this.isNewStructureFormOpen = false;
+  }
   addDropdown() {
     this.dropdowns.push([]);
     const formControlName = `equipe_prof_ids_${this.dropdowns.length - 1}`;
@@ -162,32 +226,12 @@ export class StructureAdminViewComponent implements OnInit{
   removeDropdown() {
     if (this.dropdowns.length > 0) {
       this.dropdowns.pop(); // Remove the last dropdown from the array
-  
+
       // Remove the corresponding form control from the FormGroup
       const formControlName = `equipe_prof_ids_${this.dropdowns.length}`;
       this.newStructureForm.removeControl(formControlName);
     }
   }
-  copyToClipboard(email: string, event: MouseEvent): void {
-    const targetElement = event.currentTarget as HTMLElement;
-    this.clipboard.copy(email);
-    this.snackBar.open('Email copié dans le presse-papiers', 'Close', {
-      duration: 2000, // Duration in milliseconds (2 seconds)
-      horizontalPosition: 'left',
-      verticalPosition: 'top',
-      panelClass: 'copy-snackbar',
-      data: { trigger: targetElement }
-    });
-}
-onDragStart(event: DragEvent, data: string): void {
-  event.dataTransfer?.setData('text/plain', data);
-}
-
-allowDrop(event: DragEvent): void {
-  event.preventDefault();
-}
-
-
 
   // Method to save the new structure
 
@@ -195,16 +239,23 @@ allowDrop(event: DragEvent): void {
     const structure = this.newStructureForm.value;
     structure.type = this.mapStructureType(structure.type);
 
-    // Extract selected professor IDs from form
+    // Extract selected professor ID for the responsible person
+    const selectedResponsableName = this.newStructureForm.get('idResponsable')?.value;
+    const selectedResponsable = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedResponsableName);
+    if (selectedResponsable) {
+      structure.idResponsable = selectedResponsable.id;
+    }
+
+    // Extract selected professor IDs for team members
     const selectedIds: number[] = [];
     for (let i = 0; i < this.dropdowns.length; i++) {
       const dropdownControlName = `equipe_prof_ids_${i}`;
-      const selectedId = this.newStructureForm.get(dropdownControlName)?.value;
-      if (selectedId) {
-        selectedIds.push(selectedId);
+      const selectedName = this.newStructureForm.get(dropdownControlName)?.value;
+      const selectedProfessor = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedName);
+      if (selectedProfessor) {
+        selectedIds.push(selectedProfessor.id);
       }
     }
-
     structure.equipe_prof_ids = selectedIds;
 
     // Remove individual equipe_prof_ids from the structure object
@@ -237,6 +288,8 @@ allowDrop(event: DragEvent): void {
   }
 
 
+
+
   // Map Angular enum value to Java enum value
   mapStructureType(structureType: string): string {
     switch (structureType) {
@@ -250,6 +303,46 @@ allowDrop(event: DragEvent): void {
         return '';
     }
   }
+  copyToClipboard(email: string, event: MouseEvent): void {
+    const targetElement = event.currentTarget as HTMLElement;
+    this.clipboard.copy(email);
+    this.snackBar.open('Nom copié dans le presse-papier', 'Close', {
+      duration: 2000, // Duration in milliseconds (2 seconds)
+      horizontalPosition: 'left',
+      verticalPosition: 'top',
+      panelClass: 'copy-snackbar',
+      data: { trigger: targetElement }
+    });
+}
+onDragStart(event: DragEvent, data: string): void {
+  event.dataTransfer?.setData('text/plain', data);
+}
+
+allowDrop(event: DragEvent): void {
+  event.preventDefault();
+}
+
+
+
+  //DELETE STRUCTURE
+  deleteStructure(id: any, event?: DragEvent): void {
+    if (event) {
+      // If the function is called from a drag event, prevent the default behavior
+      event.preventDefault();
+    }
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette structure ?")) {
+      this.structureService.deleteStructure(id).subscribe({
+        next: () => {
+          window.alert("Structure supprimée avec succès !");
+          window.location.reload();
+        },
+        error: err => console.log(err)
+      });
+    }
+  }
+
+
+
 
   /*private initDetailsFormBuilder() {
     this.detailsForm = this.formBuilder.group({
@@ -264,40 +357,10 @@ allowDrop(event: DragEvent): void {
   }*/
 
 
-  private initDetailsFormBuilder() {
-    this.detailsForm = this.formBuilder.group({
-      acronyme: ['', [Validators.required]],
-      nom: ['', [Validators.required]],
-      idResponsable: ['', [Validators.required]],
-      budget: [null, [Validators.required]],
-      type: ['', [Validators.required]],
-      equipe_prof_ids: ['', [Validators.required]], // Initialize as an empty array
-    });
 
-  }
-  isEditMode: boolean = false;
 
-  toggleEditMode() {
-    this.isEditMode = !this.isEditMode;
-  }
 
-  /*saveProfessorChanges() {
-    const updatedProf: Professeur = this.detailsForm.value;
-    this.structureService.updateProfessor(this.selectedProf.id, updatedProf).subscribe({
-      next: () => {
-        window.alert("Professor updated successfully!");
-        window.location.reload();
-        this.isEditMode = false; // Disable edit mode after saving changes
-      },
-      error: err => {
-        console.error('An error occurred while updating professor:', err);
-        // Optionally, display an error message to the user
-        window.alert("An error occurred while updating professor. Please try again later.");
-      }
-    });
-  }*/
 
-  
 
 
 

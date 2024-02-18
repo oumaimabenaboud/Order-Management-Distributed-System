@@ -24,4 +24,7 @@ export class StructuresService {
   public deleteStructure(id: any) {
     return this.http.delete("http://localhost:1818/STRUCTURE-SERVICE/structures/"+id)
   }
+  public updateStructure(id: any, Structure: any) {
+    return this.http.put("http://localhost:1818/STRUCTURE-SERVICE/structures/"+id, Structure)
+  }
 }

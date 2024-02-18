@@ -54,7 +54,7 @@ public class StructureRestController {
         for (Long profId : addedStructure.getEquipe_prof_ids()) {
             // Si l'identifiant est déjà présent, c'est un membre en double
             if (!uniqueIds.add(profId)) {
-                return ResponseEntity.badRequest().body("Des membres en double ont été détectés dans l'équipe.");
+                return ResponseEntity.badRequest().body("Des membres en double ont été détectés.");
             }
         }
 

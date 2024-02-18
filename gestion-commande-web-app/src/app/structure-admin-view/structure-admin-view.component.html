@@ -110,7 +110,7 @@
             <th><i class="fa-solid fa-signature"></i> Acronyme</th>
             <th><i class="fa-solid fa-building"></i> Nom</th>
             <th><i class="fa-solid fa-building"></i> Type de Structure</th>
-            <th><i class="fa-solid fa-user-tie"></i> Responsable</th>  
+            <th><i class="fa-solid fa-user-tie"></i> Responsable</th>
             <th><i class="fa-solid fa-credit-card"></i> Budget Annuel</th>
             <th><i class="fa-solid fa-magnifying-glass-plus"></i> Détails</th>
             <th><i class="fa-solid fa-trash"></i> Supprimer</th>
@@ -161,17 +161,10 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <select class="form-control" id="type" formControlName="type" [disabled]="!isEditMode">
-                <option value="" disabled selected hidden>type</option>
-                <option *ngFor="let type of structureTypes" [ngValue]="type">{{ type }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <select class="form-control" id="responsable" formControlName="responsable" [disabled]="!isEditMode">
-                <option *ngFor="let responsable of listprof" [value]="responsable.id">{{responsable.prenom}} {{ responsable.nom }}</option>
-              </select>
+              <input type="text" class="form-control" id="type" formControlName="type" list="structureTypeList" [readonly]="!isEditMode">
+              <datalist id="structureTypeList">
+                <option *ngFor="let type of structureTypes" [value]="type"></option>
+              </datalist>
             </div>
           </div>
           <div class="col-md-6">
@@ -181,13 +174,23 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <!-- Display structure's members as dropdowns -->
-              <select class="form-control" id="equipe_prof_ids" formControlName="equipe_prof_ids" [disabled]="!isEditMode">
-                <!-- Iterate over each member in the structure and display them as options in the dropdown -->
-                <option *ngFor="let member of selectedStructure.equipe_prof_ids" [value]="member.id">{{ member.prenom }} {{ member.nom }}</option>
-              </select>
+              <label>Responsable</label>
+              <input type="text" class="form-control" id="nomResponsable" formControlName="nomResponsable" list="professorList" [readonly]="!isEditMode">
+              <datalist id="professorList">
+                <option *ngFor="let responsable of listprof" [value]="responsable.prenom+' '+ responsable.nom" ></option>
+              </datalist>
             </div>
           </div>
+          <div class="col-md-6" *ngFor="let membre of equipe_prof_names; let i = index">
+            <div class="form-group">
+              <label>Membre {{ i + 1 }}</label>
+              <input type="text" class="form-control" [formControl]="equipe_prof_names[i]"  list="professorList"  [readonly]="!isEditMode">
+              <datalist id="professorList">
+                <option *ngFor="let membre of listprof" [value]="membre.prenom+' '+ membre.nom" ></option>
+              </datalist>
+            </div>
+          </div>
+
           <!-- Add more form controls as needed -->
         </form>
       </div>
@@ -198,7 +201,7 @@
           {{ isEditMode ? 'Annuler' : 'Modifier' }}
         </button>
         <!-- Save changes button (visible in edit mode) -->
-        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" ><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer les modifications</button>
+        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="saveStructureChanges()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer les modifications</button>
       </div>
     </div>
     <div class="overlay" [ngClass]="{'show': isDetailsFormOpen}"></div>
@@ -213,7 +216,7 @@
         <form class="row" [formGroup]="newStructureForm" (ngSubmit)="saveNewStructure()">
           <div class="col-md-6">
             <div class="form-group">
-              <!-- <label for="prenom">Prénom</label> -->
+
               <input type="text" class="form-control" id="acronyme" formControlName="acronyme" placeholder="Acronyme">
             </div>
           </div>
@@ -243,11 +246,11 @@
             <div class="form-group">
               <input type="text" class="form-control" id="idResponsable" formControlName="idResponsable" list="professorList" placeholder="Nom du Responsable">
               <datalist id="professorList">
-                <option class="test" *ngFor="let responsable of listprof" [value]="responsable.id" >{{responsable.prenom}} {{ responsable.nom }}</option> 
+                <option *ngFor="let responsable of listprof" [value]="responsable.prenom + ' ' + responsable.nom">{{responsable.prenom}} {{ responsable.nom }}</option>
               </datalist>
             </div>
           </div>
-                    
+
           <!-- HTML Template -->
           <div class="col-md-6">
             <div class="hh">
@@ -264,6 +267,7 @@
               </datalist>
             </div>
           </div>
+
         </form>
       </div>
       <div class="card-footer bg-transparent">

@@ -26,10 +26,10 @@ public class BudgetServiceApplication {
 			universityBudget = budgetRepository.save(universityBudget);
 
 			// Add rubriques for different allocations
-			Rubrique academicDepartments = Rubrique.builder().nom("Départements académiques").allocatedAmount(300000.0).budget(universityBudget).build();
-			Rubrique research = Rubrique.builder().nom("Recherche").allocatedAmount(200000.0).budget(universityBudget).build();
-			Rubrique infrastructure = Rubrique.builder().nom("Infrastructure").allocatedAmount(250000.0).budget(universityBudget).build();
-			Rubrique events = Rubrique.builder().nom("Événements").allocatedAmount(250000.0).budget(universityBudget).build();
+			Rubrique academicDepartments = Rubrique.builder().nom("Départements académiques").allocatedAmount(300000.0).budget_id(universityBudget.getId()).build();
+			Rubrique research = Rubrique.builder().nom("Recherche").allocatedAmount(200000.0).budget_id(universityBudget.getId()).build();
+			Rubrique infrastructure = Rubrique.builder().nom("Infrastructure").allocatedAmount(250000.0).budget_id(universityBudget.getId()).build();
+			Rubrique events = Rubrique.builder().nom("Événements").allocatedAmount(250000.0).budget_id(universityBudget.getId()).build();
 
 			rubriqueRepository.saveAll(List.of(academicDepartments, research, infrastructure, events));
 
