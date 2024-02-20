@@ -21,11 +21,11 @@ export class StructureAdminViewComponent implements OnInit{
   searchTerm: string = '';
   structureTypes: string[] = Object.values(structurestype);
   listprof: any[] = [];
+  listlabo:any[]=[];
   dropdowns: number[][] = [[]];
   public newStructureForm! : FormGroup;
   detailsForm!: FormGroup;
   equipe_prof_names: any[] = []; // Assuming any type for the members, you can replace any with a specific type if available
-
   //NavBar
   status = false;
 
@@ -41,19 +41,42 @@ export class StructureAdminViewComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
+    this.structureService.getAllStructures().subscribe({
+      next: (data) => {
+        this.structures = data;
+        // Assuming this.structures is an array of structures
+        this.structures.forEach((structure: Structure) => {
+          let p: string; // Declare p outside the loop
+          switch (structure.type.toString()) {
+            case 'LabodeRecherche':
+              p = 'Laboratoire de Recherche';
+              break;
+            case 'EquipedeRecherche':
+              p = 'Equipe de Recherche';
+              break;
+            case 'ProjetdeRecherche':
+              p = 'Projet de Recherche';
+              break;
+          }
+          // @ts-ignore
+          structure['typeAsString'] = p; // Assign p to a dynamically created property in the structure object
+        });
+      },
+      error: (err) => console.error(err)
+    });
 
-    this.structureService.getAllStructures().subscribe(
-      { next:(data)=>{
-          this.structures = data;
-        },
-        error : (err)=>console.error(err)
-      });
     // Fetch professors and assign them to listprof
     this.profService.getProfessors().subscribe(
       (data) => {
         this.listprof = data;
       },
       (error) => console.error(error)
+    );
+    this.structureService.getStructuresByType('LabodeRecherche').subscribe(
+      (data)=>{
+      this.listlabo = data;
+    },
+      (error)=> console.error(error)
     );
     this.initDetailsFormBuilder();
     this.initnewStructureFormBuilder();
@@ -75,8 +98,24 @@ export class StructureAdminViewComponent implements OnInit{
     });
   }*/
 
+
   // GET STRUCTURE BY ID , PUT
   getStructureById(id: any) {
+
+    function getStructureTypeAsString(type: structurestype): string {
+      switch (type.toString()) {
+        case 'LabodeRecherche':
+          return 'Laboratoire de Recherche';
+        case 'EquipedeRecherche':
+          return 'Equipe de Recherche';
+        case 'ProjetdeRecherche':
+          return 'Projet de Recherche';
+        default:
+          return 'Unknown';
+      }
+    }
+
+
     this.structureService.getStructureById(id).subscribe({
       next: (structure) => {
         this.selectedStructure = structure;
@@ -85,8 +124,9 @@ export class StructureAdminViewComponent implements OnInit{
         this.detailsForm.patchValue({
           acronyme: structure.acronyme,
           nom: structure.nom,
-          type: structure.type,
+          type: getStructureTypeAsString(structure.type),
           nomResponsable: structure.nomResponsable,
+          parentLabId:structure.parentLabId,
           budget: structure.budget,
         });
 
@@ -101,8 +141,6 @@ export class StructureAdminViewComponent implements OnInit{
       error: (err) => console.error(err)
     });
   }
-
-
 
   addMembre(member: string) {
     this.equipe_prof_names.push(this.formBuilder.control(member));
@@ -126,6 +164,7 @@ export class StructureAdminViewComponent implements OnInit{
       nomResponsable: ['', [Validators.required]],
       budget: [null, [Validators.required]],
       type: ['', [Validators.required]],
+      parentLabId:['', [Validators.required]],
       equipe_prof_names: this.formBuilder.array([]), // Initialize as a FormArray
     });
 
@@ -303,9 +342,12 @@ export class StructureAdminViewComponent implements OnInit{
         return '';
     }
   }
-  copyToClipboard(email: string, event: MouseEvent): void {
+
+
+
+  copyToClipboard(nomResponsable: string, event: MouseEvent): void {
     const targetElement = event.currentTarget as HTMLElement;
-    this.clipboard.copy(email);
+    this.clipboard.copy(nomResponsable);
     this.snackBar.open('Nom copié dans le presse-papier', 'Close', {
       duration: 2000, // Duration in milliseconds (2 seconds)
       horizontalPosition: 'left',
@@ -357,11 +399,5 @@ allowDrop(event: DragEvent): void {
   }*/
 
 
-
-
-
-
-
-
-
+  protected readonly structurestype = structurestype;
 }

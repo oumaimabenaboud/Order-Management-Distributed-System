@@ -43,9 +43,9 @@ public class StructureServiceApplication {
 			Long professorId4 = 4L;
 
 			// Add example structures
-			Structure structure1 = addStructure(structureRepository, "Labo MIAAD", "LabodeRecherche", 10000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId3, professorId4), professeurRestClient);
-			Structure structure2 = addStructure(structureRepository, "Equipe AI", "EquipedeRecherche", 15000.0, professorId2, "Ali Oubelkacem", List.of(professorId1, professorId3), professeurRestClient);
-			Structure structure3 = addStructure(structureRepository, "Projet FSM", "ProjetdeRecherche", 20000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId4), professeurRestClient);
+			Structure structure1 = addStructure(structureRepository, "Labo MIAAD", "LabodeRecherche", 10000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId3, professorId4), professeurRestClient,null);
+			Structure structure2 = addStructure(structureRepository, "Equipe AI", "EquipedeRecherche", 15000.0, professorId2, "Ali Oubelkacem", List.of(professorId1, professorId3), professeurRestClient,1L);
+			Structure structure3 = addStructure(structureRepository, "Projet FSM", "ProjetdeRecherche", 20000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId4), professeurRestClient,null);
 
 			// Fetch all structures
 			List<Structure> allStructures = structureRepository.findAll();
@@ -53,7 +53,7 @@ public class StructureServiceApplication {
 		};
 	}
 
-	private Structure addStructure(StructureRepository structureRepository, String name, String type, double budget, Long responsibleId, String nomResponsable, List<Long> equipeProfIds, ProfesseurRestClient professeurRestClient) {
+	private Structure addStructure(StructureRepository structureRepository, String name, String type, double budget, Long responsibleId, String nomResponsable, List<Long> equipeProfIds, ProfesseurRestClient professeurRestClient, Long parentLabId) {
 		// Fetch professor names using IDs
 		List<String> equipeProfNames = new ArrayList<>();
 		for (Long id : equipeProfIds) {
@@ -73,6 +73,7 @@ public class StructureServiceApplication {
 				.nomResponsable(nomResponsable)
 				.equipe_prof_ids(equipeProfIds) // Set the team member IDs
 				.equipe_prof_names(equipeProfNames) // Set the team member names
+				.parentLabId(parentLabId)
 				.build();
 
 		// Save the structure
