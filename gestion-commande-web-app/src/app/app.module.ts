@@ -14,6 +14,33 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChangePasswordComponent } from './change-password/change-password.component'; // Import BrowserAnimationsModule
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Routes } from '@angular/router';
+
+// const appRoutes: Routes = [
+//   // { path: 'login', component: LoginComponent },
+//   {
+//     path: "login",
+//     loadChildren:
+//       "./modules/authentication/authentication.module#AuthenticationModule"
+//   }, // {path: 'login', component: ReactiveLoginComponent},
+//   {
+//     path: "logout",
+//     loadChildren:
+//       "./modules/authentication/authentication.module#AuthenticationModule"
+//   },
+//   {
+//     path: "home",
+//     component: HomeComponent,
+//     canActivate: [AuthGuard],
+//     children: [
+//       { path: "employeeList", component: EmployeeListComponent },
+//       { path: "addEmployee", component: AddEmployeeComponent },
+//       { path: "employee/:key", component: EmployeeComponent }
+//     ]
+//   },
+//   { path: "**", component: PageNotFoundComponent }
+// ];
+
 @NgModule({
   declarations: [
     AppComponent,

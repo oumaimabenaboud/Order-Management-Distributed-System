@@ -1,19 +1,57 @@
-import {Component, OnInit} from '@angular/core';
-import {Commande} from "../model/commande.model";
-import {CommandesService} from "../services/commandes.service";
+import { Component, OnInit } from '@angular/core';
+import { Professeur } from "../model/professeur.model";
+import { ProfesseurService } from "../services/professeur.service";
+import { PlatformLocation } from '@angular/common';
 
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.css']  // Fix the typo here
+  styleUrls: ['./admin-dashboard.component.css']
 })
-
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit {
   status = false;  // Declare status property
-
+  userId: number | null = null;
 
   addToggle() {
     this.status = !this.status;
+  }constructor(
+    private profService: ProfesseurService,
+    private platformLocation: PlatformLocation
+  ) {}
+
+  ngOnInit(): void {
+    if (this.isBrowser()) {
+      this.getUserId();
+    }
+  }
+
+  isBrowser(): boolean {
+    return typeof window !== 'undefined' && this.platformLocation !== null;
+  }
+
+  getUserId(): void {
+    // Retrieve the id from sessionStorage
+    const id = localStorage.getItem('id');
+    this.userId = id ? parseInt(id, 10) : null;
+    console.log('Long value:', this.userId);
+
+    if (this.userId) {
+      this.getProfessorById();
+    } else {
+      console.error('User ID not found in localStorage');
+    }
+  }
+
+  getProfessorById(): void {
+    this.profService.getProfessor(this.userId!).subscribe(
+      (professor: Professeur) => {
+        console.log('Professor:', professor);
+        console.log(professor.nom);
+        return professor.nom+" "+professor.prenom;
+      },
+      (error) => {
+        console.error('Error fetching professor:', error);
+      }
+    );
   }
 }
-

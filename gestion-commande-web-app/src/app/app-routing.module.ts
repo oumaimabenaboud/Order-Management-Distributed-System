@@ -10,7 +10,7 @@ import {ChangePasswordComponent} from "./change-password/change-password.compone
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'admin', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path:'admin', component: AdminDashboardComponent },
   {path:'login' , component:LoginComponent},
   {path:'prof-admin' , component:ProfAdminViewComponent},
