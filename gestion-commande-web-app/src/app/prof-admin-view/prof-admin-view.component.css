@@ -235,33 +235,31 @@ h4 {
 }
 
 
-/* Style pour le tableau */
 table {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 20px; /* Ajouter un rayon de bordure de 30px */
-  overflow: hidden; /* Pour que le rayon de bordure soit visible */
+  border-radius: 20px; 
+  overflow: hidden; 
 
 }
 
-/* Style pour l'en-tête du tableau */
 th {
   padding: 12px;
-  background-color: #004AAD;
+  background-color: #01618F;
   color: white;
   text-align: left;
 }
 
-/* Style pour les cellules du tableau */
 td {
   padding: 12px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid transparent;
+  background-color: var(--grey);
+
 }
 
-/* Style pour les lignes impaires du tableau */
 tr:nth-child(odd) {
-  background-color: #f2f2f2;
-}
+  background-color: white;
+} 
 
 
 

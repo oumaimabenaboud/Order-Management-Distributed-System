@@ -141,10 +141,11 @@
         <!-- Form header -->
         <div class="hh">
           <h4><i class="fa-solid fa-magnifying-glass-plus"></i> Détails de la structure</h4>
-          <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()">
-            <i class="fa-solid fa-circle-xmark" id="detail-button "></i>
-          </button>
+          
         </div>
+        <button class="btnfp btn-outline-secondary ms-3" (click)="closeDetailsForm()">
+          <i class="fa-solid fa-circle-xmark" id="detail-button "></i>
+        </button>
 
         <!-- Structure details form -->
         <form class="row" [formGroup]="detailsForm">
@@ -211,7 +212,7 @@
       <div class="card-body">
         <div class="hh">
           <h4> <i class="fa-solid fa-building"></i> Ajouter une nouvelle structure</h4>
-          <button class="btnf btn-outline-primary" (click)="closeNewStructureForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
+          <button class="btnfp btn-outline-primary" (click)="closeNewStructureForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
         </div>
         <form class="row" [formGroup]="newStructureForm" (ngSubmit)="saveNewStructure()">
           <div class="col-md-6">

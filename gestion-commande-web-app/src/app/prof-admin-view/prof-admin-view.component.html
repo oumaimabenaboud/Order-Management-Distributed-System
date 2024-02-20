@@ -87,7 +87,7 @@
 
           <li><i class='bx bx-chevron-right' ></i></li>
           <li>
-            <a class="active" routerlin="/prof-admin">Professeurs</a>
+            <a class="active" routerlink="/prof-admin">Professeurs</a>
           </li>
           <form (submit)="search()" class="search-form">
             <div class="form-input">
@@ -166,7 +166,7 @@
         <div class="hh">
 
           <h4><i class="fa-solid fa-magnifying-glass-plus"></i> Détails du professeur</h4>
-          <button class="btnf btn-outline-secondary ms-3" (click)="closeDetailsForm()"> <i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
+          <button class="btnfp btn-outline-secondary ms-3" (click)="closeDetailsForm()"> <i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
 
         </div>
         <form class="row" [formGroup]="detailsForm">
@@ -209,7 +209,7 @@
       <div class="card-body">
         <div class="hh">
           <h4><i class="fa-solid fa-user-plus" id="detail-button "></i> Ajouter un nouveau professeur</h4>
-          <button class="btnf btn-outline-primary" (click)="closeNewProfForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
+          <button class="btnfp btn-outline-primary" (click)="closeNewProfForm()"><i class="fa-solid fa-circle-xmark" id="detail-button "></i></button>
   </div>
           <form class="row" [formGroup]="newProfForm" (ngSubmit)="saveNewProf()">
           <div class="col-md-6">
