@@ -6,6 +6,8 @@ import {StructuresService} from "../services/structures.service";
 import { Structure, structurestype } from "../model/structure.model";
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlatformLocation } from '@angular/common';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -29,19 +31,37 @@ export class StructureAdminViewComponent implements OnInit{
   childEquipesNoms: any[] = [];// Assuming any type for the members, you can replace any with a specific type if available
   //NavBar
   status = false;
+  userId: number | null = null;
+  professeur : Professeur | undefined;
 
-  addToggle() {
-    this.status = !this.status;
-  }
+  
   constructor(
     private structureService: StructuresService,
     private profService: ProfesseurService,
     private formBuilder: FormBuilder,
     private clipboard: Clipboard,
-    private snackBar: MatSnackBar // Inject the Clipboard service here
+    private snackBar: MatSnackBar,
+    private platformLocation: PlatformLocation,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    if (this.isBrowser()) {
+      const id = sessionStorage.getItem('id');
+      this.userId = id ? parseInt(id, 10) : null;
+
+      if (this.userId) {
+        this.profService.getProfessor(this.userId).subscribe(
+          (professor: Professeur) => {
+            this.professeur = professor;
+          },
+          (error) => {
+            console.error('Error fetching professor:', error);
+          }
+        );
+      } else {
+        console.error('User ID not found in sessionStorage');
+      }
     this.structureService.getAllStructures().subscribe({
       next: (data) => {
         this.structures = data;
@@ -82,7 +102,18 @@ export class StructureAdminViewComponent implements OnInit{
     this.initDetailsFormBuilder();
     this.initnewStructureFormBuilder();
   }
+  }
+  isBrowser(): boolean {
+    return typeof window !== 'undefined' && this.platformLocation !== null;
+  }
+  addToggle() {
+    this.status = !this.status;
+  }
 
+  logout() {
+    sessionStorage.removeItem('id');
+    this.router.navigate(['/login']);
+  }
   /*search() {
     // If both prenom and nom are empty, reset the table to show all professors
     if (!this.searchTerm) {

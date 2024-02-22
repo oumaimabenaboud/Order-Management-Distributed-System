@@ -6,6 +6,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Professeur} from "../model/professeur.model";
 import {RubriqueService} from "../services/rubrique.service";
 import {Rubrique} from "../model/rubrique.model";
+import { PlatformLocation } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rubrique-admin-view',
@@ -18,33 +20,51 @@ export class RubriqueAdminViewComponent implements OnInit {
   isNewRubriqueFormOpen: boolean = false;
   selectedRubrique: any;
   searchTerm: string = '';
+  userId: number | null = null;
+  professeur : Professeur | undefined;
 
   //NavBar
   status = false;
 
-  addToggle() {
-    this.status = !this.status;
-  }
   constructor(
     private rubriqueService: RubriqueService,
+    private profService: ProfesseurService,
     private formBuilder: FormBuilder,
     private clipboard: Clipboard,
-    private snackBar: MatSnackBar // Inject the Clipboard service here
+    private snackBar: MatSnackBar,
+    private platformLocation: PlatformLocation,
+    private router: Router
   ) { }
 
 
 
 
   ngOnInit(): void {
+    if (this.isBrowser()) {
+      const id = sessionStorage.getItem('id');
+      this.userId = id ? parseInt(id, 10) : null;
 
-    this.rubriqueService.getAllRubriques().subscribe(
-      { next:(data)=>{
-          this.rubriques = data;
-        },
-        error : (err)=>console.error(err)
-      });
-    this.initDetailsFormBuilder();
-    this.initNewRubriqueFormBuilder();
+      if (this.userId) {
+        this.profService.getProfessor(this.userId).subscribe(
+          (professor: Professeur) => {
+            this.professeur = professor;
+          },
+          (error) => {
+            console.error('Error fetching professor:', error);
+          }
+        );
+      } else {
+        console.error('User ID not found in sessionStorage');
+      }
+      this.rubriqueService.getAllRubriques().subscribe(
+        { next:(data)=>{
+            this.rubriques = data;
+          },
+          error : (err)=>console.error(err)
+        });
+      this.initDetailsFormBuilder();
+      this.initNewRubriqueFormBuilder();
+  }
   }
   copyToClipboard(email: string, event: MouseEvent): void {
     const targetElement = event.currentTarget as HTMLElement;
@@ -57,7 +77,17 @@ export class RubriqueAdminViewComponent implements OnInit {
       data: { trigger: targetElement }
     });
   }
+  isBrowser(): boolean {
+    return typeof window !== 'undefined' && this.platformLocation !== null;
+  }
+  addToggle() {
+    this.status = !this.status;
+  }
 
+  logout() {
+    sessionStorage.removeItem('id');
+    this.router.navigate(['/login']);
+  }
 
   getRubrique(id: any, event?: DragEvent): void  {
     if (event) {

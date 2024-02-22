@@ -4,6 +4,8 @@ import {ProfesseurService} from "../services/professeur.service";
 import {Professeur} from "../model/professeur.model";
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlatformLocation } from '@angular/common';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -20,20 +22,20 @@ export class ProfAdminViewComponent implements OnInit {
   searchTerm: string = '';
   enabled: boolean = false; // Define the enabled property
   userId: number | null = null;
+  professeur : Professeur | undefined;
 
 
 
   //NavBar
   status = false;
 
-  addToggle() {
-    this.status = !this.status;
-  }
   constructor(
     private profService: ProfesseurService,
     private formBuilder: FormBuilder,
     private clipboard: Clipboard,
-    private snackBar: MatSnackBar // Inject the Clipboard service here
+    private snackBar: MatSnackBar,
+    private platformLocation: PlatformLocation,
+    private router: Router
     
   ) { }
 
@@ -41,16 +43,44 @@ export class ProfAdminViewComponent implements OnInit {
 
   //Table of Profs
   ngOnInit(): void {
+    if (this.isBrowser()) {
+      const id = sessionStorage.getItem('id');
+      this.userId = id ? parseInt(id, 10) : null;
 
-    this.profService.getProfessors().subscribe(
-      { next:(data)=>{
-          this.profs = data;
-        },
-        error : (err)=>console.error(err)
-      });
-    this.initDetailsFormBuilder();
-    this.initNewProfFormBuilder();
+      if (this.userId) {
+        this.profService.getProfessor(this.userId).subscribe(
+          (professor: Professeur) => {
+            this.professeur = professor;
+          },
+          (error) => {
+            console.error('Error fetching professor:', error);
+          }
+        );
+      } else {
+        console.error('User ID not found in sessionStorage');
+      }
+      this.profService.getProfessors().subscribe(
+        { next:(data)=>{
+            this.profs = data;
+          },
+          error : (err)=>console.error(err)
+        });
+      this.initDetailsFormBuilder();
+      this.initNewProfFormBuilder();
   }
+}
+    isBrowser(): boolean {
+      return typeof window !== 'undefined' && this.platformLocation !== null;
+    }
+    addToggle() {
+      this.status = !this.status;
+    }
+
+    logout() {
+      sessionStorage.removeItem('id');
+      this.router.navigate(['/login']);
+    }
+
   copyToClipboard(email: string, event: MouseEvent): void {
     const targetElement = event.currentTarget as HTMLElement;
     this.clipboard.copy(email);

@@ -28,6 +28,7 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    let userId = null;
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
   
@@ -36,7 +37,9 @@ export class LoginComponent {
           if (response) {
             if (response === 'Admin login successful') {
               console.log(response);
-              this.router.navigate(['/admin']);
+              userId=-1;
+              sessionStorage.setItem('id', JSON.stringify(userId));
+              this.router.navigate(['/prof-admin']);
             } else if (response === 'Invalid email format' || response === 'Email and password are required') {
               this.openErrorSnackBar(response);
             } else if (response === 'User connected for the first time') {
@@ -44,7 +47,7 @@ export class LoginComponent {
               this.loginService.getUserIdByEmail(email).subscribe(
                 (professor: any) => {
                   // console.log('Professor:', professor);
-                  const userId = professor && professor.id;
+                  userId = professor && professor.id;
                   if (userId) {
                     this.router.navigate(['/change-password', { userId: userId }]);
                   } else {
@@ -66,9 +69,8 @@ export class LoginComponent {
                   // console.log('Professor:', professor);
                   const userId = professor && professor.id;
                   if (userId) {
-                    console.log('local storage:', userId);
+                    // console.log('local storage:', userId);
                     sessionStorage.setItem('id', JSON.stringify(userId));
-                    // sessionStorage.setItem('id',userId)
                     this.router.navigate(['/admin']);                  
                   } else {
                     console.error('User ID not found for email:', email);
