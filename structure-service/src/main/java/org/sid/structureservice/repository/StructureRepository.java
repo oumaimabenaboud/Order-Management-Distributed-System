@@ -10,4 +10,5 @@ import java.util.List;
 @RepositoryRestResource
 public interface StructureRepository extends JpaRepository<Structure,Long> {
     List<Structure> findByType(structurestype type);
+    Structure getStructureById (Long id);
 }

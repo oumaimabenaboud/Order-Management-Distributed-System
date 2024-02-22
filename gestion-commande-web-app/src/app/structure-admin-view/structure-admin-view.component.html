@@ -125,7 +125,7 @@
             </td>
 
             <td style="text-decoration: none; color:#004AAD;" (click)="copyToClipboard(s.nomResponsable, $event)" draggable="true" (dragstart)="onDragStart($event, s.nomResponsable)"><i class="fa-solid fa-envelope"></i> {{s.nomResponsable}}</td>
-            <td style="text-decoration: none; color:#004AAD;"> {{s.budget}} DHs</td>
+            <td style="text-decoration: none; color:#004AAD;"> {{s.budgetAnnuel}} DHs</td>
             <td>
               <button class ="btnd detail-button" (click)="getStructureById(s.id)"> <i class="fa-solid fa-magnifying-glass-plus"></i></button>
             </td>
@@ -175,16 +175,30 @@
           <div *ngIf="detailsForm.get('type')?.value === 'Equipe de Recherche'" class="col-md-6">
             <div class="form-group">
               <label>Laboratoire Parent</label>
-              <input type="text" class="form-control" id="parentLabId" formControlName="parentLabId" list="laboList" [readonly]="!isEditMode">
+              <input type="text" class="form-control" id="parentLabNom" formControlName="parentLabNom" list="laboList" [readonly]="!isEditMode">
               <datalist id="laboList">
-                <option *ngFor="let parentLabId of listlabo" [value]="parentLabId.nom"></option>
+                <option *ngFor="let parentLab of listlabo" [value]="parentLab.nom"></option>
               </datalist>
             </div>
           </div>
+          <!-- Additional input for equi_child -->
+          <div *ngIf="detailsForm.get('type')?.value === 'Laboratoire de Recherche'" >
+            <label>Équipes de recherche affiliées</label>
+            <div class="col-md-6"  *ngFor="let equipe of childEquipesNoms; let i = index">
+              <div class="form-group">
+                <label>Équipe {{ i + 1 }}</label>
+                <input type="text" class="form-control" [formControl]="childEquipesNoms[i]"  list="professorList"  [readonly]="!isEditMode">
+                <datalist id="professorList">
+                  <option *ngFor="let equipe of listprof" [value]="equipe.prenom+' '+ equipe.nom" ></option>
+                </datalist>
+              </div>
+            </div>
+          </div>
+
 
           <div class="col-md-6">
             <div class="form-group">
-              <input type="number" class="form-control" id="budget" formControlName="budget" [readonly]="!isEditMode">
+              <input type="number" class="form-control" id="budgetAnnuel" formControlName="budgetAnnuel" [readonly]="!isEditMode">
             </div>
           </div>
           <div class="col-md-6">
@@ -254,7 +268,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <!-- <label for="nom">Nom</label> -->
-              <input type="number" class="form-control" id="budget" formControlName="budget" placeholder="Budget Annuel">
+              <input type="number" class="form-control" id="budgetAnnuel" formControlName="budgetAnnuel" placeholder="Budget Annuel">
             </div>
           </div>
           <div class="col-md-6">

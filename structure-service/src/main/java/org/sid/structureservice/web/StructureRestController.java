@@ -2,19 +2,16 @@ package org.sid.structureservice.web;
 
 import lombok.AllArgsConstructor;
 import org.sid.structureservice.entities.Structure;
-import org.sid.structureservice.entities.ResponsableStructure;
 import org.sid.structureservice.enums.structurestype;
 import org.sid.structureservice.feign.BudgetRestClient;
 import org.sid.structureservice.feign.ProfesseurRestClient;
 import org.sid.structureservice.model.Professeur;
 import org.sid.structureservice.repository.StructureRepository;
-import org.sid.structureservice.repository.ResponsableStructureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController@AllArgsConstructor
 @RequestMapping("/structures")
@@ -74,7 +71,7 @@ public class StructureRestController {
         newStructure.setNom(addedStructure.getNom());
         newStructure.setAcronyme(addedStructure.getAcronyme());
         newStructure.setType(addedStructure.getType());
-        newStructure.setBudget(addedStructure.getBudget());
+        newStructure.setBudgetAnnuel(addedStructure.getBudgetAnnuel());
         newStructure.setIdResponsable(responsibleProfessor.getId());
         newStructure.setNomResponsable(responsibleProfessor.getPrenom() + ' ' + responsibleProfessor.getNom());
         newStructure.setEquipe_prof_ids(addedStructure.getEquipe_prof_ids());
@@ -93,7 +90,8 @@ public class StructureRestController {
     @GetMapping
     public List<Structure> getAllStructures(){
         List<Structure> structures = structureRepository.findAll();
-        populateEquipeProfesseurs(structures); // Populate equipeProfesseurs for each structure
+        populateEquipeProfesseurs(structures);// Populate equipeProfesseurs for each structure
+        populateEquipeChild(structures);
         return structures;
     }
 
@@ -116,7 +114,25 @@ public class StructureRestController {
             structure.setEquipe_prof_names(equipeProfNames);
         }
     }
-
+    private void populateEquipeChild(List<Structure> structures) {
+        for (Structure structure : structures) {
+            List<String> childEquipesNoms = new ArrayList<>();
+            if (structure.getChildEquipesIds() != null) {
+                for (Long equipeId : structure.getChildEquipesIds()) {
+                    Structure fetchedStructure = structureRepository.getStructureById(equipeId);
+                    if (fetchedStructure != null) {
+                        String equipeName = fetchedStructure.getNom();
+                        childEquipesNoms.add(equipeName);
+                    } else {
+                        System.out.println("Failed to fetch structure with ID: " + equipeId);
+                    }
+                }
+            } else {
+                System.out.println("Equipes affiliées IDs is null for Laboratoire with ID: " + structure.getId());
+            }
+            structure.setChildEquipesNoms(childEquipesNoms);
+        }
+    }
     @GetMapping("/byType/{type}")
     public List<Structure> getStructuresByType(@PathVariable structurestype type) {
         List<Structure> structures = structureRepository.findByType(type);
@@ -134,7 +150,7 @@ public class StructureRestController {
     public void deleteStructure(@PathVariable String id){
         structureRepository.deleteById(Long.valueOf(id));
     }
-    private List<Professeur> fetchProfessorsForTeam(Collection<Professeur> professors) {
+    /*private List<Professeur> fetchProfessorsForTeam(Collection<Professeur> professors) {
         List<Professeur> updatedProfessors = new ArrayList<>();
 
         for (Professeur professor : professors) {
@@ -144,5 +160,5 @@ public class StructureRestController {
         }
 
         return updatedProfessors;
-    }
+    }*/
 }
