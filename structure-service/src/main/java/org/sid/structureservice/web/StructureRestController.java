@@ -117,6 +117,12 @@ public class StructureRestController {
         }
     }
 
+    @GetMapping("/byType/{type}")
+    public List<Structure> getStructuresByType(@PathVariable structurestype type) {
+        List<Structure> structures = structureRepository.findByType(type);
+        populateEquipeProfesseurs(structures); // Populate equipeProfesseurs for each structure
+        return structures;
+    }
 
     @GetMapping("{id}")
     public Structure getStructureById(@PathVariable Long id){

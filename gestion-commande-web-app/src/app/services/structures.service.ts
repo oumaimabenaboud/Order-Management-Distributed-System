@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Structure} from "../model/structure.model";
+import {Professeur} from "../model/professeur.model";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class StructuresService {
   public getStructureById(id: any):Observable<Structure>{
     return this.http.get<Structure>("http://localhost:1818/STRUCTURE-SERVICE/structures/"+id)
   }
+  getStructuresByType(type: string): Observable<Structure[]> {
+    return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures/byType/"+type);
+  }
+
   public addStructure(Structure: any) {
     return this.http.post("http://localhost:1818/STRUCTURE-SERVICE/structures", Structure)
   }
@@ -27,4 +32,6 @@ export class StructuresService {
   public updateStructure(id: any, Structure: any) {
     return this.http.put("http://localhost:1818/STRUCTURE-SERVICE/structures/"+id, Structure)
   }
+
+
 }
