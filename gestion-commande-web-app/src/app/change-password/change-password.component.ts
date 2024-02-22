@@ -40,8 +40,13 @@ export class ChangePasswordComponent implements OnInit {
       
       this.professorService.updateProfessor(userId, updatedProfessor).subscribe(
         (response) => {
-          console.log('Password updated successfully:', response);
-          this.router.navigate(['/admin']), {userId: userId};
+          // console.log('Password updated successfully:', response);
+          this.snackBar.open('Mot de passe mis à jour avec succès', 'Fermer', {
+            duration: 2000,
+            horizontalPosition: 'left',
+            verticalPosition: 'top'
+          });
+          this.router.navigate(['/login']);
         },
         (error) => {
           console.error('Error updating password:', error);
