@@ -4,8 +4,11 @@ export interface Structure {
   nom: string;
   idResponsable: number;
   nomResponsable: string;
-  budget: number;
+  budgetAnnuel: number;
   parentLabId: number;
+  parentLabNom: string;
+  childEquipesIds: number[]; // List of professor IDs
+  childEquipesNoms: string[]; // List of professor names
   type: structurestype; // Assuming structurestype is a string enum
 
   equipe_prof_ids: number[]; // List of professor IDs

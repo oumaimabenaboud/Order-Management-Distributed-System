@@ -6,8 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.sid.structureservice.enums.structurestype;
-import org.sid.structureservice.model.Professeur;
-import java.util.Collection;
+
 import java.util.List;
 
 @Entity
@@ -20,8 +19,14 @@ public class Structure {
 
     private Long idResponsable;
     private String nomResponsable;
-    private double budget;
+    private double budgetAnnuel;
     private Long parentLabId;
+    private String parentLabNom;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Long> childEquipesIds;
+
+    @ElementCollection
+    private List<String> childEquipesNoms;
 
     @Enumerated(EnumType.STRING)
     private structurestype type;

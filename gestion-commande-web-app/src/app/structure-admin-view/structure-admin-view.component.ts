@@ -25,7 +25,8 @@ export class StructureAdminViewComponent implements OnInit{
   dropdowns: number[][] = [[]];
   public newStructureForm! : FormGroup;
   detailsForm!: FormGroup;
-  equipe_prof_names: any[] = []; // Assuming any type for the members, you can replace any with a specific type if available
+  equipe_prof_names: any[] = [];
+  childEquipesNoms: any[] = [];// Assuming any type for the members, you can replace any with a specific type if available
   //NavBar
   status = false;
 
@@ -120,6 +121,7 @@ export class StructureAdminViewComponent implements OnInit{
       next: (structure) => {
         this.selectedStructure = structure;
         this.equipe_prof_names = [];
+        this.childEquipesNoms = [];
         // Pre-fill the detailsForm with the selected structure's information
         this.detailsForm.patchValue({
           acronyme: structure.acronyme,
@@ -127,13 +129,18 @@ export class StructureAdminViewComponent implements OnInit{
           type: getStructureTypeAsString(structure.type),
           nomResponsable: structure.nomResponsable,
           parentLabId:structure.parentLabId,
-          budget: structure.budget,
+          parentLabNom:structure.parentLabNom,
+          budgetAnnuel: structure.budgetAnnuel,
         });
 
 
         // Add each member to the membres FormArray
         structure.equipe_prof_names.forEach(member => {
           this.addMembre(member);
+        });
+
+        structure.childEquipesNoms.forEach(equipe => {
+          this.addEquipe(equipe);
         });
 
         this.openDetailsForm();
@@ -144,6 +151,10 @@ export class StructureAdminViewComponent implements OnInit{
 
   addMembre(member: string) {
     this.equipe_prof_names.push(this.formBuilder.control(member));
+  }
+
+  addEquipe(equipe: string) {
+    this.childEquipesNoms.push(this.formBuilder.control(equipe));
   }
 
   openDetailsForm() {
@@ -162,10 +173,11 @@ export class StructureAdminViewComponent implements OnInit{
       acronyme: ['', [Validators.required]],
       nom: ['', [Validators.required]],
       nomResponsable: ['', [Validators.required]],
-      budget: [null, [Validators.required]],
+      budgetAnnuel: [null, [Validators.required]],
       type: ['', [Validators.required]],
-      parentLabId:['', [Validators.required]],
+      parentLabNom:['', [Validators.required]],
       equipe_prof_names: this.formBuilder.array([]), // Initialize as a FormArray
+      childEquipesNoms:this.formBuilder.array([]),
     });
 
 
@@ -210,6 +222,12 @@ export class StructureAdminViewComponent implements OnInit{
     updatedStructure.equipe_prof_names = selectedMemberNames;
     updatedStructure.equipe_prof_ids = selectedMemberIds;
 
+    // Extract selected responsible person's ID
+    const selectedLaboName = this.detailsForm.get('parentLabNom')?.value;
+    const selectedLabo = this.listlabo.find(labo => labo.nom === selectedLaboName);
+    if (selectedLabo) {
+      updatedStructure.parentLabId = selectedLabo.id;
+    }
     // Update the structure with the selected member names
     this.structureService.updateStructure(this.selectedStructure.id, updatedStructure).subscribe({
       next: () => {
@@ -234,7 +252,7 @@ export class StructureAdminViewComponent implements OnInit{
       acronyme: ['', [Validators.required]],
       nom: ['', [Validators.required]],
       idResponsable: ['', [Validators.required]],
-      budget: [null, [Validators.required]],
+      budgetAnnuel: [null, [Validators.required]],
       type: ['', [Validators.required]],
       equipe_prof_ids: [[]], // Initialize as an empty array
     });
@@ -398,6 +416,4 @@ allowDrop(event: DragEvent): void {
     });
   }*/
 
-
-  protected readonly structurestype = structurestype;
 }
