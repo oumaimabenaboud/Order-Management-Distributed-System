@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.bouncycastle.asn1.iana.IANAObjectIdentifiers.mail;
-
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -50,7 +48,6 @@ public class LoginController {
             }
 
             Optional<professeur> optionalProf = ProfesseurRepo.findByMail(email);
-            logger.error(String.valueOf(optionalProf));
             if (optionalProf.isPresent()) {
                 professeur prof = optionalProf.get();
                 // Check if the provided password matches the stored hashed password
@@ -68,14 +65,14 @@ public class LoginController {
                     return "Invalid credentials";
                 }
             } else {
+                logger.error("Professor not found");
                 return "Professor not found";
             }
         }
     }
     @GetMapping("/getUserByEmail")
-    public Long getUserIdByEmail(@RequestParam String email) {
-        Optional<professeur> optionalProf = ProfesseurRepo.findByMail(email);
-        return optionalProf.map(professeur::getId).orElse(null);
+    public Optional<professeur> getUserIdByEmail(@RequestParam String email) {
+        return ProfesseurRepo.findByMail(email);
     }
 
     private boolean isValidEmailPattern(String email) {

@@ -6,13 +6,14 @@ import {ProfAdminViewComponent} from "./prof-admin-view/prof-admin-view.componen
 import {StructureAdminViewComponent} from "./structure-admin-view/structure-admin-view.component";
 import {RubriqueAdminViewComponent} from "./rubrique-admin-view/rubrique-admin-view.component";
 import {ChangePasswordComponent} from "./change-password/change-password.component";
-
+import { WelcomeComponent } from './welcome/welcome.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'admin', pathMatch: 'full' },
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path:'admin', component: AdminDashboardComponent },
   {path:'login' , component:LoginComponent},
+  {path:'welcome' , component:WelcomeComponent},
   {path:'prof-admin' , component:ProfAdminViewComponent},
   {path:'structure-admin' , component:StructureAdminViewComponent},
   {path:'rubrique-admin' , component:RubriqueAdminViewComponent},

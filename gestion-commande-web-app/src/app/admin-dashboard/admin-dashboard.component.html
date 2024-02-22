@@ -68,7 +68,8 @@
     <!-- <a href="#" class="profile">
       <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
     </a> -->
-    <a routerLink="/login" class="nav-link">Se connecter</a>
+    
+    <a class="">Bonjour, {{ professeur?.prenom }} {{ professeur?.nom }}</a>
 
   </nav>
   <!-- NAVBAR -->
@@ -105,7 +106,7 @@
       <li>
         <i class='bx bxs-group' ></i>
         <span class="text">
-          <h3>2834</h3>
+          <h3>{{ professeur?.prenom }}</h3>
           <p>Visitors</p>
         </span>
       </li>

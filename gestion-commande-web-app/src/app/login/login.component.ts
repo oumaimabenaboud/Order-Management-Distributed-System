@@ -40,10 +40,11 @@ export class LoginComponent {
             } else if (response === 'Invalid email format' || response === 'Email and password are required') {
               this.openErrorSnackBar(response);
             } else if (response === 'User connected for the first time') {
-              console.log(response);
+              // console.log(response);
               this.loginService.getUserIdByEmail(email).subscribe(
-                (userId) => {
-                  // console.log('User ID:', userId);
+                (professor: any) => {
+                  // console.log('Professor:', professor);
+                  const userId = professor && professor.id;
                   if (userId) {
                     this.router.navigate(['/change-password', { userId: userId }]);
                   } else {
@@ -55,13 +56,31 @@ export class LoginComponent {
                   console.error('Error fetching user ID:', error);
                   this.openErrorSnackBar('Error fetching user ID');
                 }
-              );
+              );              
+            } else if (response === 'Professor not found') {
+              this.openErrorSnackBar("Professeur not found");
             } else if (response === 'Login successful') {
               console.log(response);
-              this.router.navigate(['/prof-admin']);
+              this.loginService.getUserIdByEmail(email).subscribe(
+                (professor: any) => {
+                  // console.log('Professor:', professor);
+                  const userId = professor && professor.id;
+                  if (userId) {
+                    console.log('local storage:', userId);
+                    localStorage.setItem('id', JSON.stringify(userId));
+                    // localStorage.setItem('id',userId)
+                    this.router.navigate(['/admin']);                  
+                  } else {
+                    console.error('User ID not found for email:', email);
+                    this.openErrorSnackBar('User ID not found for email');
+                  }
+                },
+                (error) => {
+                  console.error('Error fetching user ID:', error);
+                  this.openErrorSnackBar('Error fetching user ID');
+                }
+              ); 
             } else if (response === 'Invalid credentials') {
-              this.openErrorSnackBar(response);
-            } else if (response === 'Professeur not found') {
               this.openErrorSnackBar(response);
             }
           } else {
