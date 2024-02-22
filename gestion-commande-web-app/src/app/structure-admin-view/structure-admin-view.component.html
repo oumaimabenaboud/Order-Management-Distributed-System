@@ -183,13 +183,17 @@
           </div>
           <!-- Additional input for equi_child -->
           <div *ngIf="detailsForm.get('type')?.value === 'Laboratoire de Recherche'" >
-            <label>Équipes de recherche affiliées</label>
+            <label *ngIf="childEquipesNoms.length > 0 || isEditMode">Équipes de recherche affiliées</label>
+            <br *ngIf="isEditMode">
+            <!-- Add button -->
+            <button type="button" class="btnp btn-primary" (click)="addEquipeChildNom()" *ngIf="isEditMode"> Ajouter<i class="fa-solid fa-user-plus"></i></button>
+            <!-- Remove button -->
+            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeEquipeChildNom()" *ngIf="isEditMode"> Retrancher<i class="fa-solid fa-user-minus"></i> </button>
             <div class="col-md-6"  *ngFor="let equipe of childEquipesNoms; let i = index">
               <div class="form-group">
-                <label>Équipe {{ i + 1 }}</label>
-                <input type="text" class="form-control" [formControl]="childEquipesNoms[i]"  list="professorList"  [readonly]="!isEditMode">
-                <datalist id="professorList">
-                  <option *ngFor="let equipe of listprof" [value]="equipe.prenom+' '+ equipe.nom" ></option>
+                <input type="text" class="form-control" [formControl]="childEquipesNoms[i]"  list="equipeList"  [readonly]="!isEditMode">
+                <datalist id="equipeList">
+                  <option *ngFor="let equipe of listequipe" [value]="equipe.nom" ></option>
                 </datalist>
               </div>
             </div>
@@ -210,15 +214,24 @@
               </datalist>
             </div>
           </div>
+          <label>Membres</label>
+          <!-- Add button -->
+          <button type="button" class="btnp btn-primary" (click)="addEquipeProf()" *ngIf="isEditMode"> Ajouter<i class="fa-solid fa-user-plus"></i></button>
+
+          <!-- Remove button -->
+          <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeEquipeProf()" *ngIf="isEditMode"> Retrancher<i class="fa-solid fa-user-minus"></i> </button>
+
+          <!-- Form fields -->
+
           <div class="col-md-6" *ngFor="let membre of equipe_prof_names; let i = index">
             <div class="form-group">
-              <label>Membre {{ i + 1 }}</label>
-              <input type="text" class="form-control" [formControl]="equipe_prof_names[i]"  list="professorList"  [readonly]="!isEditMode">
+              <input type="text" class="form-control" [formControl]="equipe_prof_names[i]" list="professorList" [readonly]="!isEditMode">
               <datalist id="professorList">
                 <option *ngFor="let membre of listprof" [value]="membre.prenom+' '+ membre.nom" ></option>
               </datalist>
             </div>
           </div>
+
 
           <!-- Add more form controls as needed -->
         </form>
@@ -285,7 +298,7 @@
             <div class="hh">
               <!-- <label for="nom" style="color:#004AAD; margin-left:4px">Membres de la structure</label> -->
               <button type="button" class="btnp btn-primary" (click)="addDropdown()"> Ajouter<i class="fa-solid fa-user-plus"></i></button>
-            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeDropdown()"> Retarancher<i class="fa-solid fa-user-minus"></i> </button>
+            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeDropdown()"> Retrancher<i class="fa-solid fa-user-minus"></i> </button>
           </div>
             </div>
           <div class="col-md-6" *ngFor="let dropdown of dropdowns; let i = index">

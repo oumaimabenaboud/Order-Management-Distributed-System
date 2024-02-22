@@ -22,6 +22,7 @@ export class StructureAdminViewComponent implements OnInit{
   structureTypes: string[] = Object.values(structurestype);
   listprof: any[] = [];
   listlabo:any[]=[];
+  listequipe:any[]=[];
   dropdowns: number[][] = [[]];
   public newStructureForm! : FormGroup;
   detailsForm!: FormGroup;
@@ -77,6 +78,12 @@ export class StructureAdminViewComponent implements OnInit{
       (data)=>{
       this.listlabo = data;
     },
+      (error)=> console.error(error)
+    );
+    this.structureService.getStructuresByType('EquipedeRecherche').subscribe(
+      (data)=>{
+        this.listequipe = data;
+      },
       (error)=> console.error(error)
     );
     this.initDetailsFormBuilder();
@@ -179,21 +186,47 @@ export class StructureAdminViewComponent implements OnInit{
       equipe_prof_names: this.formBuilder.array([]), // Initialize as a FormArray
       childEquipesNoms:this.formBuilder.array([]),
     });
-
-
-
   }
 
   isEditMode: boolean = false;
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
   }
+  addEquipeProf() {
+    if (this.isEditMode) {
+      // For professor equipe names
+      this.equipe_prof_names.push(this.formBuilder.control(''));
+    }
+  }
+  addEquipeChildNom() {
+    if (this.isEditMode) {
+      // For child equipe names
+      this.childEquipesNoms.push(this.formBuilder.control(''));
+    }
+  }
+
+  removeEquipeProf() {
+    if (this.isEditMode) {
+      // For professor equipe names
+      if (this.equipe_prof_names.length > 1) {
+        this.equipe_prof_names.pop();
+      }
+    }
+  }
+  removeEquipeChildNom() {
+    if (this.isEditMode) {
+      // For child equipe names
+      if (this.childEquipesNoms.length > 1) {
+        this.childEquipesNoms.pop();
+      }
+    }
+  }
 
   saveStructureChanges() {
     const updatedStructure: Structure = this.detailsForm.value;
 
     // Map structure type if needed
-    // updatedStructure.type = this.mapStructureType(updatedStructure.type);
+    updatedStructure.type = <structurestype>this.mapStructureType(updatedStructure.type);
 
     // Extract selected responsible person's ID
     const selectedResponsableName = this.detailsForm.get('nomResponsable')?.value;
@@ -222,12 +255,33 @@ export class StructureAdminViewComponent implements OnInit{
     updatedStructure.equipe_prof_names = selectedMemberNames;
     updatedStructure.equipe_prof_ids = selectedMemberIds;
 
-    // Extract selected responsible person's ID
+    // Extract selected labo's ID
     const selectedLaboName = this.detailsForm.get('parentLabNom')?.value;
     const selectedLabo = this.listlabo.find(labo => labo.nom === selectedLaboName);
     if (selectedLabo) {
       updatedStructure.parentLabId = selectedLabo.id;
     }
+
+
+    const selectedChildEquipeNames: string[] = [];
+    for (let i = 0; i < this.childEquipesNoms.length; i++) {
+      const control = this.childEquipesNoms.at(i);
+      selectedChildEquipeNames.push(control.value);
+    }
+
+
+    const selectedChildEquipeIds: number[] = [];
+    selectedChildEquipeNames.forEach(equipeName => {
+      const selectedEquipe = this.listequipe.find(equipe => equipe.nom === equipeName);
+      if (selectedEquipe) {
+        selectedChildEquipeIds.push(selectedEquipe.id);
+      }
+    });
+
+    updatedStructure.childEquipesNoms = selectedChildEquipeNames;
+    updatedStructure.childEquipesIds = selectedChildEquipeIds;
+
+
     // Update the structure with the selected member names
     this.structureService.updateStructure(this.selectedStructure.id, updatedStructure).subscribe({
       next: () => {
@@ -235,11 +289,20 @@ export class StructureAdminViewComponent implements OnInit{
         window.location.reload();
         this.isEditMode = false; // Disable edit mode after saving changes
       },
-      error: err => {
-        console.error('An error occurred while updating structure:', err);
-        // Optionally, display an error message to the user
-        window.alert("An error occurred while updating structure. Please try again later.");
+      error : error => {
+        console.error("Une erreur s'est produite lors de l'ajout de la structure.", error);
+      if (error.status === 200) {
+        window.alert('Structure mise à jour avec succès !');
+        window.location.reload();
+        this.closeNewStructureForm();
+      } else if (error.status === 400) {
+        // Bad request, display error message from server
+        window.alert(error.error);
+      } else {
+        // Other errors, display generic error message
+        window.alert("Une erreur s'est produite lors de la modification de la structure. Veuillez réessayer plus tard.");
       }
+    }
     });
   }
 

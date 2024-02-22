@@ -43,11 +43,12 @@ public class StructureServiceApplication {
 			Long professorId2 = 2L;
 			Long professorId3 = 3L;
 			Long professorId4 = 4L;
-
+			Long professorId5 = 5L;
 			// Add example structures
 			Structure structure1 = addStructure(structureRepository, "Laboratoire d'IA", "LabodeRecherche", 10000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId3, professorId4), professeurRestClient,null,null,List.of(2L));
-			Structure structure2 = addStructure(structureRepository, "Equipe Robotique", "EquipedeRecherche", 15000.0, professorId2, "Ali Oubelkacem", List.of(professorId1, professorId3), professeurRestClient,1L,"Laboratoire d'IA",null );
-			Structure structure3 = addStructure(structureRepository, "Projet NLP", "ProjetdeRecherche", 20000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId4), professeurRestClient,null,null,null);
+			Structure structure2 = addStructure(structureRepository, "Equipe Robotique", "EquipedeRecherche", 15000.0, professorId2, "Ali Oubelkacem", List.of(professorId1, professorId3,professorId4,professorId5), professeurRestClient,1L,"Laboratoire d'IA",null );
+			Structure structure3 = addStructure(structureRepository, "Projet NLP", "ProjetdeRecherche", 20000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId5), professeurRestClient,null,null,null);
+			Structure structure4 = addStructure(structureRepository, "Laboratoire de BioInformatique", "LabodeRecherche", 10000.0, professorId4, "Mehdi Alaoui Ismaili", List.of(professorId1, professorId2, professorId3), professeurRestClient,null,null,null);
 
 			// Fetch all structures
 			List<Structure> allStructures = structureRepository.findAll();
@@ -66,19 +67,7 @@ public class StructureServiceApplication {
 			}
 		}
 
-		// Fetch child equipe names using IDs
-		List<String> childEquipesNoms = new ArrayList<>();
-		for (Long equipeId : childEquipesIds) {
-			Structure fetchedStructure = structureRepository.getStructureById(equipeId);
-			if (fetchedStructure != null) {
-				String equipeName = fetchedStructure.getNom();
-				childEquipesNoms.add(equipeName);
-			} else {
-				System.out.println("Failed to fetch structure with ID: " + equipeId);
-			}
-		}
-
-		// Create the structure
+		// Create the structure without child equipe names
 		Structure structure = Structure.builder()
 				.nom(name)
 				.acronyme(name.substring(0, 3)) // Assuming acronym is the first three letters of the name
@@ -89,14 +78,32 @@ public class StructureServiceApplication {
 				.equipe_prof_ids(equipeProfIds) // Set the team member IDs
 				.equipe_prof_names(equipeProfNames) // Set the team member names
 				.parentLabId(parentLabId)
-                .parentLabNom(parentLabNom)
+				.parentLabNom(parentLabNom)
 				.childEquipesIds(childEquipesIds)
-				.childEquipesNoms(childEquipesNoms)
 				.build();
 
-		// Save the structure
-		return structureRepository.save(structure);
+		// Save the parent structure first
+		Structure savedStructure = structureRepository.save(structure);
+
+		// Fetch and add child equipe names using IDs after saving the parent structure
+		List<String> childEquipesNoms = new ArrayList<>();
+		if (childEquipesIds != null) {
+			for (Long equipeId : childEquipesIds) {
+				Structure fetchedStructure = structureRepository.getStructureById(equipeId);
+				if (fetchedStructure != null) {
+					String equipeName = fetchedStructure.getNom();
+					childEquipesNoms.add(equipeName);
+				} else {
+					System.out.println("Failed to fetch structure with ID: " + equipeId);
+				}
+			}
+		}
+
+		// Update the parent structure with child equipe names and save again
+		savedStructure.setChildEquipesNoms(childEquipesNoms);
+		return structureRepository.save(savedStructure);
 	}
+
 
 	private void populateEquipeProfesseurs(List<Structure> structures, ProfesseurRestClient professeurRestClient) {
 		for (Structure structure : structures) {
