@@ -19,6 +19,8 @@ export class ProfAdminViewComponent implements OnInit {
   selectedProf: any;
   searchTerm: string = '';
   enabled: boolean = false; // Define the enabled property
+  userId: number | null = null;
+
 
 
   //NavBar
@@ -32,6 +34,7 @@ export class ProfAdminViewComponent implements OnInit {
     private formBuilder: FormBuilder,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar // Inject the Clipboard service here
+    
   ) { }
 
 
@@ -86,10 +89,6 @@ toggleAccess(prof: Professeur): void {
     }
   );
 }
-
-
-
-
 
 
 
