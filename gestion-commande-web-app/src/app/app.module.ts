@@ -15,6 +15,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Routes } from '@angular/router';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 // const appRoutes: Routes = [
 //   // { path: 'login', component: LoginComponent },
@@ -49,7 +50,8 @@ import { Routes } from '@angular/router';
     ProfAdminViewComponent,
     StructureAdminViewComponent,
     RubriqueAdminViewComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,
