@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Professeur } from "../model/professeur.model";
 import { ProfesseurService } from "../services/professeur.service";
 import { PlatformLocation } from '@angular/common';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -16,13 +18,14 @@ export class AdminDashboardComponent implements OnInit {
 
   constructor(
     private profService: ProfesseurService,
-    private platformLocation: PlatformLocation
+    private platformLocation: PlatformLocation,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     if (this.isBrowser()) {
-      // Retrieve the id from localStorage
-      const id = localStorage.getItem('id');
+      // Retrieve the id from sessionStorage
+      const id = sessionStorage.getItem('id');
       this.userId = id ? parseInt(id, 10) : null;
     
       if (this.userId) {
@@ -36,7 +39,7 @@ export class AdminDashboardComponent implements OnInit {
           }
         );
       } else {
-        console.error('User ID not found in localStorage');
+        console.error('User ID not found in sessionStorage');
       }
     }
   }
@@ -46,5 +49,10 @@ export class AdminDashboardComponent implements OnInit {
   }
   addToggle() {
     this.status = !this.status;
+  }
+
+  logout() {
+    sessionStorage.removeItem('id');
+    this.router.navigate(['/login']);
   }
 }

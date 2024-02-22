@@ -67,8 +67,8 @@ export class LoginComponent {
                   const userId = professor && professor.id;
                   if (userId) {
                     console.log('local storage:', userId);
-                    localStorage.setItem('id', JSON.stringify(userId));
-                    // localStorage.setItem('id',userId)
+                    sessionStorage.setItem('id', JSON.stringify(userId));
+                    // sessionStorage.setItem('id',userId)
                     this.router.navigate(['/admin']);                  
                   } else {
                     console.error('User ID not found for email:', email);
