@@ -12,40 +12,39 @@ export class AdminDashboardComponent implements OnInit {
   status = false;  // Declare status property
   userId: number | null = null;
   userName: string = '';
+  professeur: Professeur | undefined;
 
-  addToggle() {
-    this.status = !this.status;
-  }constructor(
+  constructor(
     private profService: ProfesseurService,
     private platformLocation: PlatformLocation
   ) {}
 
   ngOnInit(): void {
-    // Retrieve the id from localStorage
-    const id = localStorage.getItem('id');
-    this.userId = id ? parseInt(id, 10) : null;
-    console.log('Long value:', this.userId);
-  
-    if (this.userId) {
-      this.profService.getProfessor(this.userId).subscribe(
-        (professor: Professeur) => {
-          console.log('Professor:', professor);
-          console.log(professor.nom);
-          this.userName = professor.nom + ' ' + professor.prenom;
-        },
-        (error) => {
-          console.error('Error fetching professor:', error);
-        }
-      );
-    } else {
-      console.error('User ID not found in localStorage');
+    if (this.isBrowser()) {
+      // Retrieve the id from localStorage
+      const id = localStorage.getItem('id');
+      this.userId = id ? parseInt(id, 10) : null;
+    
+      if (this.userId) {
+        this.profService.getProfessor(this.userId).subscribe(
+          (professor: Professeur) => {
+            this.professeur = professor;
+            this.userName = professor.nom + ' ' + professor.prenom;
+          },
+          (error) => {
+            console.error('Error fetching professor:', error);
+          }
+        );
+      } else {
+        console.error('User ID not found in localStorage');
+      }
     }
   }
-  
 
   isBrowser(): boolean {
     return typeof window !== 'undefined' && this.platformLocation !== null;
   }
-
-  
+  addToggle() {
+    this.status = !this.status;
+  }
 }
