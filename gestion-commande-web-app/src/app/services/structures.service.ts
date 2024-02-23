@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Structure} from "../model/structure.model";
 import {Professeur} from "../model/professeur.model";
+import {Rubrique} from "../model/rubrique.model";
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,20 @@ export class StructuresService {
   public updateStructure(id: any, Structure: any) {
     return this.http.put("http://localhost:1818/STRUCTURE-SERVICE/structures/"+id, Structure)
   }
+  public searchStructures(searchTerm: string): Observable<Structure[]> {
+    let params = new HttpParams();
+    if (searchTerm) {
+      params = params.set('searchTerm', searchTerm);
+    }
 
+    return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures//search", { params })
+  }
 
+  getStructuresByResponsable(professorId: number): Observable<Structure[]> {
+    return this.http.get<Structure[]>(`/api/structures/byResponsable/${professorId}`);
+  }
+
+  getStructuresByEquipeMember(professorId: number): Observable<Structure[]> {
+    return this.http.get<Structure[]>(`/api/structures/byEquipeMember/${professorId}`);
+  }
 }

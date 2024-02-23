@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController@AllArgsConstructor
 @RequestMapping("/structures")
@@ -36,20 +35,20 @@ public class StructureRestController {
         Professeur responsibleProfessor = professeurRestClient.getProfesseurById(addedStructure.getIdResponsable());
 
         // Vérifier que le responsable n'est pas membre de l'équipe
-        if (addedStructure.getEquipe_prof_ids().contains(addedStructure.getIdResponsable())) {
+        if (addedStructure.getEquipeProfIds().contains(addedStructure.getIdResponsable())) {
             return ResponseEntity.badRequest().body("Le responsable ne peut pas être membre de l'équipe.");
         }
 
         // Vérifier le nombre de membres pour le type 'EquipedeRecherche'
         if (addedStructure.getType() == structurestype.EquipedeRecherche) {
-            if (addedStructure.getEquipe_prof_ids().size() < 4) {
+            if (addedStructure.getEquipeProfIds().size() < 4) {
                 return ResponseEntity.badRequest().body("Pour le type 'Equipe de Recherche', il faut au moins 4 membres.");
             }
         }
 
         // Vérifier s'il y a des membres dupliqués
         Set<Long> uniqueIds = new HashSet<>();
-        for (Long profId : addedStructure.getEquipe_prof_ids()) {
+        for (Long profId : addedStructure.getEquipeProfIds()) {
             // Si l'identifiant est déjà présent, c'est un membre en double
             if (!uniqueIds.add(profId)) {
                 return ResponseEntity.badRequest().body("Des membres en double ont été détectés.");
@@ -60,7 +59,7 @@ public class StructureRestController {
         List<String> equipeProfNames = new ArrayList<>();
 
         // Fetch details of each professor in the equipe and populate equipeProfNames
-        for (Long profId : addedStructure.getEquipe_prof_ids()) {
+        for (Long profId : addedStructure.getEquipeProfIds()) {
             Professeur prof = professeurRestClient.getProfesseurById(profId);
             if (prof != null) {
                 equipeProfNames.add(prof.getPrenom() + " " + prof.getNom());
@@ -75,8 +74,8 @@ public class StructureRestController {
         newStructure.setBudgetAnnuel(addedStructure.getBudgetAnnuel());
         newStructure.setIdResponsable(responsibleProfessor.getId());
         newStructure.setNomResponsable(responsibleProfessor.getPrenom() + ' ' + responsibleProfessor.getNom());
-        newStructure.setEquipe_prof_ids(addedStructure.getEquipe_prof_ids());
-        newStructure.setEquipe_prof_names(equipeProfNames);
+        newStructure.setEquipeProfIds(addedStructure.getEquipeProfIds());
+        newStructure.setEquipeProfNames(equipeProfNames);
 
 
         // Save or perform necessary actions with the new structure
@@ -99,8 +98,8 @@ public class StructureRestController {
     private void populateEquipeProfesseurs(List<Structure> structures) {
         for (Structure structure : structures) {
             List<String> equipeProfNames = new ArrayList<>();
-            if (structure.getEquipe_prof_ids() != null) {
-                for (Long profId : structure.getEquipe_prof_ids()) {
+            if (structure.getEquipeProfIds() != null) {
+                for (Long profId : structure.getEquipeProfIds()) {
                     Professeur fetchedProfesseur = professeurRestClient.getProfesseurById(profId);
                     if (fetchedProfesseur != null) {
                         String profName = fetchedProfesseur.getPrenom() + " " + fetchedProfesseur.getNom();
@@ -112,7 +111,7 @@ public class StructureRestController {
             } else {
                 System.out.println("Equipe prof IDs is null for structure with ID: " + structure.getId());
             }
-            structure.setEquipe_prof_names(equipeProfNames);
+            structure.setEquipeProfNames(equipeProfNames);
         }
     }
     private void populateEquipeChild(List<Structure> structures) {
@@ -137,7 +136,8 @@ public class StructureRestController {
     @GetMapping("/byType/{type}")
     public List<Structure> getStructuresByType(@PathVariable structurestype type) {
         List<Structure> structures = structureRepository.findByType(type);
-        populateEquipeProfesseurs(structures); // Populate equipeProfesseurs for each structure
+        populateEquipeProfesseurs(structures);// Populate equipeProfesseurs for each structure
+        populateEquipeChild(structures);
         return structures;
     }
 
@@ -180,20 +180,20 @@ public class StructureRestController {
         }
 
         // Verify that the responsible professor is not a member of the team
-        if (updatedStructure.getEquipe_prof_ids().contains(updatedStructure.getIdResponsable())) {
+        if (updatedStructure.getEquipeProfIds().contains(updatedStructure.getIdResponsable())) {
             return ResponseEntity.badRequest().body("Le responsable ne peut pas être membre de l'équipe.");
         }
 
         // Verify the number of members for the type 'EquipedeRecherche'
         if (updatedStructure.getType() == structurestype.EquipedeRecherche) {
-            if (updatedStructure.getEquipe_prof_ids().size() < 4) {
+            if (updatedStructure.getEquipeProfIds().size() < 4) {
                 return ResponseEntity.badRequest().body("Pour le type 'Equipe de Recherche', il faut au moins 4 membres.");
             }
         }
 
         // Verify if there are any duplicate members
         Set<Long> uniqueIds = new HashSet<>();
-        for (Long profId : updatedStructure.getEquipe_prof_ids()) {
+        for (Long profId : updatedStructure.getEquipeProfIds()) {
             // If the ID is already present, it's a duplicate member
             if (!uniqueIds.add(profId)) {
                 return ResponseEntity.badRequest().body("Des membres en double ont été détectés.");
@@ -203,51 +203,38 @@ public class StructureRestController {
 
         // Check if child equipe is changing lab parents
         if (existingStructure.getParentLabId()!= updatedStructure.getParentLabId()) {
-            System.out.println("Child Equip with ID : "+ existingStructure.getId()+" moving from one parent lab to another");
+            System.out.println("Child Equip with ID : "+ existingStructure.getId() +" moving from one parent lab to another");
             // Fetch the old parent lab from the database
             Structure oldParentLab = structureRepository.getStructureById(existingStructure.getParentLabId());
             if (oldParentLab != null) {
                 System.out.println("Old parent lab found with ID: " + oldParentLab.getId());
-                // Log the existing child equipe IDs of the old parent lab before removing the structure
                 System.out.println("Existing child equipe IDs for old parent lab before removal: " + oldParentLab.getChildEquipesIds());
-
-                // Remove this structure from the child equipe list of the old parent lab
                 List<Long> childEquipesIds = oldParentLab.getChildEquipesIds();
                 if (childEquipesIds != null) {
                     childEquipesIds.remove(existingStructure.getId());
                     oldParentLab.setChildEquipesIds(childEquipesIds);
-
-                    // Log the updated child equipe IDs of the old parent lab after removing the structure
                     System.out.println("Updated child equipe IDs for old parent lab: " + childEquipesIds);
-
-                    // Save the old parent lab with the updated child equipe list
                     structureRepository.save(oldParentLab);
                     System.out.println("Old parent lab updated successfully");
                 }
             } else {
                 System.out.println("Old parent lab not found");
-            } // Check if this structure is a child equipe and add it to the parent lab
+            }
             if (updatedStructure.getParentLabId() != null) {
-                // Fetch the new parent lab from the database
                 Structure newParentLab = structureRepository.getStructureById(updatedStructure.getParentLabId());
                 if (newParentLab != null) {
-                    // Add this structure as a child equipe to the new parent lab
                     List<Long> childEquipesIds = newParentLab.getChildEquipesIds();
                     if (childEquipesIds == null) {
                         childEquipesIds = new ArrayList<>();
                     }
-                    // Log the existing child equipe IDs before adding the new one
                     System.out.println("Existing child equipe IDs for new parent lab before adding: " + childEquipesIds);
                     childEquipesIds.add(existingStructure.getId());
                     System.out.println("Updated child equipe IDs for new parent lab: " + childEquipesIds); // Add this line for debugging
                     newParentLab.setChildEquipesIds(childEquipesIds);
-                    // Save the new parent lab with the updated child equipe list
                     structureRepository.save(newParentLab);
                 }
             }
         }
-
-
 
         // Check if Child Equipes are getting updated
         if (existingStructure.getChildEquipesIds()!= updatedStructure.getChildEquipesIds()) {
@@ -258,7 +245,6 @@ public class StructureRestController {
             // Verify if there are any duplicate equips
             Set<Long> uniqueEquips = new HashSet<>();
             for (Long equipId : newChildEquipesIds) {
-                // If the ID is already present, it's a duplicate member
                 if (!uniqueEquips.add(equipId)) {
                     return ResponseEntity.badRequest().body("Des équipes de recherche affiliées en double ont été détectés.");
                 }
@@ -326,8 +312,8 @@ public class StructureRestController {
 
         existingStructure.setIdResponsable(updatedStructure.getIdResponsable());
         existingStructure.setBudgetAnnuel(updatedStructure.getBudgetAnnuel());
-        existingStructure.setEquipe_prof_ids(updatedStructure.getEquipe_prof_ids());
-        existingStructure.setEquipe_prof_names(updatedStructure.getEquipe_prof_names());
+        existingStructure.setEquipeProfIds(updatedStructure.getEquipeProfIds());
+        existingStructure.setEquipeProfNames(updatedStructure.getEquipeProfNames());
         existingStructure.setParentLabId(updatedStructure.getParentLabId());
         existingStructure.setParentLabNom(updatedStructure.getParentLabNom());
         existingStructure.setChildEquipesIds(updatedStructure.getChildEquipesIds());
@@ -340,5 +326,37 @@ public class StructureRestController {
 
         return ResponseEntity.ok("Structure mise à jour avec succès !");
     }
+
+    @GetMapping("/byResponsable/{professorId}")
+    public List<Structure> getStructuresByResponsable(@PathVariable Long professorId) {
+        List<Structure> structures = structureRepository.findByIdResponsable(professorId);
+        populateEquipeProfesseurs(structures);// Populate equipeProfesseurs for each structure
+        populateEquipeChild(structures);
+        return structures;
+    }
+
+    @GetMapping("/byEquipeMember/{professorId}")
+    public List<Structure> getStructuresByEquipeMember(@PathVariable Long professorId) {
+        List<Structure> structures = structureRepository.findByEquipeProfIdsContains(professorId);
+        populateEquipeProfesseurs(structures);// Populate equipeProfesseurs for each structure
+        populateEquipeChild(structures);
+        return structures;
+    }
+
+    @GetMapping("/search")
+    public List<Structure> searchStructures(@RequestParam(required = false) String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            List<Structure> structures = structureRepository.findByNomContainingIgnoreCase(searchTerm);
+            populateEquipeProfesseurs(structures);// Populate equipeProfesseurs for each structure
+            populateEquipeChild(structures);
+            return structures;
+        } else {
+            List<Structure> structures = structureRepository.findAll();
+            populateEquipeProfesseurs(structures);// Populate equipeProfesseurs for each structure
+            populateEquipeChild(structures);
+            return structures;
+        }
+    }
+
 
 }

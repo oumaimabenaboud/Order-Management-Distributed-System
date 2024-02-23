@@ -27,7 +27,7 @@ export class StructureAdminViewComponent implements OnInit{
   dropdowns: number[][] = [[]];
   public newStructureForm! : FormGroup;
   detailsForm!: FormGroup;
-  equipe_prof_names: any[] = [];
+  equipeProfNames: any[] = [];
   childEquipesNoms: any[] = [];// Assuming any type for the members, you can replace any with a specific type if available
   //NavBar
   status = false;
@@ -46,32 +46,6 @@ export class StructureAdminViewComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    /*this.structureService.getAllStructures().subscribe({
-      next: (data) => {
-        this.structures = data;
-        // Assuming this.structures is an array of structures
-        this.structures.forEach((structure: Structure) => {
-          let p: string; // Declare p outside the loop
-          switch (structure.type.toString()) {
-            case 'LabodeRecherche':
-              p = 'Laboratoire de Recherche';
-              break;
-            case 'EquipedeRecherche':
-              p = 'Equipe de Recherche';
-              break;
-            case 'ProjetdeRecherche':
-              p = 'Projet de Recherche';
-              break;
-            case 'Département':
-              p = 'Département';
-              break;
-          }
-          // @ts-ignore
-          structure['typeAsString'] = p; // Assign p to a dynamically created property in the structure object
-        });
-      },
-      error: (err) => console.error(err)
-    });*/
     this.getAllStructures();
 
     // Fetch professors and assign them to listprof
@@ -101,23 +75,8 @@ export class StructureAdminViewComponent implements OnInit{
       (data) => {
         this.structures = data;
         this.structures.forEach((structure: Structure) => {
-          let p: string; // Declare p outside the loop
-          switch (structure.type.toString()) {
-            case 'LabodeRecherche':
-              p = 'Laboratoire de Recherche';
-              break;
-            case 'EquipedeRecherche':
-              p = 'Equipe de Recherche';
-              break;
-            case 'ProjetdeRecherche':
-              p = 'Projet de Recherche';
-              break;
-            case 'Département':
-              p = 'Département';
-              break;
-          }
           // @ts-ignore
-          structure['typeAsString'] = p; // Assign p to a dynamically created property in the structure object
+          structure['typeAsString'] = this.convertStructureTypes(structure);
         });
         this.updateDisplayedStructures();
       },
@@ -129,23 +88,8 @@ export class StructureAdminViewComponent implements OnInit{
       (data) => {
         this.structures = data;
         this.structures.forEach((structure: Structure) => {
-          let p: string; // Declare p outside the loop
-          switch (structure.type.toString()) {
-            case 'LabodeRecherche':
-              p = 'Laboratoire de Recherche';
-              break;
-            case 'EquipedeRecherche':
-              p = 'Equipe de Recherche';
-              break;
-            case 'ProjetdeRecherche':
-              p = 'Projet de Recherche';
-              break;
-            case 'Département':
-              p = 'Département';
-              break;
-          }
           // @ts-ignore
-          structure['typeAsString'] = p; // Assign p to a dynamically created property in the structure object
+          structure['typeAsString'] = this.convertStructureTypes(structure);
         });
         this.updateDisplayedStructures();
       },
@@ -166,21 +110,51 @@ export class StructureAdminViewComponent implements OnInit{
   updateDisplayedStructures() {
     this.displayedStructures = [...this.structures]; // Copy all structures to displayedStructures
   }
-  /*search() {
-    // If both prenom and nom are empty, reset the table to show all professors
+  search() {
+    // If the search term is empty, reset the table to show all structures
     if (!this.searchTerm) {
-      this.structureService.getAllStructures();
+      this.getAllStructures(); // Call getAllStructures() and subscribe to it
       return;
     }
-    this.structureService.searchProfessors(this.searchTerm).subscribe({
+
+    this.structureService.searchStructures(this.searchTerm).subscribe({
       next: (data) => {
-        this.profs = data;
+        this.structures = data;
+        this.structures.forEach((structure: Structure) => {
+          // @ts-ignore
+          structure['typeAsString'] = this.convertStructureTypes(structure);
+        });
+        this.updateDisplayedStructures(); // Update displayedStructures after receiving the search results
       },
-      error: (err) => {
-        console.error(err);
+      error: (error) => {
+        console.error(error);
+        // Handle error if necessary
       }
     });
-  }*/
+  }
+// Define a function to convert structure types to strings
+  convertStructureTypes(structure: Structure): string {
+    let p: string;
+    switch (structure.type.toString()) {
+      case 'LabodeRecherche':
+        p = 'Laboratoire de Recherche';
+        break;
+      case 'EquipedeRecherche':
+        p = 'Equipe de Recherche';
+        break;
+      case 'ProjetdeRecherche':
+        p = 'Projet de Recherche';
+        break;
+      case 'Département':
+        p = 'Département';
+        break;
+      default:
+        p = 'Unknown Type';
+        break;
+    }
+    return p;
+  }
+
 
 
   // GET STRUCTURE BY ID , PUT
@@ -205,7 +179,7 @@ export class StructureAdminViewComponent implements OnInit{
     this.structureService.getStructureById(id).subscribe({
       next: (structure) => {
         this.selectedStructure = structure;
-        this.equipe_prof_names = [];
+        this.equipeProfNames = [];
         this.childEquipesNoms = [];
         // Pre-fill the detailsForm with the selected structure's information
         this.detailsForm.patchValue({
@@ -220,7 +194,7 @@ export class StructureAdminViewComponent implements OnInit{
 
 
         // Add each member to the membres FormArray
-        structure.equipe_prof_names.forEach(member => {
+        structure.equipeProfNames.forEach(member => {
           this.addMembre(member);
         });
 
@@ -235,7 +209,7 @@ export class StructureAdminViewComponent implements OnInit{
   }
 
   addMembre(member: string) {
-    this.equipe_prof_names.push(this.formBuilder.control(member));
+    this.equipeProfNames.push(this.formBuilder.control(member));
   }
 
   addEquipe(equipe: string) {
@@ -261,7 +235,7 @@ export class StructureAdminViewComponent implements OnInit{
       budgetAnnuel: [null, [Validators.required]],
       type: ['', [Validators.required]],
       parentLabNom:['', [Validators.required]],
-      equipe_prof_names: this.formBuilder.array([]), // Initialize as a FormArray
+      equipeProfNames: this.formBuilder.array([]), // Initialize as a FormArray
       childEquipesNoms:this.formBuilder.array([]),
     });
   }
@@ -273,7 +247,7 @@ export class StructureAdminViewComponent implements OnInit{
   addEquipeProf() {
     if (this.isEditMode) {
       // For professor equipe names
-      this.equipe_prof_names.push(this.formBuilder.control(''));
+      this.equipeProfNames.push(this.formBuilder.control(''));
     }
   }
   addEquipeChildNom() {
@@ -286,8 +260,8 @@ export class StructureAdminViewComponent implements OnInit{
   removeEquipeProf() {
     if (this.isEditMode) {
       // For professor equipe names
-      if (this.equipe_prof_names.length > 1) {
-        this.equipe_prof_names.pop();
+      if (this.equipeProfNames.length > 1) {
+        this.equipeProfNames.pop();
       }
     }
   }
@@ -323,8 +297,8 @@ export class StructureAdminViewComponent implements OnInit{
 
     // Extract selected member names and find corresponding IDs
     const selectedMemberNames: string[] = [];
-    for (let i = 0; i < this.equipe_prof_names.length; i++) {
-      const control = this.equipe_prof_names.at(i);
+    for (let i = 0; i < this.equipeProfNames.length; i++) {
+      const control = this.equipeProfNames.at(i);
       selectedMemberNames.push(control.value);
     }
 
@@ -338,8 +312,8 @@ export class StructureAdminViewComponent implements OnInit{
     });
 
     // Update the structure with the selected member names and IDs
-    updatedStructure.equipe_prof_names = selectedMemberNames;
-    updatedStructure.equipe_prof_ids = selectedMemberIds;
+    updatedStructure.equipeProfNames = selectedMemberNames;
+    updatedStructure.equipeProfIds = selectedMemberIds;
 
     // Extract selected labo's ID
     const selectedLaboName = this.detailsForm.get('parentLabNom')?.value;
@@ -376,7 +350,7 @@ export class StructureAdminViewComponent implements OnInit{
         this.isEditMode = false; // Disable edit mode after saving changes
       },
       error : error => {
-        console.error("Une erreur s'est produite lors de l'ajout de la structure.", error);
+        console.error("Une erreur s'est produite lors de la mise à jour de la structure.", error);
       if (error.status === 200) {
         window.alert('Structure mise à jour avec succès !');
         window.location.reload();
@@ -403,7 +377,7 @@ export class StructureAdminViewComponent implements OnInit{
       idResponsable: ['', [Validators.required]],
       budgetAnnuel: [null, [Validators.required]],
       type: ['', [Validators.required]],
-      equipe_prof_ids: [[]], // Initialize as an empty array
+      equipeProfIds: [[]], // Initialize as an empty array
     });
 
     // Initialize form controls for each dropdown box dynamically
@@ -462,7 +436,7 @@ export class StructureAdminViewComponent implements OnInit{
         selectedIds.push(selectedProfessor.id);
       }
     }
-    structure.equipe_prof_ids = selectedIds;
+    structure.equipeProfIds = selectedIds;
 
     // Remove individual equipe_prof_ids from the structure object
     for (let i = 0; i < this.dropdowns.length; i++) {

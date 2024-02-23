@@ -49,19 +49,29 @@ public class BudgetRestController {
     public List<Rubrique> getAllRubriques() {
         return rubriqueRepository.findAll();
     }
+    @GetMapping("/rubriques/{id}")
+    public Rubrique getRubriqueById(@PathVariable Long id) {
+        return rubriqueRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rubrique not found with id: " + id));
+    }
     @PostMapping("/rubriques")
     public Rubrique saveRubrique(@RequestBody Rubrique newRubrique) {
         return rubriqueRepository.save(newRubrique);
     }
+
     @PutMapping("/rubriques/{id}")
-    public Rubrique updateRubrique(@PathVariable Long id, @RequestBody Rubrique updatedRubrique) {
+    public ResponseEntity<?> updateRubrique(@PathVariable Long id, @RequestBody Rubrique updatedRubrique) {
         Rubrique existingRubrique = rubriqueRepository.findById(id).orElseThrow(() -> new RuntimeException("Rubrique not found"));
 
         // Update the properties if provided
-        if (updatedRubrique.getNom() != null) {
+        if (updatedRubrique.getNom() != null && !updatedRubrique.getNom().isEmpty()) {
             existingRubrique.setNom(updatedRubrique.getNom());
-    }
-        return rubriqueRepository.save(existingRubrique);
+        }else {
+            return ResponseEntity.badRequest().body("Le champ Nom de rubrique ne peut pas être vide.");
+        }
+        rubriqueRepository.save(existingRubrique);
+
+        return ResponseEntity.ok("Structure mise à jour avec succès !");
     }
     // List all rubriques in a budget
     /*@GetMapping("/budgets/{budgetId}/rubriques")
@@ -121,9 +131,5 @@ public class BudgetRestController {
             return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/rubriques/{id}")
-    public Rubrique getRubriqueById(@PathVariable Long id) {
-        return rubriqueRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rubrique not found with id: " + id));
-    }
+
 }

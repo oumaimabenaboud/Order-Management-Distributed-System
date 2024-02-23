@@ -164,7 +164,7 @@ export class RubriqueAdminViewComponent implements OnInit {
         this.closeNewRubriqueForm(); // Optionally close the form
       },
       error: (error) => {
-        console.error("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma'", error);
+        console.error(error);
         window.alert("Une erreur s'est produite lors de l'ajout de la rubrique. Veuillez réessayer plus tard.");
       }
     });
@@ -185,14 +185,22 @@ export class RubriqueAdminViewComponent implements OnInit {
     const updatedRubrique: Rubrique = this.detailsForm.value;
     this.rubriqueService.updateRubrique(this.selectedRubrique.id, updatedRubrique).subscribe({
       next: () => {
-        window.alert("Rubrique mis à jour avec succès !");
+        window.alert("Rubrique mise à jour avec succès !");
         window.location.reload();
         this.isEditMode = false; // Disable edit mode after saving changes
       },
-      error: err => {
-        console.error("Une erreur s'est produite lors de la mise à jour de la rubrique:", err);
-        // Optionally, display an error message to the user
-        window.alert("Une erreur s'est produite lors de la mise à jour de la rubrique. Veuillez réessayer plus tard.");
+      error : error => {
+        console.error("Une erreur s'est produite lors de la mise à jour de la rubrique.", error);
+        if (error.status === 200) {
+          window.alert('Rubrique mise à jour avec succès !');
+          window.location.reload();
+        } else if (error.status === 400) {
+          // Bad request, display error message from server
+          window.alert(error.error);
+        } else {
+          // Other errors, display generic error message
+          window.alert("Une erreur s'est produite lors de la modification de la rubrique. Veuillez réessayer plus tard.");
+        }
       }
     });
   }

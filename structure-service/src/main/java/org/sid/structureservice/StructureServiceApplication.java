@@ -74,8 +74,8 @@ public class StructureServiceApplication {
 				.budgetAnnuel(budget)
 				.idResponsable(responsibleId)
 				.nomResponsable(nomResponsable)
-				.equipe_prof_ids(equipeProfIds) // Set the team member IDs
-				.equipe_prof_names(equipeProfNames) // Set the team member names
+				.equipeProfIds(equipeProfIds) // Set the team member IDs
+				.equipeProfNames(equipeProfNames) // Set the team member names
 				.parentLabId(parentLabId)
 				.parentLabNom(parentLabNom)
 				.childEquipesIds(childEquipesIds)
@@ -107,8 +107,8 @@ public class StructureServiceApplication {
 	private void populateEquipeProfesseurs(List<Structure> structures, ProfesseurRestClient professeurRestClient) {
 		for (Structure structure : structures) {
 			List<String> equipeProfNames = new ArrayList<>();
-			if (structure.getEquipe_prof_ids() != null) {
-				for (Long profId : structure.getEquipe_prof_ids()) {
+			if (structure.getEquipeProfIds() != null) {
+				for (Long profId : structure.getEquipeProfIds()) {
 					Professeur fetchedProfesseur = professeurRestClient.getProfesseurById(profId);
 					if (fetchedProfesseur != null) {
 						String profName = fetchedProfesseur.getPrenom() + " " + fetchedProfesseur.getNom();
@@ -120,7 +120,7 @@ public class StructureServiceApplication {
 			} else {
 				System.out.println("Equipe prof IDs is null for structure with ID: " + structure.getId());
 			}
-			structure.setEquipe_prof_names(equipeProfNames);
+			structure.setEquipeProfNames(equipeProfNames);
 		}
 	}
 	private void populateEquipeChild(List<Structure> structures, StructureRepository structureRepository) {

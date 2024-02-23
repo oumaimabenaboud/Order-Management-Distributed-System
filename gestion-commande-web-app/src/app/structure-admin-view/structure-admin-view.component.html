@@ -89,12 +89,12 @@
           <li>
             <a class="active" routerlin="/structure-admin">Structures</a>
           </li>
-          <!--form (submit)="search()" class="search-form">
+          <form (submit)="search()" class="search-form">
             <div class="form-input">
-              <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm" class="search-input">
+              <input type="text" placeholder="Rechercher..." [(ngModel)]="searchTerm" name="searchTerm" class="search-input" (input)="search()">
               <button type="submit" class="search-button"><i class='bx bx-search' ></i></button>
             </div>
-          </form-->
+          </form>
         </ul>
       </div>
       <button class="btn btn-outline-danger"(click)="openNewStructureForm()"><i class="fa-solid fa-building"></i> Ajouter une structure</button>
@@ -236,9 +236,9 @@
 
           <!-- Form fields -->
 
-          <div class="col-md-6" *ngFor="let membre of equipe_prof_names; let i = index">
+          <div class="col-md-6" *ngFor="let membre of equipeProfNames; let i = index">
             <div class="form-group">
-              <input type="text" class="form-control" [formControl]="equipe_prof_names[i]" list="professorList" [readonly]="!isEditMode">
+              <input type="text" class="form-control" [formControl]="equipeProfNames[i]" list="professorList" [readonly]="!isEditMode">
               <datalist id="professorList">
                 <option *ngFor="let membre of listprof" [value]="membre.prenom+' '+ membre.nom" ></option>
               </datalist>
@@ -316,7 +316,7 @@
             </div>
           <div class="col-md-6" *ngFor="let dropdown of dropdowns; let i = index">
             <div class="form-group">
-              <input type="text" class="form-control" [id]="'equipe_prof_ids_' + i" formControlName="equipe_prof_ids_{{ i }}" list="professorList" placeholder="Membre {{ i + 1 }}">
+              <input type="text" class="form-control" [id]="'equipeProfIds' + i" formControlName="equipeProfIds{{ i }}" list="professorList" placeholder="Membre {{ i + 1 }}">
               <datalist id="profList_{{i}}">
                 <option *ngFor="let prof of listprof" [value]="prof.prenom + ' ' + prof.nom">{{ prof.prenom }} {{ prof.nom }}</option>
               </datalist>
