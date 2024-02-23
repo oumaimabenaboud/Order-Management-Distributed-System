@@ -20,6 +20,7 @@ export interface Structure {
 export enum structurestype {
   LabodeRecherche = 'Laboratoire de Recherche',
   EquipedeRecherche = 'Equipe de Recherche',
-  ProjetdeRecherche = 'Projet de Recherche'
+  ProjetdeRecherche = 'Projet de Recherche',
+  Département ='Département'
 }
 

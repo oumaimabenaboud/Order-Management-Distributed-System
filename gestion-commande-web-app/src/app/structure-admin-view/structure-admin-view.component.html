@@ -103,13 +103,24 @@
 
     <div class="table-data">
       <div class="order">
-
         <table>
           <thead>
-          <tr >
+          <tr>
             <th><i class="fa-solid fa-signature"></i> Acronyme</th>
             <th><i class="fa-solid fa-building"></i> Nom</th>
-            <th><i class="fa-solid fa-building"></i> Type de Structure</th>
+            <th>
+              <i class="fa-solid fa-building"></i> Type de Structure
+              <button (click)="toggleFilter()"><i class="fa-solid fa-filter"></i></button>
+              <div *ngIf="showFilter" class="filter-popup">
+                <div class="form-group">
+                  <select class="form-control" id="structureType" [(ngModel)]="selectedStructureType" (change)="onStructureTypeChange()">
+                    <option value="all">Tous</option>
+                    <option *ngFor="let type of structureTypes" [value]="type">{{ type }}</option>
+                  </select>
+                </div>
+              </div>
+            </th>
+
             <th><i class="fa-solid fa-user-tie"></i> Responsable</th>
             <th><i class="fa-solid fa-credit-card"></i> Budget Annuel</th>
             <th><i class="fa-solid fa-magnifying-glass-plus"></i> Détails</th>
@@ -117,7 +128,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let s of structures">
+          <tr *ngFor="let s of displayedStructures">
             <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.mail)">{{s.acronyme}}</td>
             <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.nom)">{{s.nom}}</td>
             <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.type)">
@@ -165,6 +176,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
+              <label>Type</label>
               <input type="text" class="form-control" id="type" formControlName="type" list="structureTypeList" [readonly]="!isEditMode">
               <datalist id="structureTypeList">
                 <option *ngFor="let type of structureTypes" [value]="type"></option>
@@ -202,6 +214,7 @@
 
           <div class="col-md-6">
             <div class="form-group">
+              <label>Budget Annuel</label>
               <input type="number" class="form-control" id="budgetAnnuel" formControlName="budgetAnnuel" [readonly]="!isEditMode">
             </div>
           </div>

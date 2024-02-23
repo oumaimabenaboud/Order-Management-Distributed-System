@@ -3,11 +3,9 @@ package org.sid.structureservice;
 import jakarta.transaction.Transactional;
 import org.sid.structureservice.entities.Structure;
 import org.sid.structureservice.enums.structurestype;
-import org.sid.structureservice.feign.BudgetRestClient;
 import org.sid.structureservice.feign.ProfesseurRestClient;
 import org.sid.structureservice.model.Professeur;
 import org.sid.structureservice.repository.StructureRepository;
-import org.sid.structureservice.repository.ResponsableStructureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -49,6 +47,7 @@ public class StructureServiceApplication {
 			Structure structure2 = addStructure(structureRepository, "Equipe Robotique", "EquipedeRecherche", 15000.0, professorId2, "Ali Oubelkacem", List.of(professorId1, professorId3,professorId4,professorId5), professeurRestClient,1L,"Laboratoire d'IA",null );
 			Structure structure3 = addStructure(structureRepository, "Projet NLP", "ProjetdeRecherche", 20000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId5), professeurRestClient,null,null,null);
 			Structure structure4 = addStructure(structureRepository, "Laboratoire de BioInformatique", "LabodeRecherche", 10000.0, professorId4, "Mehdi Alaoui Ismaili", List.of(professorId1, professorId2, professorId3), professeurRestClient,null,null,null);
+			Structure structure5 = addStructure(structureRepository, "Equipe Smart Agriculture", "EquipedeRecherche", 60000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId3,professorId4,professorId5), professeurRestClient,null,null,null);
 
 			// Fetch all structures
 			List<Structure> allStructures = structureRepository.findAll();

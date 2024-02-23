@@ -15,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class StructureAdminViewComponent implements OnInit{
   structures: any;
+  displayedStructures: any[] = [];
   isDetailsFormOpen: boolean = false;
   isNewStructureFormOpen: boolean = false;
   selectedStructure: any;
@@ -30,6 +31,8 @@ export class StructureAdminViewComponent implements OnInit{
   childEquipesNoms: any[] = [];// Assuming any type for the members, you can replace any with a specific type if available
   //NavBar
   status = false;
+  selectedStructureType: string='';
+  showFilter: boolean = false;
 
   addToggle() {
     this.status = !this.status;
@@ -43,7 +46,7 @@ export class StructureAdminViewComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    this.structureService.getAllStructures().subscribe({
+    /*this.structureService.getAllStructures().subscribe({
       next: (data) => {
         this.structures = data;
         // Assuming this.structures is an array of structures
@@ -59,13 +62,17 @@ export class StructureAdminViewComponent implements OnInit{
             case 'ProjetdeRecherche':
               p = 'Projet de Recherche';
               break;
+            case 'Département':
+              p = 'Département';
+              break;
           }
           // @ts-ignore
           structure['typeAsString'] = p; // Assign p to a dynamically created property in the structure object
         });
       },
       error: (err) => console.error(err)
-    });
+    });*/
+    this.getAllStructures();
 
     // Fetch professors and assign them to listprof
     this.profService.getProfessors().subscribe(
@@ -89,7 +96,76 @@ export class StructureAdminViewComponent implements OnInit{
     this.initDetailsFormBuilder();
     this.initnewStructureFormBuilder();
   }
-
+  getAllStructures() {
+    this.structureService.getAllStructures().subscribe(
+      (data) => {
+        this.structures = data;
+        this.structures.forEach((structure: Structure) => {
+          let p: string; // Declare p outside the loop
+          switch (structure.type.toString()) {
+            case 'LabodeRecherche':
+              p = 'Laboratoire de Recherche';
+              break;
+            case 'EquipedeRecherche':
+              p = 'Equipe de Recherche';
+              break;
+            case 'ProjetdeRecherche':
+              p = 'Projet de Recherche';
+              break;
+            case 'Département':
+              p = 'Département';
+              break;
+          }
+          // @ts-ignore
+          structure['typeAsString'] = p; // Assign p to a dynamically created property in the structure object
+        });
+        this.updateDisplayedStructures();
+      },
+      (error) => console.error(error)
+    );
+  }
+  getStructuresByType(type: string) {
+    this.structureService.getStructuresByType(type).subscribe(
+      (data) => {
+        this.structures = data;
+        this.structures.forEach((structure: Structure) => {
+          let p: string; // Declare p outside the loop
+          switch (structure.type.toString()) {
+            case 'LabodeRecherche':
+              p = 'Laboratoire de Recherche';
+              break;
+            case 'EquipedeRecherche':
+              p = 'Equipe de Recherche';
+              break;
+            case 'ProjetdeRecherche':
+              p = 'Projet de Recherche';
+              break;
+            case 'Département':
+              p = 'Département';
+              break;
+          }
+          // @ts-ignore
+          structure['typeAsString'] = p; // Assign p to a dynamically created property in the structure object
+        });
+        this.updateDisplayedStructures();
+      },
+      (error) => console.error(error)
+    );
+  }
+  toggleFilter() {
+    this.showFilter = !this.showFilter;
+  }
+  onStructureTypeChange() {
+    this.showFilter = false;
+    if (this.selectedStructureType === 'all') {
+      this.getAllStructures();
+    } else {
+      this.getStructuresByType(this.mapStructureType(this.selectedStructureType));
+    }
+  }
+  updateDisplayedStructures() {
+    this.displayedStructures = [...this.structures]; // Copy all structures to displayedStructures
+  }
   /*search() {
     // If both prenom and nom are empty, reset the table to show all professors
     if (!this.searchTerm) {
@@ -118,6 +194,8 @@ export class StructureAdminViewComponent implements OnInit{
           return 'Equipe de Recherche';
         case 'ProjetdeRecherche':
           return 'Projet de Recherche';
+        case 'Département':
+          return 'Département';
         default:
           return 'Unknown';
       }
@@ -230,10 +308,18 @@ export class StructureAdminViewComponent implements OnInit{
 
     // Extract selected responsible person's ID
     const selectedResponsableName = this.detailsForm.get('nomResponsable')?.value;
+    console.log('Selected Responsible Name:', selectedResponsableName);
+    console.log('List of Professors:', this.listprof);// Log the selected responsible person's name
     const selectedResponsable = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedResponsableName);
-    if (selectedResponsable) {
-      updatedStructure.idResponsable = selectedResponsable.id;
-    }
+    console.log('Selected Responsible Object:', selectedResponsable);
+    console.log('Selected Responsible ID:', selectedResponsable.id);
+    console.log('Selected Responsible ID:', selectedResponsable?.id);
+    console.log('List of Professor Names:');
+    this.listprof.forEach(prof => console.log(prof.prenom + ' ' + prof.nom));
+    updatedStructure.idResponsable=selectedResponsable.id;
+
+
+
 
     // Extract selected member names and find corresponding IDs
     const selectedMemberNames: string[] = [];
@@ -280,7 +366,7 @@ export class StructureAdminViewComponent implements OnInit{
 
     updatedStructure.childEquipesNoms = selectedChildEquipeNames;
     updatedStructure.childEquipesIds = selectedChildEquipeIds;
-
+    console.log(updatedStructure)
 
     // Update the structure with the selected member names
     this.structureService.updateStructure(this.selectedStructure.id, updatedStructure).subscribe({
@@ -419,6 +505,8 @@ export class StructureAdminViewComponent implements OnInit{
         return 'EquipedeRecherche';
       case 'Projet de Recherche':
         return 'ProjetdeRecherche';
+      case 'Département':
+        return 'Département';
       default:
         return '';
     }
@@ -464,19 +552,5 @@ allowDrop(event: DragEvent): void {
     }
   }
 
-
-
-
-  /*private initDetailsFormBuilder() {
-    this.detailsForm = this.formBuilder.group({
-      acronyme: this.formBuilder.control('', [Validators.required]),
-      nom: this.formBuilder.control('', [Validators.required]),
-      responsable: this.formBuilder.control('', [Validators.required]),
-      type:this.formBuilder.control('', [Validators.required]),
-      budget: this.formBuilder.control('', [Validators.required]),
-      membres: this.formBuilder.control('', [Validators.required])
-
-    });
-  }*/
 
 }

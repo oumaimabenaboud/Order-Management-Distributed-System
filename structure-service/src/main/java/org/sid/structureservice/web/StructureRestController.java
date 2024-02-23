@@ -199,9 +199,11 @@ public class StructureRestController {
                 return ResponseEntity.badRequest().body("Des membres en double ont été détectés.");
             }
         }
-        // Check if this structure is moving from one parent lab to another
+
+
+        // Check if child equipe is changing lab parents
         if (existingStructure.getParentLabId()!= updatedStructure.getParentLabId()) {
-            System.out.println("Structure is moving from one parent lab to another");
+            System.out.println("Child Equip with ID : "+ existingStructure.getId()+" moving from one parent lab to another");
             // Fetch the old parent lab from the database
             Structure oldParentLab = structureRepository.getStructureById(existingStructure.getParentLabId());
             if (oldParentLab != null) {
@@ -224,56 +226,106 @@ public class StructureRestController {
                 }
             } else {
                 System.out.println("Old parent lab not found");
-            }
-        }
-        // Determine the equipes being removed and added
-        List<Long> oldChildEquipesIds = existingStructure.getChildEquipesIds();
-        List<Long> newChildEquipesIds = updatedStructure.getChildEquipesIds();
-        System.out.println("Old child equipe IDs: " + oldChildEquipesIds);
-        System.out.println("New child equipe IDs: " + newChildEquipesIds);
-
-        // Determine the equipes being removed from the child equipe list
-        List<Long> removedChildEquipes = oldChildEquipesIds.stream()
-                .filter(oldId -> !newChildEquipesIds.contains(oldId))
-                .collect(Collectors.toList());
-        System.out.println("Removed child equipe IDs: " + removedChildEquipes);
-
-        // Determine the equipes being added to the child equipe list
-        List<Long> addedChildEquipes = newChildEquipesIds.stream()
-                .filter(newId -> !oldChildEquipesIds.contains(newId))
-                .collect(Collectors.toList());
-        System.out.println("Added child equipe IDs: " + addedChildEquipes);
-
-        // Remove the parent lab ID from equipes that are no longer child equipes
-        for (Long equipeId : removedChildEquipes) {
-            Structure removedEquipe = structureRepository.getStructureById(equipeId);
-            if (removedEquipe != null) {
-                removedEquipe.setParentLabId(null);// Remove parent lab ID
-                removedEquipe.setParentLabNom(null);// Remove parent lab ID
-                structureRepository.save(removedEquipe); // Save the equipe to update the parent lab ID
-                System.out.println("Parent lab ID removed from equipe with ID: " + equipeId);
+            } // Check if this structure is a child equipe and add it to the parent lab
+            if (updatedStructure.getParentLabId() != null) {
+                // Fetch the new parent lab from the database
+                Structure newParentLab = structureRepository.getStructureById(updatedStructure.getParentLabId());
+                if (newParentLab != null) {
+                    // Add this structure as a child equipe to the new parent lab
+                    List<Long> childEquipesIds = newParentLab.getChildEquipesIds();
+                    if (childEquipesIds == null) {
+                        childEquipesIds = new ArrayList<>();
+                    }
+                    // Log the existing child equipe IDs before adding the new one
+                    System.out.println("Existing child equipe IDs for new parent lab before adding: " + childEquipesIds);
+                    childEquipesIds.add(existingStructure.getId());
+                    System.out.println("Updated child equipe IDs for new parent lab: " + childEquipesIds); // Add this line for debugging
+                    newParentLab.setChildEquipesIds(childEquipesIds);
+                    // Save the new parent lab with the updated child equipe list
+                    structureRepository.save(newParentLab);
+                }
             }
         }
 
-        // Add the parent lab ID for new added equipe children
-        for (Long equipeId : addedChildEquipes) {
-            Structure addedEquipe = structureRepository.getStructureById(equipeId);
-            if (addedEquipe != null) {
-                addedEquipe.setParentLabId(updatedStructure.getId());
-                addedEquipe.setParentLabNom(updatedStructure.getNom());// Set parent lab ID to the ID of the new parent lab
-                structureRepository.save(addedEquipe); // Save the equipe to update the parent lab ID
-                System.out.println("Parent lab ID added to equipe with ID: " + equipeId);
+
+
+        // Check if Child Equipes are getting updated
+        if (existingStructure.getChildEquipesIds()!= updatedStructure.getChildEquipesIds()) {
+            List<Long> oldChildEquipesIds = existingStructure.getChildEquipesIds();
+            List<Long> newChildEquipesIds = updatedStructure.getChildEquipesIds();
+            System.out.println("Old child equipe IDs: " + oldChildEquipesIds+ "for Lab with Id:"+existingStructure.getId());
+            System.out.println("New child equipe IDs: " + newChildEquipesIds+ "for Lab with Id:"+existingStructure.getId());
+            // Verify if there are any duplicate equips
+            Set<Long> uniqueEquips = new HashSet<>();
+            for (Long equipId : newChildEquipesIds) {
+                // If the ID is already present, it's a duplicate member
+                if (!uniqueEquips.add(equipId)) {
+                    return ResponseEntity.badRequest().body("Des équipes de recherche affiliées en double ont été détectés.");
+                }
+            }
+            // Remove the parent lab ID from old equipes that are no longer child equipes
+            for (Long equipeId : oldChildEquipesIds) {
+                Structure removedEquipe = structureRepository.getStructureById(equipeId);
+                if (removedEquipe != null) {
+                    removedEquipe.setParentLabId(null);// Remove parent lab ID
+                    removedEquipe.setParentLabNom(null);// Remove parent lab ID
+                    structureRepository.save(removedEquipe); // Save the equipe to update the parent lab ID
+                    System.out.println("Parent lab ID removed from old equipe with ID: " + equipeId);
+                }
+            }
+
+            // Add the parent lab ID for new added equipe children
+            for (Long equipeId : newChildEquipesIds) {
+                Structure addedEquipe = structureRepository.getStructureById(equipeId);
+                if (addedEquipe != null) {
+                    //if this equipe already has a parent lab
+                    if(addedEquipe.getParentLabId()!=null){
+                        Structure oldLabParent = structureRepository.getStructureById(addedEquipe.getParentLabId());
+                        System.out.println("For equipe with ID: " + equipeId + "it's oldLab parent's Id is: " + oldLabParent.getId() );
+                        List<Long> oldChildEquips = oldLabParent.getChildEquipesIds();
+                        System.out.println("it's oldLab parent's child equipes before removing the equipe is: " + oldChildEquips);
+                        oldChildEquips.remove(equipeId);
+                        System.out.println("it's oldLab parent's child equipes after removing the equipe is: " + oldChildEquips);
+                        oldLabParent.setChildEquipesIds(oldChildEquips);
+                        structureRepository.save(oldLabParent);
+                        System.out.println("Equipe with ID: " + equipeId + "removed from Parent Lab with Id"+ oldLabParent);
+                    }
+                    addedEquipe.setParentLabId(existingStructure.getId());
+                    addedEquipe.setParentLabNom(updatedStructure.getNom());// Set parent lab ID to the ID of the new parent lab
+                    structureRepository.save(addedEquipe); // Save the equipe to update the parent lab ID
+                    System.out.println("Parent lab ID added to equipe with ID: " + equipeId);
+                }
             }
         }
-
 
         // Update the existing structure with the new values
-        existingStructure.setNom(updatedStructure.getNom());
-        existingStructure.setAcronyme(updatedStructure.getAcronyme());
-        existingStructure.setType(updatedStructure.getType());
-        existingStructure.setBudgetAnnuel(updatedStructure.getBudgetAnnuel());
+        if (updatedStructure.getNom() != null  && !updatedStructure.getNom().isEmpty()) {
+            existingStructure.setNom(updatedStructure.getNom());
+        } else {
+            return ResponseEntity.badRequest().body("Le champ 'nom' ne peut pas être vide.");
+        }
+
+        if (updatedStructure.getAcronyme() != null  && !updatedStructure.getAcronyme().isEmpty()) {
+            existingStructure.setAcronyme(updatedStructure.getAcronyme());
+        } else {
+            return ResponseEntity.badRequest().body("Le champ 'acronyme' ne peut pas être vide.");
+        }
+
+        if (updatedStructure.getType() != null) {
+            existingStructure.setType(updatedStructure.getType());
+        } else {
+            return ResponseEntity.badRequest().body("Le champ 'type' ne peut pas être vide.");
+        }
+
+
+        if (updatedStructure.getNomResponsable() != null  && !updatedStructure.getNomResponsable().isEmpty()) {
+            existingStructure.setNomResponsable(updatedStructure.getNomResponsable());
+        } else {
+            return ResponseEntity.badRequest().body("Le champ 'Nom du Responsable' ne peut pas être vide.");
+        }
+
         existingStructure.setIdResponsable(updatedStructure.getIdResponsable());
-        existingStructure.setNomResponsable(updatedStructure.getNomResponsable());
+        existingStructure.setBudgetAnnuel(updatedStructure.getBudgetAnnuel());
         existingStructure.setEquipe_prof_ids(updatedStructure.getEquipe_prof_ids());
         existingStructure.setEquipe_prof_names(updatedStructure.getEquipe_prof_names());
         existingStructure.setParentLabId(updatedStructure.getParentLabId());
@@ -282,25 +334,7 @@ public class StructureRestController {
         existingStructure.setChildEquipesNoms(updatedStructure.getChildEquipesNoms());
 
 
-        // Check if this structure is a child equipe and add it to the parent lab
-        if (updatedStructure.getParentLabId() != null) {
-            // Fetch the new parent lab from the database
-            Structure newParentLab = structureRepository.getStructureById(updatedStructure.getParentLabId());
-            if (newParentLab != null) {
-                // Add this structure as a child equipe to the new parent lab
-                List<Long> childEquipesIds = newParentLab.getChildEquipesIds();
-                if (childEquipesIds == null) {
-                    childEquipesIds = new ArrayList<>();
-                }
-                // Log the existing child equipe IDs before adding the new one
-                System.out.println("Existing child equipe IDs for new parent lab before adding: " + childEquipesIds);
-                childEquipesIds.add(existingStructure.getId());
-                System.out.println("Updated child equipe IDs for new parent lab: " + childEquipesIds); // Add this line for debugging
-                newParentLab.setChildEquipesIds(childEquipesIds);
-                // Save the new parent lab with the updated child equipe list
-                structureRepository.save(newParentLab);
-            }
-        }
+
         // Save the updated structure to the database
         structureRepository.save(existingStructure);
 
