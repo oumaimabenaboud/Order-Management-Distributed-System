@@ -36,4 +36,6 @@ public class Structure {
 
     @ElementCollection
     private List<String> equipeProfNames;
+
+
 }
