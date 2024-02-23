@@ -32,8 +32,8 @@ public class Structure {
     private structurestype type;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<Long> equipe_prof_ids; // List of professor IDs
+    private List<Long> equipeProfIds; // List of professor IDs
 
     @ElementCollection
-    private List<String> equipe_prof_names;
+    private List<String> equipeProfNames;
 }

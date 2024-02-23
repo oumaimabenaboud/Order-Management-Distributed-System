@@ -100,12 +100,12 @@
           <li>
             <a class="active" routerlin="/structure-admin">Structures</a>
           </li>
-          <!--form (submit)="search()" class="search-form">
+          <form (submit)="search()" class="search-form">
             <div class="form-input">
-              <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" name="searchTerm" class="search-input">
+              <input type="text" placeholder="Rechercher..." [(ngModel)]="searchTerm" name="searchTerm" class="search-input" (input)="search()">
               <button type="submit" class="search-button"><i class='bx bx-search' ></i></button>
             </div>
-          </form-->
+          </form>
         </ul>
       </div>
       <button class="btn btn-outline-danger"(click)="openNewStructureForm()"><i class="fa-solid fa-building"></i> Ajouter une structure</button>
@@ -114,13 +114,24 @@
 
     <div class="table-data">
       <div class="order">
-
         <table>
           <thead>
-          <tr >
+          <tr>
             <th><i class="fa-solid fa-signature"></i> Acronyme</th>
             <th><i class="fa-solid fa-building"></i> Nom</th>
-            <th><i class="fa-solid fa-building"></i> Type de Structure</th>
+            <th>
+              <i class="fa-solid fa-building"></i> Type de Structure
+              <button (click)="toggleFilter()"><i class="fa-solid fa-filter"></i></button>
+              <div *ngIf="showFilter" class="filter-popup">
+                <div class="form-group">
+                  <select class="form-control" id="structureType" [(ngModel)]="selectedStructureType" (change)="onStructureTypeChange()">
+                    <option value="all">Tous</option>
+                    <option *ngFor="let type of structureTypes" [value]="type">{{ type }}</option>
+                  </select>
+                </div>
+              </div>
+            </th>
+
             <th><i class="fa-solid fa-user-tie"></i> Responsable</th>
             <th><i class="fa-solid fa-credit-card"></i> Budget Annuel</th>
             <th><i class="fa-solid fa-magnifying-glass-plus"></i> Détails</th>
@@ -128,7 +139,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let s of structures">
+          <tr *ngFor="let s of displayedStructures">
             <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.mail)">{{s.acronyme}}</td>
             <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.nom)">{{s.nom}}</td>
             <td style="text-decoration: none; color:#004AAD;" draggable="true" (dragstart)="onDragStart($event, s.type)">
@@ -176,6 +187,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group">
+              <label>Type</label>
               <input type="text" class="form-control" id="type" formControlName="type" list="structureTypeList" [readonly]="!isEditMode">
               <datalist id="structureTypeList">
                 <option *ngFor="let type of structureTypes" [value]="type"></option>
@@ -194,13 +206,17 @@
           </div>
           <!-- Additional input for equi_child -->
           <div *ngIf="detailsForm.get('type')?.value === 'Laboratoire de Recherche'" >
-            <label>Équipes de recherche affiliées</label>
+            <label *ngIf="childEquipesNoms.length > 0 || isEditMode">Équipes de recherche affiliées</label>
+            <br *ngIf="isEditMode">
+            <!-- Add button -->
+            <button type="button" class="btnp btn-primary" (click)="addEquipeChildNom()" *ngIf="isEditMode"> Ajouter<i class="fa-solid fa-user-plus"></i></button>
+            <!-- Remove button -->
+            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeEquipeChildNom()" *ngIf="isEditMode"> Retrancher<i class="fa-solid fa-user-minus"></i> </button>
             <div class="col-md-6"  *ngFor="let equipe of childEquipesNoms; let i = index">
               <div class="form-group">
-                <label>Équipe {{ i + 1 }}</label>
-                <input type="text" class="form-control" [formControl]="childEquipesNoms[i]"  list="professorList"  [readonly]="!isEditMode">
-                <datalist id="professorList">
-                  <option *ngFor="let equipe of listprof" [value]="equipe.prenom+' '+ equipe.nom" ></option>
+                <input type="text" class="form-control" [formControl]="childEquipesNoms[i]"  list="equipeList"  [readonly]="!isEditMode">
+                <datalist id="equipeList">
+                  <option *ngFor="let equipe of listequipe" [value]="equipe.nom" ></option>
                 </datalist>
               </div>
             </div>
@@ -209,6 +225,7 @@
 
           <div class="col-md-6">
             <div class="form-group">
+              <label>Budget Annuel</label>
               <input type="number" class="form-control" id="budgetAnnuel" formControlName="budgetAnnuel" [readonly]="!isEditMode">
             </div>
           </div>
@@ -221,15 +238,24 @@
               </datalist>
             </div>
           </div>
-          <div class="col-md-6" *ngFor="let membre of equipe_prof_names; let i = index">
+          <label>Membres</label>
+          <!-- Add button -->
+          <button type="button" class="btnp btn-primary" (click)="addEquipeProf()" *ngIf="isEditMode"> Ajouter<i class="fa-solid fa-user-plus"></i></button>
+
+          <!-- Remove button -->
+          <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeEquipeProf()" *ngIf="isEditMode"> Retrancher<i class="fa-solid fa-user-minus"></i> </button>
+
+          <!-- Form fields -->
+
+          <div class="col-md-6" *ngFor="let membre of equipeProfNames; let i = index">
             <div class="form-group">
-              <label>Membre {{ i + 1 }}</label>
-              <input type="text" class="form-control" [formControl]="equipe_prof_names[i]"  list="professorList"  [readonly]="!isEditMode">
+              <input type="text" class="form-control" [formControl]="equipeProfNames[i]" list="professorList" [readonly]="!isEditMode">
               <datalist id="professorList">
                 <option *ngFor="let membre of listprof" [value]="membre.prenom+' '+ membre.nom" ></option>
               </datalist>
             </div>
           </div>
+
 
           <!-- Add more form controls as needed -->
         </form>
@@ -296,12 +322,12 @@
             <div class="hh">
               <!-- <label for="nom" style="color:#004AAD; margin-left:4px">Membres de la structure</label> -->
               <button type="button" class="btnp btn-primary" (click)="addDropdown()"> Ajouter<i class="fa-solid fa-user-plus"></i></button>
-            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeDropdown()"> Retarancher<i class="fa-solid fa-user-minus"></i> </button>
+            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeDropdown()"> Retrancher<i class="fa-solid fa-user-minus"></i> </button>
           </div>
             </div>
           <div class="col-md-6" *ngFor="let dropdown of dropdowns; let i = index">
             <div class="form-group">
-              <input type="text" class="form-control" [id]="'equipe_prof_ids_' + i" formControlName="equipe_prof_ids_{{ i }}" list="professorList" placeholder="Membre {{ i + 1 }}">
+              <input type="text" class="form-control" [id]="'equipeProfIds' + i" formControlName="equipeProfIds{{ i }}" list="professorList" placeholder="Membre {{ i + 1 }}">
               <datalist id="profList_{{i}}">
                 <option *ngFor="let prof of listprof" [value]="prof.prenom + ' ' + prof.nom">{{ prof.prenom }} {{ prof.nom }}</option>
               </datalist>

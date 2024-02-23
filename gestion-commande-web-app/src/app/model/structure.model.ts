@@ -11,8 +11,8 @@ export interface Structure {
   childEquipesNoms: string[]; // List of professor names
   type: structurestype; // Assuming structurestype is a string enum
 
-  equipe_prof_ids: number[]; // List of professor IDs
-  equipe_prof_names: string[]; // List of professor names
+  equipeProfIds: number[]; // List of professor IDs
+  equipeProfNames: string[]; // List of professor names
 }
 
 
@@ -20,6 +20,7 @@ export interface Structure {
 export enum structurestype {
   LabodeRecherche = 'Laboratoire de Recherche',
   EquipedeRecherche = 'Equipe de Recherche',
-  ProjetdeRecherche = 'Projet de Recherche'
+  ProjetdeRecherche = 'Projet de Recherche',
+  Département ='Département'
 }
 
