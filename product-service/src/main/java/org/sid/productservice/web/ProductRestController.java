@@ -2,13 +2,14 @@ package org.sid.productservice.web;
 
 import lombok.AllArgsConstructor;
 import org.sid.productservice.entities.Product;
+import org.sid.productservice.feign.BudgetRestClient;
 import org.sid.productservice.model.Rubrique;
 import org.sid.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import org.sid.productservice.feign.BudgetRestClient;
+
 
 @RestController@AllArgsConstructor
 @RequestMapping("/products")
@@ -20,6 +21,10 @@ public class ProductRestController {
     @Autowired
     private BudgetRestClient budgetRestClient;
 
+    @Autowired
+    public ProductRestController( BudgetRestClient budgetRestClient) {
+        this.budgetRestClient = budgetRestClient;
+    }
 
     @GetMapping
     public List<Product> products(){
@@ -32,7 +37,7 @@ public class ProductRestController {
                 .orElseThrow((()-> new RuntimeException(String.format("Account % not found",id))));
     }
 
-    @GetMapping("/all")
+     @GetMapping("/all")
     public List<Product> allproducts() {
         List<Product> products = productRepository.findAll();
         populateProductRubriques(products);
