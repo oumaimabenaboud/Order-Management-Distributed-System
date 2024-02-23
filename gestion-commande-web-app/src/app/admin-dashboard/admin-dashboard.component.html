@@ -32,10 +32,12 @@
   </ul>
   <ul class="side-menu">
     <li>
-      <a href="#">
-        <i class='bx bxs-cog' ></i>
-        <span class="text">Settings</span>
-      </a>
+      <div *ngIf="userId !== -1">
+        <a routerLink="">
+          <i class='bx bxs-cog' ></i>
+          <span class="text">Settings</span>
+        </a>
+      </div>
     </li>
     <li>
       <a href="#" class="logout">
