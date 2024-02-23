@@ -8,7 +8,11 @@ import org.sid.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @RestController@AllArgsConstructor
@@ -38,15 +42,14 @@ public class ProductRestController {
     }
 
      @GetMapping("/all")
-    public List<Product> allproducts() {
-        List<Product> products = productRepository.findAll();
-        populateProductRubriques(products);
-        return products;
-    }
+     public List<Product> getAllProductsWithRubriques() {
+         List<Product> products = productRepository.findAll();
+         populateProductRubriques(products);
+         return products;
+     }
 
     private void populateProductRubriques(List<Product> products) {
         for (Product product : products) {
-            // Assuming each product has a rubriqueId that corresponds to its rubrique
             Long rubriqueId = Long.parseLong(product.getRubrique());
             Rubrique fetchedRubrique = budgetRestClient.getRubriqueById(rubriqueId);
             if (fetchedRubrique != null) {
@@ -57,6 +60,26 @@ public class ProductRestController {
             }
         }
     }
+
+
+/*
+    // In your Product entity
+    private Long rubriqueId;
+    private String rubriqueName;
+
+    // In your ProductRestController
+    private void populateProductRubriques(List<Product> products) {
+        for (Product product : products) {
+            Long rubriqueId = Long.valueOf(product.getRubriqueId());
+            Rubrique fetchedRubrique = budgetRestClient.getRubriqueById(rubriqueId);
+            if (fetchedRubrique != null) {
+                product.setRubriqueNom(fetchedRubrique.getNom());
+            } else {
+                System.out.println("Failed to fetch rubrique with ID: " + rubriqueId);
+            }
+        }
+    }
+*/
 
     @GetMapping("/search/byName")
     public Product getProductByName(@RequestParam(name="name") String name) {
