@@ -16,6 +16,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Routes } from '@angular/router';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
 
 // const appRoutes: Routes = [
 //   // { path: 'login', component: LoginComponent },
@@ -51,7 +52,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
     StructureAdminViewComponent,
     RubriqueAdminViewComponent,
     ChangePasswordComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    StructuredetailsComponent
   ],
   imports: [
     BrowserModule,

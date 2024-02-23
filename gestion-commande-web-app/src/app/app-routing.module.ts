@@ -8,7 +8,7 @@ import {RubriqueAdminViewComponent} from "./rubrique-admin-view/rubrique-admin-v
 import {ChangePasswordComponent} from "./change-password/change-password.component";
 import { WelcomeComponent } from './welcome/welcome.component';
 import { authGuard } from './guards/auth.guard';
-
+import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -18,7 +18,8 @@ const routes: Routes = [
   {path:'prof-admin' , component:ProfAdminViewComponent , canActivate: [authGuard]},
   {path:'structure-admin' , component:StructureAdminViewComponent},
   {path:'rubrique-admin' , component:RubriqueAdminViewComponent},
-  {path:'change-password' , component:ChangePasswordComponent}
+  {path:'change-password' , component:ChangePasswordComponent},
+  {path:'structure-details' , component:StructuredetailsComponent}
 ];
 
 @NgModule({
