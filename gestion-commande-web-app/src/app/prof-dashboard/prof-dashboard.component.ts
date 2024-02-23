@@ -7,10 +7,10 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-dashboard',
-  templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.css']
+  templateUrl: './prof-dashboard.component.html',
+  styleUrls: ['./prof-dashboard.component.css']
 })
-export class AdminDashboardComponent implements OnInit {
+export class ProfDashboardComponent implements OnInit {
   status = false;  // Declare status property
   userId: number | null = null;
   userName: string = '';
@@ -27,7 +27,7 @@ export class AdminDashboardComponent implements OnInit {
       // Retrieve the id from sessionStorage
       const id = sessionStorage.getItem('id');
       this.userId = id ? parseInt(id, 10) : null;
-    
+
       if (this.userId) {
         this.profService.getProfessor(this.userId).subscribe(
           (professor: Professeur) => {

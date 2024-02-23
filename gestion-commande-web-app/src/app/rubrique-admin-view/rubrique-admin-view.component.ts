@@ -24,7 +24,7 @@ export class RubriqueAdminViewComponent implements OnInit {
   professeur : Professeur | undefined;
 
   //NavBar
-  status = false;
+  status = true;
 
   constructor(
     private rubriqueService: RubriqueService,

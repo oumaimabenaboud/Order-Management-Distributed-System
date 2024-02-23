@@ -27,7 +27,7 @@ export class ProfAdminViewComponent implements OnInit {
 
 
   //NavBar
-  status = false;
+  status = true;
 
   constructor(
     private profService: ProfesseurService,
@@ -36,7 +36,7 @@ export class ProfAdminViewComponent implements OnInit {
     private snackBar: MatSnackBar,
     private platformLocation: PlatformLocation,
     private router: Router
-    
+
   ) { }
 
 

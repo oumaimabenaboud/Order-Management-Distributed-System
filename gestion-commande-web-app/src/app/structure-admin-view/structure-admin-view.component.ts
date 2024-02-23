@@ -31,7 +31,7 @@ export class StructureAdminViewComponent implements OnInit{
   equipeProfNames: any[] = [];
   childEquipesNoms: any[] = [];// Assuming any type for the members, you can replace any with a specific type if available
   //NavBar
-  status = false;
+  status = true;
   selectedStructureType: string='';
   showFilter: boolean = false;
   userId: number | null = null;
@@ -119,7 +119,7 @@ export class StructureAdminViewComponent implements OnInit{
   isBrowser(): boolean {
     return typeof window !== 'undefined' && this.platformLocation !== null;
   }
-    
+
   logout() {
     sessionStorage.removeItem('id');
     this.router.navigate(['/login']);
