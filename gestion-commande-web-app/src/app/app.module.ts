@@ -17,6 +17,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Routes } from '@angular/router';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
+import { ProductDashComponent } from './product-dash/product-dash.component';
 
 // const appRoutes: Routes = [
 //   // { path: 'login', component: LoginComponent },
@@ -53,7 +54,8 @@ import { StructuredetailsComponent } from './structuredetails/structuredetails.c
     RubriqueAdminViewComponent,
     ChangePasswordComponent,
     WelcomeComponent,
-    StructuredetailsComponent
+    StructuredetailsComponent,
+    ProductDashComponent
   ],
   imports: [
     BrowserModule,

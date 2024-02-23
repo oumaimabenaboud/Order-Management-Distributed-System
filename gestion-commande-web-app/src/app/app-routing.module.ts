@@ -9,6 +9,7 @@ import {ChangePasswordComponent} from "./change-password/change-password.compone
 import { WelcomeComponent } from './welcome/welcome.component';
 import { authGuard } from './guards/auth.guard';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
+import {ProductDashComponent} from "./product-dash/product-dash.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -19,7 +20,8 @@ const routes: Routes = [
   {path:'structure-admin' , component:StructureAdminViewComponent},
   {path:'rubrique-admin' , component:RubriqueAdminViewComponent},
   {path:'change-password' , component:ChangePasswordComponent},
-  {path:'structure-details' , component:StructuredetailsComponent}
+  {path:"structuredetail/:structureId" , component:StructuredetailsComponent},
+  {path:"product" , component:ProductDashComponent}
 ];
 
 @NgModule({

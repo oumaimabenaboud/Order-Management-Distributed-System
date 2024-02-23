@@ -1,32 +1,20 @@
 <!-- SIDEBAR -->
 <section id="sidebar" [ngClass]="status ? 'hide' : ''">
-  <a href="/admin" class="brand">
+  <a href="/prof-dash" class="brand">
     <i class='bx bxs-smile'></i>
     <span class="text">Admin Dashboard</span>
   </a>
   <ul class="side-menu top">
     <li class="active">
-      <a routerLink="/admin">
+      <a routerLink="/prof-dash">
         <i class='bx bxs-dashboard' ></i>
-        <span class="text">Dashboard</span>
+        <span class="text">Accueil</span>
       </a>
     </li>
     <li>
-      <a routerLink="/prof-admin">
-        <i class='bx bxs-user' ></i>
-        <span class="text">Professeurs</span>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/structure-admin">
-        <i class='bx bxs-building-house' ></i>
-        <span class="text">Structures</span>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/rubrique-admin">
-        <i class='bx bx-label'></i>
-        <span class="text">Rubriques</span>
+      <a routerLink="/product">
+        <i class='bx bx-package'></i>
+        <span class="text">Produits</span>
       </a>
     </li>
   </ul>
@@ -34,13 +22,13 @@
     <li>
       <a href="#">
         <i class='bx bxs-cog' ></i>
-        <span class="text">Settings</span>
+        <span class="text">Paramètres</span>
       </a>
     </li>
     <li>
       <a href="#" class="logout">
         <i class='bx bxs-log-out-circle' ></i>
-        <span class="text" (click)="logout()">Logout</span>
+        <span class="text" (click)="logout()">Se déconnecter</span>
       </a>
     </li>
   </ul>
@@ -53,7 +41,7 @@
 <section id="content">
   <!-- NAVBAR -->
   <nav>
-    <i (click)="addToggle()" class='bx bx-menu' ></i> 
+    <i (click)="addToggle()" class='bx bx-menu' ></i>
     <!-- <a href="#" class="nav-link">Categories</a>
     <form action="#">
       <div class="form-input">
@@ -67,16 +55,16 @@
     </a> -->
     <!-- <a href="#" class="profile">
       <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
-    </a> --> 
-    
+    </a> -->
+
     <div *ngIf="userId != -1">
       <a class="">Bonjour, {{ professeur?.prenom }} {{ professeur?.nom }}</a>
     </div>
-    
+
     <div *ngIf="userId === -1">
       <a class="">Bonjour, ADMIN</a>
     </div>
-    
+
   </nav>
   <!-- NAVBAR -->
 
@@ -84,21 +72,21 @@
   <main class="main">
     <div class="head-title">
       <div class="left">
-        <h1>Dashboard</h1>
-        <ul class="breadcrumb">
+        <h1>Accueil</h1>
+        <!--<ul class="breadcrumb">
           <li>
             <a href="#">Dashboard</a>
           </li>
           <li><i class='bx bx-chevron-right' ></i></li>
           <li>
-            <a class="active" href="#">Home</a>
+            <a class="active" href="#">Accueil</a>
           </li>
-        </ul>
+        </ul>-->
       </div>
-      <a href="#" class="btn-download">
+      <!--<a href="#" class="btn-download">
         <i class='bx bxs-cloud-download' ></i>
         <span class="text">Download PDF</span>
-      </a>
+      </a>-->
     </div>
 
     <!-- <ul class="box-info">
@@ -132,47 +120,54 @@
                 <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
                 <i class="fa-solid fa-user-tie" style="font-size: 40px; color:#4C86A7"></i>
                 <div class="ml-5 mr-auto">
-                    <p class="text-xl font-semibold text-black" style="color:#4C86A7">Nom & prénom</p>
+                    <p class="text-xl font-semibold text-black" style="color:#4C86A7">{{ professeur?.prenom }} {{ professeur?.nom }}</p>
                 </div>
                 <svg class="hidden w-5 h-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
             </div>
-            <p class="text-base leading-relaxed text-gray-600 mt-7">mail</p>
+            <p class="text-base leading-relaxed text-gray-600 mt-7">{{ professeur?.mail }}</p>
         </div>
     </div>
-      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
-          <div class="p-8">
-              <div class="flex items-center" >
+      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngFor="let s of structuresrespo">
+        <a href="javascript:void(0)" (click)="getStructureById(s)">
+          <div class="p-8" >
+              <div class="flex items-center"  >
                   <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
                   <i class="fa-solid fa-building" style="font-size: 40px; color:#FB8B03"></i>
                   <div class="ml-5 mr-auto">
-                      <p class="text-xl font-semibold text-black" style="color:#FB8B03">Nom structure</p>
-                      <p class="mt-px text-sm text-gray-600">Respo</p>
+                      <p class="text-xl font-semibold text-black" style="color:#FB8B03">{{s.acronyme}}</p>
+                      <p class="mt-px text-sm text-gray-600">{{s.nom}}</p>
                   </div>
                   <svg class="hidden w-5 h-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
               </div>
-              <p class="text-base leading-relaxed text-gray-600 mt-7">ahihih</p>
+              <p class="text-base leading-relaxed text-gray-600 mt-7">{{s.typeAsString}}</p>
+              <p class="mt-px text-sm text-gray-600">Vous êtes responsable</p>
           </div>
+        </a>
       </div>
-      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
-          <div class="p-8">
+      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngFor="let s of structuresmembre">
+        <a href="javascript:void(0)" (click)="getStructureById(s)">
+        <div class="p-8">
               <div class="flex items-center" >
                   <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
                   <i class="fa-solid fa-building" style="font-size: 40px; color:#4C86A7"></i>
                   <div class="ml-5 mr-auto">
-                      <p class="text-xl font-semibold text-black" style="color:#4C86A7">Nom Structure </p>
-                      <p class="mt-px text-sm text-gray-600">Membre</p>
+                      <p class="text-xl font-semibold text-black" style="color:#4C86A7">{{s.acronyme}}</p>
+                      <p class="mt-px text-sm text-gray-600">{{s.nom}}</p>
                   </div>
                   <svg class="hidden w-5 h-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
               </div>
-              <p class="text-base leading-relaxed text-gray-600 mt-7">Lorem  od tempor  dolore.</p>
+              <p class="text-base leading-relaxed text-gray-600 mt-7">{{s.typeAsString}}</p>
+            <p class="mt-px text-sm text-gray-600">Responsable : {{s.nomResponsable}}</p>
           </div>
+        </a>
       </div>
+
 
   </div>
 

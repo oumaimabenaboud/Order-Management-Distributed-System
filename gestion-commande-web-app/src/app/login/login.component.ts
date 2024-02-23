@@ -71,7 +71,7 @@ export class LoginComponent {
                   if (userId) {
                     // console.log('local storage:', userId);
                     sessionStorage.setItem('id', JSON.stringify(userId));
-                    this.router.navigate(['/admin']);
+                    this.router.navigate(['/prof-dash']);
                   } else {
                     console.error('User ID not found for email:', email);
                     this.openErrorSnackBar("'Identifiant utilisateur non trouvé pour l'adresse email'");

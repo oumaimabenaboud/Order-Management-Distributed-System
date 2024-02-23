@@ -1,18 +1,10 @@
 <!-- SIDEBAR -->
 <section id="sidebar" [ngClass]="status ? 'hide' : ''">
-  <a href="/admin" class="brand">
+  <a href="/prof-admin" class="brand">
     <i class='bx bxs-smile'></i>
     <span class="text">Admin Dashboard</span>
   </a>
   <ul class="side-menu top">
-    <li>
-      <div *ngIf="userId !== -1">
-        <a routerLink="/admin">
-          <i class='bx bxs-dashboard'></i>
-          <span class="text">Dashboard</span>
-        </a>
-      </div>
-    </li>
     <li>
       <a routerLink="/prof-admin">
         <i class='bx bxs-user' ></i>
@@ -33,18 +25,11 @@
     </li>
   </ul>
   <ul class="side-menu">
-    <li>
-      <div *ngIf="userId !== -1">
-        <a routerLink="">
-          <i class='bx bxs-cog' ></i>
-          <span class="text">Settings</span>
-        </a>
-      </div>
-    </li>
+
     <li>
       <a href="#" class="logout">
         <i class='bx bxs-log-out-circle' ></i>
-        <span class="text" (click)="logout()">Logout</span>
+        <span class="text" (click)="logout()">Se déconnecter</span>
       </a>
     </li>
 
@@ -76,7 +61,7 @@
     </a> -->
     <div>
       <a class="">
-        Bonjour, 
+        Bonjour,
         <ng-container *ngIf="userId !== -1; else adminGreeting">
           {{ professeur?.prenom }} {{ professeur?.nom }}
         </ng-container>
