@@ -10,6 +10,7 @@ import java.util.List;
 
 @FeignClient(name="BUDGET-SERVICE")
 public interface BudgetRestClient {
+
     @GetMapping("/budget-management")
     List<Budget> getAllBudgets();
 
@@ -17,32 +18,35 @@ public interface BudgetRestClient {
     Budget createBudget();
 
     @GetMapping("/budget-management/{id}")
-    Budget getBudgetById(@PathVariable Long id);
+    Budget getBudgetById(@PathVariable("id") Long id);
 
     @DeleteMapping("/budget-management/{id}")
-    void deleteBudget(@PathVariable Long id);
+    void deleteBudget(@PathVariable("id") Long id);
 
     @GetMapping("/budget-management/rubriques")
     List<Rubrique> getAllRubriques();
 
+    @GetMapping("/budget-management/rubriques/{id}")
+    Rubrique getRubriqueById(@PathVariable("id") Long id);
+
     @PostMapping("/budget-management/rubriques")
     Rubrique saveRubrique(@RequestBody Rubrique newRubrique);
 
-    @GetMapping("/budget-management/budgets/{budgetId}/rubriques")
-    List<Rubrique> getRubriquesInBudget(@PathVariable Long budgetId);
+    @PutMapping("/budget-management/rubriques/{id}")
+    ResponseEntity<?> updateRubrique(@PathVariable("id") Long id, @RequestBody Rubrique updatedRubrique);
 
     @PostMapping("/budget-management/budgets/{budgetId}/rubriques")
-    Rubrique addRubriqueToBudget(@PathVariable Long budgetId, @RequestBody Rubrique rubrique);
+    Rubrique addRubriqueToBudget(@PathVariable("budgetId") Long budgetId, @RequestBody Rubrique rubrique);
+
+    @GetMapping("/budget-management/rubriques/search")
+    List<Rubrique> searchRubriques(@RequestParam(required = false, name = "searchTerm") String searchTerm);
 
     @DeleteMapping("/budget-management/rubriques/{rubriqueId}")
-    void deleteRubrique(@PathVariable Long rubriqueId);
+    void deleteRubrique(@PathVariable("rubriqueId") Long rubriqueId);
 
     @PutMapping("/budget-management/{budgetId}")
-    ResponseEntity<Budget> updateBudget(@PathVariable Long budgetId, @RequestBody Budget updatedBudget);
+    ResponseEntity<Budget> updateBudget(@PathVariable("budgetId") Long budgetId, @RequestBody Budget updatedBudget);
 
     @GetMapping("/budget-management/{budgetId}/rubriques")
-    ResponseEntity<List<Rubrique>> getAllRubriquesForBudget(@PathVariable Long budgetId);
-
-    @GetMapping("/budget-management/rubriques/{id}")
-    Rubrique getRubriqueById(@PathVariable Long id);
+    ResponseEntity<List<Rubrique>> getAllRubriquesForBudget(@PathVariable("budgetId") Long budgetId);
 }
