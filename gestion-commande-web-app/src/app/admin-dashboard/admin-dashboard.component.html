@@ -32,12 +32,10 @@
   </ul>
   <ul class="side-menu">
     <li>
-      <div *ngIf="userId !== -1">
-        <a routerLink="">
-          <i class='bx bxs-cog' ></i>
-          <span class="text">Settings</span>
-        </a>
-      </div>
+      <a href="#">
+        <i class='bx bxs-cog' ></i>
+        <span class="text">Settings</span>
+      </a>
     </li>
     <li>
       <a href="#" class="logout">
@@ -103,7 +101,7 @@
       </a>
     </div>
 
-    <ul class="box-info">
+    <!-- <ul class="box-info">
       <li>
         <i class='bx bxs-calendar-check' ></i>
         <span class="text">
@@ -125,8 +123,58 @@
           <p>Total Sales</p>
         </span>
       </li>
-    </ul>
+    </ul> -->
+    <div class="grid grid-cols-1 gap-2 mt-12 lg:mt-16 xl:gap-16 sm:grid-cols-2 lg:grid-cols-3">
 
+      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
+        <div class="p-8">
+            <div class="flex items-center" >
+                <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
+                <i class="fa-solid fa-user-tie" style="font-size: 40px; color:#4C86A7"></i>
+                <div class="ml-5 mr-auto">
+                    <p class="text-xl font-semibold text-black" style="color:#4C86A7">Nom & prénom</p>
+                </div>
+                <svg class="hidden w-5 h-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </div>
+            <p class="text-base leading-relaxed text-gray-600 mt-7">mail</p>
+        </div>
+    </div>
+      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
+          <div class="p-8">
+              <div class="flex items-center" >
+                  <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
+                  <i class="fa-solid fa-building" style="font-size: 40px; color:#FB8B03"></i>
+                  <div class="ml-5 mr-auto">
+                      <p class="text-xl font-semibold text-black" style="color:#FB8B03">Nom structure</p>
+                      <p class="mt-px text-sm text-gray-600">Respo</p>
+                  </div>
+                  <svg class="hidden w-5 h-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+              </div>
+              <p class="text-base leading-relaxed text-gray-600 mt-7">ahihih</p>
+          </div>
+      </div>
+      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
+          <div class="p-8">
+              <div class="flex items-center" >
+                  <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
+                  <i class="fa-solid fa-building" style="font-size: 40px; color:#4C86A7"></i>
+                  <div class="ml-5 mr-auto">
+                      <p class="text-xl font-semibold text-black" style="color:#4C86A7">Nom Structure </p>
+                      <p class="mt-px text-sm text-gray-600">Membre</p>
+                  </div>
+                  <svg class="hidden w-5 h-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+              </div>
+              <p class="text-base leading-relaxed text-gray-600 mt-7">Lorem  od tempor  dolore.</p>
+          </div>
+      </div>
+
+  </div>
 
 
     <!-- <div class="table-data">
@@ -196,3 +244,91 @@
   <!-- MAIN -->
 </section>
 <!-- CONTENT -->
+<style>
+  /* Tab content - closed */
+  .tab-content {
+  max-height: 0;
+  -webkit-transition: max-height .35s;
+  -o-transition: max-height .35s;
+  transition: max-height .35s;
+  }
+  /* :checked - resize to full height */
+  .tab input:checked ~ .tab-content {
+  max-height: 100vh;
+  }
+  /* Label formatting when open */
+  .tab input:checked + label{
+  /*@apply text-xl p-5 border-l-2 border-indigo-500 bg-gray-100 text-indigo*/
+  font-size: 1.25rem; /*.text-xl*/
+  padding: 1.25rem; /*.p-5*/
+  border-left-width: 3px; /*.border-l-2*/
+  border-color: #FB8B03; /*.border-indigo*/
+  background-color: #f8fafc; /*.bg-gray-100 */
+  color: #FB8B03; /*.text-indigo*/
+  }
+  /* Icon */
+  .tab label::after {
+  float:right;
+  right: 0;
+  top: 0;
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5;
+  font-size: 1.25rem;
+  text-align: center;
+  -webkit-transition: all .35s;
+  -o-transition: all .35s;
+  transition: all .35s;
+  }
+  /* Icon formatting - closed */
+  .tab input[type=checkbox] + label::after {
+  content: "+";
+  font-weight:bold; /*.font-bold*/
+  border-width: 1px; /*.border*/
+  border-radius: 9999px; /*.rounded-full */
+  border-color: #b8c2cc; /*.border-grey*/
+  }
+  .tab input[type=radio] + label::after {
+  content: "\25BE";
+  font-weight:bold; /*.font-bold*/
+  border-width: 1px; /*.border*/
+  border-radius: 9999px; /*.rounded-full */
+  border-color: #b8c2cc; /*.border-grey*/
+  }
+  /* Icon formatting - open */
+  .tab input[type=checkbox]:checked + label::after {
+  transform: rotate(315deg);
+  background-color: #FB8B03; /*.bg-indigo*/
+  color: #f8fafc; /*.text-grey-lightest*/
+  }
+  .tab input[type=radio]:checked + label::after {
+  transform: rotateX(180deg);
+  background-color: #FB8B03; /*.bg-indigo*/
+  color: #f8fafc; /*.text-grey-lightest*/
+  }
+</style>
+<script>
+/* Optional Javascript to close the radio button version by clicking it again */
+var myRadios = document.getElementsByName('tabs2');
+var setCheck;
+var x = 0;
+for(x = 0; x < myRadios.length; x++){
+   myRadios[x].onclick = function(){
+       if(setCheck != this){
+            setCheck = this;
+       }else{
+           this.checked = false;
+           setCheck = null;
+   }
+   };
+}
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+</script>
