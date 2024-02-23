@@ -1,23 +1,25 @@
 package org.sid.productservice.web;
 
+import lombok.AllArgsConstructor;
 import org.sid.productservice.entities.Product;
+import org.sid.productservice.model.Rubrique;
 import org.sid.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import org.sid.productservice.feign.BudgetRestClient;
 
-@RestController
+@RestController@AllArgsConstructor
 @RequestMapping("/products")
 public class ProductRestController {
 
     @Autowired
     private ProductRepository productRepository;
 
-    public ProductRestController(ProductRepository productRepository){
-        this.productRepository = productRepository;
-    }
+    @Autowired
+    private BudgetRestClient budgetRestClient;
+
 
     @GetMapping
     public List<Product> products(){
@@ -29,6 +31,28 @@ public class ProductRestController {
         return productRepository.findById(id)
                 .orElseThrow((()-> new RuntimeException(String.format("Account % not found",id))));
     }
+
+    @GetMapping("/all")
+    public List<Product> allproducts() {
+        List<Product> products = productRepository.findAll();
+        populateProductRubriques(products);
+        return products;
+    }
+
+    private void populateProductRubriques(List<Product> products) {
+        for (Product product : products) {
+            // Assuming each product has a rubriqueId that corresponds to its rubrique
+            Long rubriqueId = Long.parseLong(product.getRubrique());
+            Rubrique fetchedRubrique = budgetRestClient.getRubriqueById(rubriqueId);
+            if (fetchedRubrique != null) {
+                // Assuming rubrique name is stored in the name attribute of the Rubrique object
+                product.setRubrique(fetchedRubrique.getNom());
+            } else {
+                System.out.println("Failed to fetch rubrique with ID: " + rubriqueId);
+            }
+        }
+    }
+
     @GetMapping("/search/byName")
     public Product getProductByName(@RequestParam(name="name") String name) {
         Product product = productRepository.findByNom(name);

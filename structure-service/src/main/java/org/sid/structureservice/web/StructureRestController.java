@@ -23,11 +23,11 @@ public class StructureRestController {
     @Autowired
     private BudgetRestClient budgetRestClient;
 
-        @Autowired
-        public StructureRestController(ProfesseurRestClient professeurRestClient, BudgetRestClient budgetRestClient) {
-            this.professeurRestClient = professeurRestClient;
-            this.budgetRestClient = budgetRestClient;
-        }
+    @Autowired
+    public StructureRestController(ProfesseurRestClient professeurRestClient, BudgetRestClient budgetRestClient) {
+        this.professeurRestClient = professeurRestClient;
+        this.budgetRestClient = budgetRestClient;
+    }
 
     @PostMapping
     public ResponseEntity<?> createStructure(@RequestBody Structure addedStructure) {
