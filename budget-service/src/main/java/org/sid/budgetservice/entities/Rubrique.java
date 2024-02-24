@@ -1,6 +1,5 @@
 package org.sid.budgetservice.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +17,4 @@ public class Rubrique {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
-    private double allocatedAmount;
-    private Long budget_id;
 }

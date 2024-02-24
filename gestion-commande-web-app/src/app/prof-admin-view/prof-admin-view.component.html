@@ -113,7 +113,7 @@
               <th><i class="fa-solid fa-envelope"></i> Email</th>
               <th><i class="fa-solid fa-magnifying-glass-plus"></i> Détails</th>
               <th><i class="fa-solid fa-trash"></i> Supprimer</th>
-              <th><i class="fa-solid fa-sliders"></i> Modifier l'accès</th>
+              <!--<th><i class="fa-solid fa-sliders"></i> Modifier l'accès</th>-->
 
             </tr>
           </thead>
@@ -140,7 +140,7 @@
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </td>
-              <td>
+              <!--<td>
                 <button class="btna" [class.active]="p.droit_daccee" (click)="toggleAccess(p)">
                   <ng-container *ngIf="p.droit_daccee; else enableIcon">
                     <i class="fa-solid fa-square-xmark" style="color: red;"></i>
@@ -150,7 +150,7 @@
                   </ng-template>
                   <label class="label">{{ p.droit_daccee ? ' Disable ' : ' Enable' }}</label>
                 </button>
-              </td>
+              </td>-->
             </tr>
           </tbody>
         </table>

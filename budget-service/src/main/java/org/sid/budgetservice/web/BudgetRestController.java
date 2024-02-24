@@ -1,9 +1,9 @@
 package org.sid.budgetservice.web;
 import org.sid.budgetservice.repositories.BudgetRepository;
 import org.sid.budgetservice.entities.*;
+import org.sid.budgetservice.repositories.RubriqueAllocationRepository;
 import org.sid.budgetservice.repositories.RubriqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,29 +21,11 @@ public class BudgetRestController {
     @Autowired
     private BudgetRepository budgetRepository;
 
-    @GetMapping
-    public List<Budget> getAllBudgets() {
-        return budgetRepository.findAll();
-    }
-
-    @PostMapping
-    public Budget createBudget() {
-        Budget budget = new Budget();
-        budget.setRubriques(new ArrayList<>()); // Default with 0 rubriques
-        return budgetRepository.save(budget);
-    }
+    @Autowired
+    private RubriqueAllocationRepository rubriqueAllocation;
 
 
-    @GetMapping("/{id}")
-    public Budget getBudgetById(@PathVariable Long id) {
-        return budgetRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Budget not found with id: " + id));
-    }
-    // Delete a budget
-    @DeleteMapping("/{id}")
-    public void deleteBudget(@PathVariable Long id) {
-        budgetRepository.deleteById(id);
-    }
+    //Rubriques
 
     @GetMapping("/rubriques")
     public List<Rubrique> getAllRubriques() {
@@ -73,16 +55,44 @@ public class BudgetRestController {
 
         return ResponseEntity.ok("Structure mise à jour avec succès !");
     }
-    // List all rubriques in a budget
-    /*@GetMapping("/budgets/{budgetId}/rubriques")
-    public List<Rubrique> getRubriquesInBudget(@PathVariable Long budgetId) {
-        return rubriqueRepository.findByBudgetId(budgetId);
-    }*/
-    @PostMapping("/budgets/{budgetId}/rubriques")
+    @DeleteMapping("/rubriques/{rubriqueId}")
+    public void deleteRubrique(@PathVariable Long rubriqueId) {
+        rubriqueRepository.deleteById(rubriqueId);
+    }
+
+
+    //Budget
+    @GetMapping
+    public List<Budget> getAllBudgets() {
+        return budgetRepository.findAll();
+    }
+
+    @PostMapping
+    public Budget createBudget(@RequestBody Budget newBudget) {
+        Budget budget = new Budget();
+        budget.setYear(newBudget.getYear());
+        budget.setTotalAlloue(newBudget.getTotalAlloue());
+        budget.setTotalRestant(newBudget.getTotalRestant());
+        budget.setRubriqueAllocations(new ArrayList<>()); // Default with 0 rubriques
+        return budgetRepository.save(budget);
+    }
+
+    @GetMapping("/rubriques/{id}")
+    public Budget getBudgetById(@PathVariable Long id) {
+        return budgetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Budget not found with id: " + id));
+    }
+    // Delete a budget
+    @DeleteMapping("/{id}")
+    public void deleteBudget(@PathVariable Long id) {
+        budgetRepository.deleteById(id);
+    }
+
+    /*@PostMapping("/budgets/{budgetId}/rubriques")
     public Rubrique addRubriqueToBudget(@PathVariable Long budgetId, @RequestBody Rubrique rubrique) {
         Budget budget = budgetRepository.findById(budgetId)
                 .orElseThrow(() -> new RuntimeException("Budget not found with id: " + budgetId));
-        rubrique.setBudget_id(budget.getId());
+        rubrique.setBudgetId(budget.getId());
         return rubriqueRepository.save(rubrique);
     }
 
@@ -95,11 +105,6 @@ public class BudgetRestController {
         }
     }
 
-    // Delete a rubrique
-    @DeleteMapping("/rubriques/{rubriqueId}")
-    public void deleteRubrique(@PathVariable Long rubriqueId) {
-        rubriqueRepository.deleteById(rubriqueId);
-    }
     // Update an existing budget
     @PutMapping("/{id}")
     public ResponseEntity<Budget> updateBudget(@PathVariable Long budgetId, @RequestBody Budget updatedBudget) {
@@ -107,7 +112,7 @@ public class BudgetRestController {
 
         if (existingBudgetOptional.isPresent()) {
             Budget existingBudget = existingBudgetOptional.get();
-            existingBudget.setTotalAmount(updatedBudget.getTotalAmount());
+            existingBudget.setTotalAlloue(updatedBudget.getTotalAlloue());
             // You might need to handle rubriques here
 
             Budget savedBudget = budgetRepository.save(existingBudget);
@@ -120,16 +125,16 @@ public class BudgetRestController {
 
 
     @GetMapping("/{budgetId}/rubriques")
-    public ResponseEntity<List<Rubrique>> getAllRubriquesForBudget(@PathVariable Long budgetId) {
+    public ResponseEntity<List<RubriqueAllocation>> getAllRubriquesForBudget(@PathVariable Long budgetId) {
         Optional<Budget> budgetOptional = budgetRepository.findById(budgetId);
 
         if (budgetOptional.isPresent()) {
             Budget budget = budgetOptional.get();
-            List<Rubrique> rubriques = new ArrayList<>(budget.getRubriques());
+            List<RubriqueAllocation> rubriques = new ArrayList<>(budget.getRubriqueAllocations());
             return ResponseEntity.ok(rubriques);
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.sid.structureservice.enums.structurestype;
 
+import java.util.Hashtable;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,7 @@ public class Structure {
 
     @ElementCollection
     private List<String> equipeProfNames;
+
 
 
 }

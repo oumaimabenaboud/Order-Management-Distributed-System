@@ -1,10 +1,7 @@
 package org.sid.structureservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class Rubrique {
@@ -13,6 +10,4 @@ public class Rubrique {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
-    private double allocatedAmount;
-    private Long budget_id;
 }

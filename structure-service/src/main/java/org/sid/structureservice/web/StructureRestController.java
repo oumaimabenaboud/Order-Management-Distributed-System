@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+import static org.sid.structureservice.enums.structurestype.LabodeRecherche;
+
 @RestController@AllArgsConstructor
 @RequestMapping("/structures")
 public class StructureRestController {
@@ -168,11 +170,21 @@ public class StructureRestController {
 
         return updatedProfessors;
     }*/
+    public List<String> getAllLaboratoiresNames() {
+        List<Structure> structures = structureRepository.findByType(LabodeRecherche);
+        List<String> laboratoiresNames = new ArrayList<>();
 
+        for (Structure structure : structures) {
+            laboratoiresNames.add(structure.getNom());
+        }
+
+        return laboratoiresNames;
+    }
     @PutMapping("/{id}")
     public ResponseEntity<?> updateStructure(@PathVariable Long id, @RequestBody Structure updatedStructure) {
         // Fetch the existing structure from the database
         Structure existingStructure = structureRepository.getStructureById(id);
+        List<String> laboratoiresNames = getAllLaboratoiresNames();
 
         // If the structure doesn't exist, return 404 Not Found
         if (existingStructure == null) {
@@ -200,9 +212,12 @@ public class StructureRestController {
             }
         }
 
-
+        if (updatedStructure.getParentLabId() == null && updatedStructure.getParentLabId()!= null && !updatedStructure.getParentLabNom().isEmpty() &&  !laboratoiresNames.contains(updatedStructure.getParentLabNom())) {
+            return ResponseEntity.badRequest().body("Ce laboratoire parent n'existe pas");
+        }
         // Check if child equipe is changing lab parents
         if (existingStructure.getParentLabId()!= updatedStructure.getParentLabId()) {
+
             System.out.println("Child Equip with ID : "+ existingStructure.getId() +" moving from one parent lab to another");
             // Fetch the old parent lab from the database
             Structure oldParentLab = structureRepository.getStructureById(existingStructure.getParentLabId());
@@ -310,10 +325,20 @@ public class StructureRestController {
             return ResponseEntity.badRequest().body("Le champ 'Nom du Responsable' ne peut pas être vide.");
         }
 
+        List<String> equipeProfNames = new ArrayList<>();
+
+        // Fetch details of each professor in the equipe and populate equipeProfNames
+        for (Long profId : updatedStructure.getEquipeProfIds()) {
+            Professeur prof = professeurRestClient.getProfesseurById(profId);
+            if (prof != null) {
+                equipeProfNames.add(prof.getPrenom() + " " + prof.getNom());
+            }
+        }
+
         existingStructure.setIdResponsable(updatedStructure.getIdResponsable());
         existingStructure.setBudgetAnnuel(updatedStructure.getBudgetAnnuel());
         existingStructure.setEquipeProfIds(updatedStructure.getEquipeProfIds());
-        existingStructure.setEquipeProfNames(updatedStructure.getEquipeProfNames());
+        existingStructure.setEquipeProfNames(equipeProfNames);
         existingStructure.setParentLabId(updatedStructure.getParentLabId());
         existingStructure.setParentLabNom(updatedStructure.getParentLabNom());
         existingStructure.setChildEquipesIds(updatedStructure.getChildEquipesIds());
