@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {StructuresService} from "../services/structures.service";
 import {ActivatedRoute, Router} from '@angular/router';
 import {PlatformLocation} from "@angular/common";
+import {Structure} from "../model/structure.model";
 
 @Component({
   selector: 'app-structuredetails',
@@ -16,7 +17,7 @@ import {PlatformLocation} from "@angular/common";
 export class StructuredetailsComponent implements OnInit{
 
 
-  profs: any;
+  profs: any[] = [];
   status = true;
   enabled: boolean = false; // Define the enabled property
   structuredetail : any;
@@ -60,21 +61,28 @@ export class StructuredetailsComponent implements OnInit{
       }
     }
 
-    this.profService.getProfessors().subscribe({
-      next: (data) => {
-        this.profs = data;
-      },
-      error: (err) => console.error(err)
-    });
-
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
         this.structuredetail = structuredetail;
+        // @ts-ignore
+        this.structuredetail['typeAsString'] = this.convertStructureTypes(this.structuredetail);
         this.profService.getProfessor(this.structuredetail.idResponsable).subscribe({
           next: professeurRespo => this.professeurRespo = professeurRespo,
           error: err => console.log(err)
         });
         this.loading = false; // Data received, loading is complete
+
+        // Check if equipeProfIds is not null or undefined before iterating over it
+        if (this.structuredetail.equipeProfIds) {
+          this.structuredetail.equipeProfIds.forEach((id: number) => {
+            this.profService.getProfessor(id).subscribe({
+              next: (prof) => {
+                this.profs.push(prof);
+              },
+              error: (err) => console.error(err)
+            });
+          });
+        }
       },
       error: (err) => {
         console.log(err);
@@ -83,6 +91,7 @@ export class StructuredetailsComponent implements OnInit{
     });
   }
 
+
   isBrowser(): boolean {
     return typeof window !== 'undefined' && this.platformLocation !== null;
   }
@@ -90,6 +99,27 @@ export class StructuredetailsComponent implements OnInit{
   logout() {
     sessionStorage.removeItem('id');
     this.router.navigate(['/login']);
+  }
+  convertStructureTypes(structure: Structure): string {
+    let p: string;
+    switch (structure.type.toString()) {
+      case 'LabodeRecherche':
+        p = 'Laboratoire de Recherche';
+        break;
+      case 'EquipedeRecherche':
+        p = 'Equipe de Recherche';
+        break;
+      case 'ProjetdeRecherche':
+        p = 'Projet de Recherche';
+        break;
+      case 'Département':
+        p = 'Département';
+        break;
+      default:
+        p = 'Unknown Type';
+        break;
+    }
+    return p;
   }
   toggleAccess(prof: Professeur): void {
     const updatedAccess = !prof.droit_daccee; // Toggle the access
