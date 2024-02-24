@@ -59,7 +59,14 @@ public class BudgetRestController {
     public void deleteRubrique(@PathVariable Long rubriqueId) {
         rubriqueRepository.deleteById(rubriqueId);
     }
-
+    @GetMapping("/rubriques/search")
+    public List<Rubrique> searchRubriques(@RequestParam(required = false) String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return rubriqueRepository.findByNomContainingIgnoreCase(searchTerm);
+        } else {
+            return rubriqueRepository.findAll();
+        }
+    }
 
     //Budget
     @GetMapping
@@ -77,7 +84,7 @@ public class BudgetRestController {
         return budgetRepository.save(budget);
     }
 
-    @GetMapping("/rubriques/{id}")
+    @GetMapping("/budget/{id}")
     public Budget getBudgetById(@PathVariable Long id) {
         return budgetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Budget not found with id: " + id));
@@ -96,14 +103,7 @@ public class BudgetRestController {
         return rubriqueRepository.save(rubrique);
     }
 
-    @GetMapping("/rubriques/search")
-    public List<Rubrique> searchRubriques(@RequestParam(required = false) String searchTerm) {
-        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            return rubriqueRepository.findByNomContainingIgnoreCase(searchTerm);
-        } else {
-            return rubriqueRepository.findAll();
-        }
-    }
+
 
     // Update an existing budget
     @PutMapping("/{id}")

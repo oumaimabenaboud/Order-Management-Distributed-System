@@ -22,8 +22,8 @@ public class BudgetServiceApplication {
 	CommandLineRunner init(BudgetRepository budgetRepository, RubriqueRepository rubriqueRepository) {
 		return args -> {
 			// Create a sample budget
-			Budget structureBudget = Budget.builder().structureId(1L).build();
-			structureBudget = budgetRepository.save(structureBudget);
+			//Budget structureBudget = Budget.builder().structureId(1L).build();
+			//structureBudget = budgetRepository.save(structureBudget);
 
 			// Add rubriques for different allocations
 			Rubrique academicDepartments = Rubrique.builder().nom("Achat de matières premières").build();
@@ -37,7 +37,7 @@ public class BudgetServiceApplication {
 			rubriqueRepository.saveAll(List.of(academicDepartments, research, infrastructure, eventsa, eventsb, eventsd, eventse));
 
 
-			budgetRepository.save(structureBudget);
+			//budgetRepository.save(structureBudget);
 		};
 	}
 }

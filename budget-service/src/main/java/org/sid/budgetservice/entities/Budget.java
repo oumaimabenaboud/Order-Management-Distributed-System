@@ -19,7 +19,7 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long structureId;
-    private Year year;
+    private int year;
     private double totalAlloue;
     private double totalRestant;
     @OneToMany
