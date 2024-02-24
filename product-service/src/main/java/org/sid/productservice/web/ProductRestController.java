@@ -41,26 +41,23 @@ public class ProductRestController {
                 .orElseThrow((()-> new RuntimeException(String.format("Account % not found",id))));
     }
 
-     @GetMapping("/all")
-     public List<Product> getAllProductsWithRubriques() {
-         List<Product> products = productRepository.findAll();
-         populateProductRubriques(products);
-         return products;
-     }
+    @GetMapping("/rubProd")
+    public List<Rubrique> getAllRubriques() {
+        List<String> rubriqueNames = getAllRubriqueNames();
 
-    private void populateProductRubriques(List<Product> products) {
-        for (Product product : products) {
-            Long rubriqueId = Long.parseLong(product.getRubrique());
-            Rubrique fetchedRubrique = budgetRestClient.getRubriqueById(rubriqueId);
-            if (fetchedRubrique != null) {
-                // Assuming rubrique name is stored in the name attribute of the Rubrique object
-                product.setRubrique(fetchedRubrique.getNom());
-            } else {
-                System.out.println("Failed to fetch rubrique with ID: " + rubriqueId);
-            }
-        }
+        return budgetRestClient.getAllRubriques();
     }
 
+    public List<String> getAllRubriqueNames() {
+        List<Rubrique> rubriques = budgetRestClient.getAllRubriques();
+        List<String> rubriqueNames = new ArrayList<>();
+
+        for (Rubrique rubrique : rubriques) {
+            rubriqueNames.add(rubrique.getNom());
+        }
+
+        return rubriqueNames;
+    }
 
 /*
     // In your Product entity
@@ -102,6 +99,7 @@ public class ProductRestController {
 
     @PostMapping
     public Product createProduct(@RequestBody Product newProduct) {
+
         return productRepository.save(newProduct);
     }
 
