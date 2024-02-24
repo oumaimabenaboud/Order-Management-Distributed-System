@@ -48,7 +48,58 @@
   
    }
 
+/* Style pour l'en-tête du tableau */
+th {
+    padding: 12px;
+    background-color: #01618F;
+    color: white;
+    text-align: left;
+  }
+  
+  /* Style pour les cellules du tableau */
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Style pour les lignes impaires du tableau */
+  tr:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 20px; /* Ajouter un rayon de bordure de 30px */
+    overflow: hidden; /* Pour que le rayon de bordure soit visible */
+  
+  }
+  
+  .page {
+    border-radius: 20px;
+  }
 
+  .form-control {
+    color: #6a6c72;
+    transition: all 0.5s;
+    background-color: #f1f5fe;
+    border: 1px solid #f1f5fe;
+    font-size: 12px;
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: unset;
+    border-color: #FB8B03;
+    display: block;
+    height: 40px;
+    width: 70%;
+    outline: 0;
+
+}
+
+    .form-control:focus {
+        border-color: #004AAD;
+        box-shadow: 0 0 5px rgba(#004AAD, 0.5);
+    }  
 @media screen and (max-width:768px){
 
     .footer-area{

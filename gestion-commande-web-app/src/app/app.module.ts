@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { ProfDashboardComponent } from './prof-dashboard/prof-dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { ProfAdminViewComponent } from './prof-admin-view/prof-admin-view.component';
 import { StructureAdminViewComponent } from './structure-admin-view/structure-admin-view.component';
@@ -17,6 +17,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Routes } from '@angular/router';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
+import { ProductDashComponent } from './product-dash/product-dash.component';
 
 // const appRoutes: Routes = [
 //   // { path: 'login', component: LoginComponent },
@@ -46,14 +47,15 @@ import { StructuredetailsComponent } from './structuredetails/structuredetails.c
 @NgModule({
   declarations: [
     AppComponent,
-    AdminDashboardComponent,
+    ProfDashboardComponent,
     LoginComponent,
     ProfAdminViewComponent,
     StructureAdminViewComponent,
     RubriqueAdminViewComponent,
     ChangePasswordComponent,
     WelcomeComponent,
-    StructuredetailsComponent
+    StructuredetailsComponent,
+    ProductDashComponent
   ],
   imports: [
     BrowserModule,

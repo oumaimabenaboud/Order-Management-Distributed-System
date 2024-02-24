@@ -31,7 +31,7 @@ export class StructureAdminViewComponent implements OnInit{
   equipeProfNames: any[] = [];
   childEquipesNoms: any[] = [];// Assuming any type for the members, you can replace any with a specific type if available
   //NavBar
-  status = false;
+  status = true;
   selectedStructureType: string='';
   showFilter: boolean = false;
   userId: number | null = null;
@@ -72,20 +72,8 @@ export class StructureAdminViewComponent implements OnInit{
         this.structures = data;
         // Assuming this.structures is an array of structures
         this.structures.forEach((structure: Structure) => {
-          let p: string; // Declare p outside the loop
-          switch (structure.type.toString()) {
-            case 'LabodeRecherche':
-              p = 'Laboratoire de Recherche';
-              break;
-            case 'EquipedeRecherche':
-              p = 'Equipe de Recherche';
-              break;
-            case 'ProjetdeRecherche':
-              p = 'Projet de Recherche';
-              break;
-          }
           // @ts-ignore
-          structure['typeAsString'] = p; // Assign p to a dynamically created property in the structure object
+          structure['typeAsString'] = this.convertStructureTypes(structure);
         });
       },
       error: (err) => console.error(err)
@@ -119,7 +107,7 @@ export class StructureAdminViewComponent implements OnInit{
   isBrowser(): boolean {
     return typeof window !== 'undefined' && this.platformLocation !== null;
   }
-    
+
   logout() {
     sessionStorage.removeItem('id');
     this.router.navigate(['/login']);

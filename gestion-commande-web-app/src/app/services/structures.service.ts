@@ -39,14 +39,14 @@ export class StructuresService {
       params = params.set('searchTerm', searchTerm);
     }
 
-    return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures//search", { params })
+    return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures/search", { params })
   }
 
   getStructuresByResponsable(professorId: number): Observable<Structure[]> {
-    return this.http.get<Structure[]>(`/api/structures/byResponsable/${professorId}`);
+    return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures/byResponsable/"+professorId);
   }
 
   getStructuresByEquipeMember(professorId: number): Observable<Structure[]> {
-    return this.http.get<Structure[]>(`/api/structures/byEquipeMember/${professorId}`);
+    return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures/byEquipeMember/"+professorId);
   }
 }

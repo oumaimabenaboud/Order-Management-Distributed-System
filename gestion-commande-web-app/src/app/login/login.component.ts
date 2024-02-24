@@ -24,14 +24,14 @@ export class LoginComponent {
       email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(20)]],
     });
-    
+
   }
 
   onSubmit(): void {
     let userId = null;
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-  
+
       this.loginService.login(email, password).subscribe(
         (response) => {
           if (response) {
@@ -52,16 +52,16 @@ export class LoginComponent {
                     this.router.navigate(['/change-password', { userId: userId }]);
                   } else {
                     console.error('User ID not found for email:', email);
-                    this.openErrorSnackBar('User ID not found for email');
+                    this.openErrorSnackBar("Identifiant utilisateur non trouvé pour l'adresse email");
                   }
                 },
                 (error) => {
                   console.error('Error fetching user ID:', error);
-                  this.openErrorSnackBar('Error fetching user ID');
+                  this.openErrorSnackBar("Erreur lors de la récupération de l'identifiant utilisateur");
                 }
-              );              
+              );
             } else if (response === 'Professor not found') {
-              this.openErrorSnackBar("Professeur not found");
+              this.openErrorSnackBar("Professeur non trouvé");
             } else if (response === 'Login successful') {
               console.log(response);
               this.loginService.getUserIdByEmail(email).subscribe(
@@ -71,19 +71,19 @@ export class LoginComponent {
                   if (userId) {
                     // console.log('local storage:', userId);
                     sessionStorage.setItem('id', JSON.stringify(userId));
-                    this.router.navigate(['/admin']);                  
+                    this.router.navigate(['/prof-dash']);
                   } else {
                     console.error('User ID not found for email:', email);
-                    this.openErrorSnackBar('User ID not found for email');
+                    this.openErrorSnackBar("'Identifiant utilisateur non trouvé pour l'adresse email'");
                   }
                 },
                 (error) => {
                   console.error('Error fetching user ID:', error);
-                  this.openErrorSnackBar('Error fetching user ID');
+                  this.openErrorSnackBar("Erreur lors de la récupération de l'identifiant utilisateur");
                 }
-              ); 
+              );
             } else if (response === 'Invalid credentials') {
-              this.openErrorSnackBar(response);
+              this.openErrorSnackBar("Informations d'identification invalides");
             }
           } else {
             console.log(response);
@@ -91,7 +91,7 @@ export class LoginComponent {
         },
         (error) => {
           console.error('Login error:', error);
-          
+
           if (error instanceof HttpErrorResponse) {
             try {
               console.log('Server error:', JSON.parse(error.error));
@@ -99,13 +99,13 @@ export class LoginComponent {
               console.error('Error parsing server response:', e);
             }
           }
-          
-          this.openErrorSnackBar('An unexpected error occurred');
+
+          this.openErrorSnackBar("Une erreur inattendue s'est produite");
         }
       );
     }
   }
-  
+
 
   openErrorSnackBar(message: string): void {
     this.snackBar.open(message, 'Close', {

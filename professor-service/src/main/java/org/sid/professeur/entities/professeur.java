@@ -19,14 +19,14 @@ import jakarta.persistence.Id;
 public class professeur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Change the type to Long
-
+    private Long id;
     private String nom;
     private String prenom;
     private String mail;
     private String mdp;
     private boolean droit_daccee;
     private boolean first_cnx;
+    private boolean isAdmin;
 
 }
 
