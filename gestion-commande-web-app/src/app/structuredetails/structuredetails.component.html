@@ -80,7 +80,7 @@
         </a>
       </li>
       <li>
-        <a class="logout">
+        <a href="#" class="logout">
           <i class='bx bxs-log-out-circle' (click)="logout()" ></i>
           <span class="text" (click)="logout()">Se déconnecter</span>
         </a>
@@ -214,7 +214,12 @@
 
                     </div>
                 </div> -->
-                <div class="table-data">
+              <label for="dropdown">Année : </label>
+              <select id="dropdown" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)">
+                <option *ngFor="let year of listYears" [value]="year">{{ year }}</option>
+              </select>
+
+              <div class="table-data">
                     <div class="order" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
                       <form [formGroup]="rubriqueAllocationForm">
                         <table>
@@ -255,7 +260,7 @@
                           {{ isEditMode ? 'Annuler' : 'Modifier' }}
                         </button>
                         <!-- Save changes button (visible in edit mode) -->
-                        <!-- <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="Enregistrer()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button> -->
+                        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" ><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
                       </div>
                     </div>
                     </div>
@@ -304,75 +309,52 @@
         </div>
     </section>
 
-    <div class="min-h-screen bg-gray-100 flex flex-col justify-center" style="background-color: transparent" id="commandes" >
+      <div class="min-h-screen bg-gray-100 flex flex-col justify-center" style="background-color: transparent" id="commandes" >
         <div class="max-w-2xl mx-auto text-center">
-            <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> <i class="fa-solid fa-barcode"></i> Commandes</h2>
+          <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> <i class="fa-solid fa-barcode"></i> Commandes listes</h2>
         </div>
+
+        <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-1xl" style="margin-top: 2px;">
+          <div class="max-w-1xl mx-auto text-center" >
+            <!-- Button to add a new command -->
+            <button (click)="openNewCommandeForm()" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
+              <i class="fa-solid fa-circle-plus" style="color: #4C86A7;"></i> Ajouter nouvelle commande
+            </button>
+          </div>
+        </div>
+
         <div class="relative m-3 flex flex-wrap mx-auto justify-center">
+          <div class="relative max-w-sm min-w-[340px] bg-white shadow-md rounded-3xl p-2 mx-1 my-3 cursor-pointer">
+            <div class="overflow-x-hidden rounded-2xl relative" style="background-image: url('assets/images/shape.png'); background-size: cover; background-position: center;">
+              <img src="assets/images/commande.svg" alt="SVG Image">
+              <p class="absolute left-2 top-2 bg-white rounded-full p-2 cursor-pointer group">
+                <i style="color: #FB8B03;" class="fa-solid fa-user-tie"></i> <span style="color: #FB8B03;"> PrÃ©nom</span>
 
-            <div class="relative max-w-sm min-w-[340px] bg-white shadow-md rounded-3xl p-2 mx-1 my-3 cursor-pointer">
-                <div class="overflow-x-hidden rounded-2xl relative" >
-                    <img src="assets/images/commande.svg" alt="SVG Image">
-                    <p class="absolute left-2 top-2 bg-white rounded-full p-2 cursor-pointer group">
-                    <i style="color: #FB8B03;" class="fa-solid fa-user-tie"></i> <span style="color: #FB8B03;"> Prénom</span>
+              </p>
+              <p class="absolute right-2 top-2 bg-white rounded-full p-2 cursor-pointer group">
+                <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;"> jj/mm/yyyy</span>
 
-                    </p>
-                    <p class="absolute right-2 top-2 bg-white rounded-full p-2 cursor-pointer group">
-                        <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;"> jj/mm/yyyy</span>
-
-                    </p>
-                    <div class="inline-flex px-4 py-1.5 mx-auto rounded-full bg-gradient-to-r from-orange-200 to-blue-200" style="margin-top: 1rem;">
-                        <p class="text-xs font-semibold tracking-widest text-blue uppercase">type commande</p>
-                    </div>
-                </div>
-                <div class="mt-4 pl-2 mb-2 flex justify-between " style="background-image: url('assets/images/shape.png'); background-size: cover; background-position: center;">
-                    <div >
-                            <!-- <p class="text-lg font-semibold text-gray-900 mb-0">Product Name</p> -->
-                    <del>
-                        <p class="text-md text-gray-800 mt-0">340 Dhs / HT</p>
-                    </del>
-                    <p class="text-md text-blue-800 mt-0" >359.9 Dhs / TTC</p>
-                    </div>
-                    <!-- <div class="flex flex-col-reverse mb-1 mr-4 group cursor-pointer">
-
-                    </div> -->
-                </div>
-                <div>
-                    <div class="bg-white shadow-md rounded-3xl ">
-                    <div class="bg-white shadow-md rounded-2xl tab w-full overflow-hidden border-t">
-                        <input class=" absolute opacity-0 " id="tab-multi-com1" type="checkbox" name="com1">
-                        <label class=" block p-5 text-blue1 leading-normal cursor-pointer" for="tab-multi-com1">Details</label>
-                        <div class=" tab-content overflow-hidden border-l-2 bg-gray-100 border-indigo-500 leading-normal">
-                            <div class="flex flex-wrap">
-                                <div class="w-1/2 p-5">
-                                    <p class="mb-0">
-                                        <span class="text-lg font-semibold text-gray-900">Product name</span> <br>
-                                        <del>
-                                            <span class="text-md text-gray-800">340 Dhs / HT</span> <br>
-                                        </del>
-                                        <span class="text-md text-gray-800">349.9 Dhs / TTC</span> <br>
-                                        <span class="text-md text-gray-800">Quantité: 3</span>
-                                    </p>
-                                </div>
-                                <div class="w-1/2 p-5">
-                                    <p class="mb-0">
-                                        <span class="text-lg font-semibold text-gray-900">Product name</span> <br>
-                                        <del>
-                                            <span class="text-md text-gray-800">340 Dhs / HT</span> <br>
-                                        </del>
-                                        <span class="text-md text-gray-800">349.9 Dhs / TTC</span> <br>
-                                        <span class="text-md text-gray-800">Quantité: 3</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
+              </p>
+              <div class="inline-flex px-4 py-1.5 mx-auto rounded-full bg-gradient-to-r from-orange-200 to-blue-200" style="margin-top: 1rem;">
+                <p class="text-xs font-semibold tracking-widest text-blue uppercase">type commande</p>
+              </div>
             </div>
+            <div class="mt-4 pl-2 mb-2 flex justify-between " >
+              <div >
+                <del>
+                  <p class="text-md text-gray-800 mt-0">340 Dhs / HT</p>
+                </del>
+                <p class="text-md text-blue-800 mt-0" >359.9 Dhs / TTC</p>
+              </div>
+              <a href="#" title="" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
+                <p><i class="fa-solid fa-cart-shopping" style="color: #4C86A7;"></i> Voir liste produits</p>
+              </a>
 
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
+
 
     <section class="py-10 bg-gray-100 sm:py-16 lg:py-24" style="background-color: transparent" id="chiffres" style="border-radius: 20px;">
         <div class="max-w-5xl px-4 mx-auto sm:px-6 lg:px-8">
@@ -430,7 +412,57 @@
         </div>
     </div>
 </div> -->
+<!-- Popup card for adding a new structure -->
+<div class="popup card" *ngIf="isNewCommandeFormOpen">
+  <div class="card-body">
+    <div class="hh">
+      <button class="btnfp btn-outline-primary" (click)="closeNewCommandeForm()"><i class="fa-solid fa-circle-xmark" id="detail-button"></i></button>
+    </div>
+    <form class="row" [formGroup]="newCommandeForm" >
+      <div class="relative m-3 flex flex-wrap mx-auto justify-center">
+        <div class="relative max-w-sm min-w-[450px] bg-white shadow-md rounded-3xl p-2 mx-1 my-3 cursor-pointer">
+          <div class="overflow-x-hidden rounded-2xl relative">
+            <img src="assets/images/commande.svg" alt="SVG Image">
 
+            <div class="mt-4 pl-2 mb-2 flex justify-between " >
+              <div >
+                <p class="absolute left-1 top-1 bg-white rounded-full p-2 cursor-pointer group">
+                  <input type="text" style="color: #FB8B03; border:solid 1px  #FB8B03;" class="bg-white rounded-full p-1 cursor-pointer group" id="np" formControlName="np" placeholder="nom & prenom">
+                </p>
+                <p class="relative left-1 bottom-1 bg-white rounded-full p-1 cursor-pointer group">
+                  <!-- <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;"> jj/mm/yyyy</span> -->
+                  <input type="date" style="color: #FB8B03; border:solid 1px  #FB8B03;" class=" bg-white rounded-full p-1 cursor-pointer group"  id="date" formControlName="date" >
+                </p>
+                <p class="relative left-1 bottom-1 bg-white rounded-full p-1 cursor-pointer group">
+                  <!-- <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;"> jj/mm/yyyy</span> -->
+                  <input type="text" style="color: #FB8B03; border:solid 1px  #FB8B03;" class=" bg-white rounded-full p-1 cursor-pointer group"  id="typecommande" formControlName="typecommande" placeholder="type commande">
+
+                </p>
+                <p class="relative left-1 bottom-1 bg-white rounded-full p-1 cursor-pointer group">
+                  <input type="number" style="color: #FB8B03; border:solid 1px  #FB8B03;" class=" bg-white rounded-full p-1 cursor-pointer group"  id="prixht" formControlName="prixht"  placeholder="Dhs / HT">
+                </p>
+                <p class="relative left-1 bottom-1 bg-white rounded-full p-1 cursor-pointer group">
+
+                  <input type="number" style="color: #FB8B03; border:solid 1px  #FB8B03;" class=" bg-white rounded-full p-1 cursor-pointer group"  id="prixttc"  formControlName="prixttc" placeholder="Dhs / TTC">
+                </p>                    </div>
+              <a href="#" title="" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
+                <i class="fa-solid fa-circle-plus" style="color: #4C86A7;"></i> Ajouter
+
+              </a>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+
+
+
+
+</div>
 
 <style>
   /* Tab content - closed */
