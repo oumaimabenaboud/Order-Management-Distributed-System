@@ -19,7 +19,9 @@ public class RubriqueAllocation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long rubriqueId;
+    private Long budgetId;
     private String rubriqueName;
     private double montantAlloue;
     private double montantRestant;
+
 }

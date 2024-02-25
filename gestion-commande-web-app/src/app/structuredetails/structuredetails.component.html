@@ -191,7 +191,7 @@
     <section class="py-10 bg-gray-50 sm:py-16 lg:py-24" style="background-color: transparent"id="repbudget" >
         <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
             <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-solid fa-wallet"></i> Répartition du budget</h2>
+                <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-solid fa-wallet"></i> Répartition du Budget</h2>
                 <!-- <div class="overflow-hidden bg-white rounded shadow" style="margin-top:4px; background-image: url('assets/images/cc.png'); background-size: contain ; background-position: center;">
                     <div class="p-8">
                         <div class="flex items-center" >
@@ -215,32 +215,52 @@
                     </div>
                 </div> -->
                 <div class="table-data">
-
                     <div class="order" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
-                      <table>
-                        <thead>
-                        <tr>
-                          <th><i class="fa-solid fa-box-open"></i> Nom de la rubrique </th>
-                          <th><i class="fa-solid fa-wallet"></i> Budget alloué </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr >
-
-                          <td draggable="true" >test</td>
-
-                          <td>
-                            <input placeholder="Montant en Dhs"  class="form-control" type="number">
-                          </td>
-                        </tr>
-
-                        </tbody>
-                      </table>
-
+                      <form [formGroup]="rubriqueAllocationForm">
+                        <table>
+                          <thead>
+                          <tr>
+                            <th><i class="fa-solid fa-box-open"></i> Rubrique</th>
+                            <th><i class="fa-solid fa-wallet"></i> Montant Alloué</th>
+                            <th><i class="fa-solid fa-wallet"></i> Montant Restant</th>
+                          </tr>
+                          </thead>
+                          <tbody formArrayName="rubriqueAllocations">
+                          <tr *ngFor="let allocation of rubriqueAllocations; let i = index" [formGroupName]="i">
+                            <td>
+                              <input type="text" placeholder="Nom de la Rubrique" class="form-control" id="rubriqueName" formControlName="rubriqueName" list="rubriquesList" [value]="allocation.rubriqueName" [readonly]="!isEditMode">
+                              <datalist id="rubriquesList">
+                                <option *ngFor="let s of listrubriques" [value]="s.nom" ></option>
+                              </datalist>
+                            </td>
+                            <td>
+                              <input type="number" placeholder="Montant Alloué en Dhs" id="montantAlloue" class="form-control" formControlName="montantAlloue" [readonly]="!isEditMode">
+                            </td>
+                            <td>
+                              <input type="number" id="montantRestant" placeholder="Montant Restant" class="form-control" formControlName="montantRestant" readonly>
+                            </td>
+                            <td *ngIf="isEditMode">
+                              <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeRubriqueAllocation(i)"><i class="fa-solid fa-square-minus"></i></button>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                        <!-- Add button -->
+                        <button type="button" class="btnp btn-primary" (click)="addRubriqueAllocation()" *ngIf="isEditMode"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
+                      </form>
+                      <div class="card-footer bg-transparent">
+                        <!-- Toggle edit mode button -->
+                        <button class="btn btn-outline-primary" (click)="toggleEditMode()">
+                          <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
+                          {{ isEditMode ? 'Annuler' : 'Modifier' }}
+                        </button>
+                        <!-- Save changes button (visible in edit mode) -->
+                        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="Enregistrer()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
+                      </div>
+                    </div>
                     </div>
                   </div>
             </div>
-        </div>
     </section>
 
 
@@ -250,7 +270,7 @@
                 <!-- <div class="inline-flex px-4 py-1.5 mx-auto rounded-full bg-gradient-to-r from-fuchsia-600 to-blue-600">
                     <p class="text-xs font-semibold tracking-widest text-white uppercase">1{30+} Handcoded Blocks</p>
                 </div> -->
-                <h2 class="mt-6 text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> <i class="fa-solid fa-list"></i> List Professeurs</h2>
+                <h2 class="mt-6 text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> <i class="fa-solid fa-list"></i> Professeurs Membres</h2>
                 <!-- <p class="mt-4 text-base leading-relaxed text-gray-600">Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.</p> -->
             </div>
 
@@ -284,7 +304,7 @@
         </div>
     </section>
 
-    <div class="min-h-screen bg-gray-100 flex flex-col justify-center" id="commandes" >
+    <div class="min-h-screen bg-gray-100 flex flex-col justify-center" style="background-color: transparent" id="commandes" >
         <div class="max-w-2xl mx-auto text-center">
             <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> <i class="fa-solid fa-barcode"></i> Commandes</h2>
         </div>

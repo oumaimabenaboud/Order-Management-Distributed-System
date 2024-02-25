@@ -37,11 +37,11 @@ public class StructureServiceApplication {
 	CommandLineRunner start(StructureRepository structureRepository, ProfesseurRestClient professeurRestClient) {
 		return args -> {
 			// Fetch professor IDs from your service or database
-			Long professorId1 = 1L;
-			Long professorId2 = 2L;
-			Long professorId3 = 3L;
-			Long professorId4 = 4L;
-			Long professorId5 = 5L;
+			Long professorId1 = 2L;
+			Long professorId2 = 3L;
+			Long professorId3 = 4L;
+			Long professorId4 = 5L;
+			Long professorId5 = 6L;
 			// Add example structures
 			Structure structure1 = addStructure(structureRepository, "Laboratoire d'IA", "LabodeRecherche", 10000.0, professorId1, "My.Ali Bekri", List.of(professorId2, professorId3, professorId4), professeurRestClient,null,null,List.of(2L));
 			Structure structure2 = addStructure(structureRepository, "Equipe Robotique", "EquipedeRecherche", 15000.0, professorId2, "Ali Oubelkacem", List.of(professorId1, professorId3,professorId4,professorId5), professeurRestClient,1L,"Laboratoire d'IA",null );

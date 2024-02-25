@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ProfesseurService} from "../services/professeur.service";
 import {Professeur} from "../model/professeur.model";
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -8,6 +8,9 @@ import {StructuresService} from "../services/structures.service";
 import {ActivatedRoute, Router} from '@angular/router';
 import {PlatformLocation} from "@angular/common";
 import {Structure} from "../model/structure.model";
+import {BudgetService} from "../services/budget.service";
+import {Budget} from "../model/budget.model";
+import {RubriqueAllocation} from "../model/rubriqueAllocation.model";
 
 @Component({
   selector: 'app-structuredetails',
@@ -21,15 +24,21 @@ export class StructuredetailsComponent implements OnInit{
   status = true;
   enabled: boolean = false; // Define the enabled property
   structuredetail : any;
+  budget:any;
   structureId !:number;
   userId: number | null = null;
   professeurConnecté : Professeur | undefined;
   professeurRespo : Professeur | undefined;
   loading: boolean = true;
+  listrubriques: any[] = [];
+  rubriqueAllocations: any[] = [];
+  rubriqueAllocationForm!: FormGroup;
+  isEditMode: boolean = false;
   constructor(
     private structureService: StructuresService,
     private router : Router,
     private route :ActivatedRoute,
+    private budgetService: BudgetService,
     private profService: ProfesseurService,
     private snackBar: MatSnackBar,
     private platformLocation: PlatformLocation,
@@ -60,6 +69,14 @@ export class StructuredetailsComponent implements OnInit{
         console.error('User ID not found in sessionStorage');
       }
     }
+    this.budgetService.getAllRubriques().subscribe(
+      (data)=>{
+        this.listrubriques = data;
+      },
+      (error)=> console.error(error)
+    );
+
+    this.repartitionBudgetForm();
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
@@ -91,6 +108,9 @@ export class StructuredetailsComponent implements OnInit{
     });
   }
 
+  toggleEditMode() {
+    this.isEditMode = !this.isEditMode;
+  }
 
   isBrowser(): boolean {
     return typeof window !== 'undefined' && this.platformLocation !== null;
@@ -121,6 +141,44 @@ export class StructuredetailsComponent implements OnInit{
     }
     return p;
   }
+  repartitionBudgetForm() {
+    this.rubriqueAllocationForm = this.formBuilder.group({
+      rubriqueAllocations: this.formBuilder.array([]) // Initialize as an empty FormArray
+    });
+
+    this.budgetService.getBugetByStructureId(this.structureId).subscribe(
+      (budget: any) => {
+        this.budget = budget;
+        this.budget.rubriqueAllocations.forEach((rubriqueAllocation: any) => {
+          this.addRubriqueAllocation(rubriqueAllocation);
+        });
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  addRubriqueAllocation(rubriqueAllocation: any = null) {
+    const rubriqueAllocationFormGroup = this.createRubriqueAllocationFormGroup(rubriqueAllocation);
+    (this.rubriqueAllocationForm.get('rubriqueAllocations') as FormArray).push(rubriqueAllocationFormGroup);
+    this.rubriqueAllocations.push(rubriqueAllocationFormGroup);
+  }
+
+  removeRubriqueAllocation(index: number) {
+    (this.rubriqueAllocationForm.get('rubriqueAllocations') as FormArray).removeAt(index);
+    this.rubriqueAllocations.splice(index, 1);
+  }
+
+  createRubriqueAllocationFormGroup(rubriqueAllocation: any = null): FormGroup {
+    return this.formBuilder.group({
+      rubriqueName: [rubriqueAllocation ? rubriqueAllocation.rubriqueName : '', [Validators.required]],
+      montantAlloue: [rubriqueAllocation ? rubriqueAllocation.montantAlloue : '', [Validators.required]],
+      montantRestant: [rubriqueAllocation ? rubriqueAllocation.montantRestant : '', [Validators.required]],
+    });
+  }
+
+
   toggleAccess(prof: Professeur): void {
     const updatedAccess = !prof.droit_daccee; // Toggle the access
     this.profService.updateProfessorAccess(prof.id, updatedAccess).subscribe(
@@ -137,4 +195,60 @@ export class StructuredetailsComponent implements OnInit{
     );
   }
 
+
+  /*Enregistrer() {
+    const rubriquesAllocations: RubriqueAllocation[] = [];
+    for (let i = 0; i < this.rubriqueAllocations.length; i++) {
+      const selectedName = this.rubriqueAllocations.get(dropdownControlName)?.value;
+      const selectedProfessor = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedName);
+      if (selectedProfessor) {
+        selectedIds.push(selectedProfessor.id);
+      }
+    }
+    structure.equipeProfIds = selectedIds;
+      const structure = this.rubriqueAllocationForm.value;
+      structure.type = this.mapStructureType(structure.type);
+
+      // Extract selected professor ID for the responsible person
+      const selectedResponsableName = this.newStructureForm.get('idResponsable')?.value;
+      const selectedResponsable = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedResponsableName);
+      if (selectedResponsable) {
+        structure.idResponsable = selectedResponsable.id;
+      }
+
+      // Extract selected professor IDs for team members
+
+
+      // Remove individual equipe_prof_ids from the structure object
+      for (let i = 0; i < this.dropdowns.length; i++) {
+        delete structure[`equipe_prof_ids_${i}`];
+      }
+
+      // Call service to add the structure
+      this.structureService.addStructure(structure).subscribe(
+        () => {
+          window.alert('Structure ajoutée avec succès !');
+          window.location.reload();
+          this.closeNewStructureForm();
+        },
+        error => {
+          console.error("Une erreur s'est produite lors de l'ajout de la structure.", error);
+          if (error.status === 200) {
+            window.alert('Structure ajoutée avec succès !');
+            window.location.reload();
+            this.closeNewStructureForm();
+          } else if (error.status === 400) {
+            // Bad request, display error message from server
+            window.alert(error.error);
+          } else {
+            // Other errors, display generic error message
+            window.alert("Une erreur s'est produite lors de l'ajout de la structure. Veuillez réessayer plus tard.");
+          }
+        }
+      );
+    }
+    if (this.budget === null){
+
+    }
+  }*/
 }

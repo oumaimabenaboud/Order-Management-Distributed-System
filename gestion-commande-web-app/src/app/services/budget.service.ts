@@ -3,12 +3,15 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Rubrique} from "../model/rubrique.model";
 import {Professeur} from "../model/professeur.model";
+import {Budget} from "../model/budget.model";
 @Injectable({
   providedIn: 'root'
 })
-export class RubriqueService {
+export class BudgetService {
 
   constructor(private http: HttpClient) { }
+
+  //Rubrique
   public getAllRubriques():Observable<Array<Rubrique>>{
     return this.http.get<Array<Rubrique>>("http://localhost:1818/BUDGET-SERVICE/budget-management/rubriques")
   }
@@ -36,4 +39,11 @@ export class RubriqueService {
 
     return this.http.get<Rubrique[]>("http://localhost:1818/BUDGET-SERVICE/budget-management/rubriques/search", { params })
   }
+
+  //Budget
+
+  public getBugetByStructureId(id: any):Observable<Budget>{
+    return this.http.get<Budget>("http://localhost:1818/BUDGET-SERVICE/budget-management/budget/byStructure/"+id)
+  }
+
 }

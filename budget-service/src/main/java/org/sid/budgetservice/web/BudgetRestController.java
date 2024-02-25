@@ -69,7 +69,7 @@ public class BudgetRestController {
     }
 
     //Budget
-    @GetMapping
+    @GetMapping("/budget")
     public List<Budget> getAllBudgets() {
         return budgetRepository.findAll();
     }
@@ -77,7 +77,7 @@ public class BudgetRestController {
     @PostMapping
     public Budget createBudget(@RequestBody Budget newBudget) {
         Budget budget = new Budget();
-        budget.setYear(newBudget.getYear());
+        budget.setBudgetYear(newBudget.getBudgetYear());
         budget.setTotalAlloue(newBudget.getTotalAlloue());
         budget.setTotalRestant(newBudget.getTotalRestant());
         budget.setRubriqueAllocations(new ArrayList<>()); // Default with 0 rubriques
@@ -89,6 +89,15 @@ public class BudgetRestController {
         return budgetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Budget not found with id: " + id));
     }
+    @GetMapping("/budget/byStructure/{id}")
+    public Budget getBudgetByStructureId(@PathVariable Long id) {
+        Budget budget = budgetRepository.findByStructureId(id);
+        if (budget == null) {
+            throw new RuntimeException("Budget not found with id: " + id);
+        }
+        return budget;
+    }
+
     // Delete a budget
     @DeleteMapping("/{id}")
     public void deleteBudget(@PathVariable Long id) {

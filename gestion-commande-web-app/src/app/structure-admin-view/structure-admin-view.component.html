@@ -195,9 +195,9 @@
             <label *ngIf="childEquipesNoms.length > 0 || isEditMode">Équipes de recherche affiliées</label>
             <br *ngIf="isEditMode">
             <!-- Add button -->
-            <button type="button" class="btnp btn-primary" (click)="addEquipeChildNom()" *ngIf="isEditMode"> Ajouter<i class="fa-solid fa-user-plus"></i></button>
+            <button type="button" class="btnp btn-primary" (click)="addEquipeChildNom()" *ngIf="isEditMode"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
             <!-- Remove button -->
-            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeEquipeChildNom()" *ngIf="isEditMode"> Retrancher<i class="fa-solid fa-user-minus"></i> </button>
+            <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeEquipeChildNom()" *ngIf="isEditMode"><i class="fa-solid fa-square-minus"></i> Retrancher</button>
             <div class="col-md-6"  *ngFor="let equipe of childEquipesNoms; let i = index">
               <div class="form-group">
                 <input type="text" class="form-control" [formControl]="childEquipesNoms[i]"  list="equipeList"  [readonly]="!isEditMode">

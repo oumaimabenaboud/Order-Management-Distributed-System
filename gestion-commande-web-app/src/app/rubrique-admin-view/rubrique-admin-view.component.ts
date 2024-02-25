@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Professeur} from "../model/professeur.model";
-import {RubriqueService} from "../services/rubrique.service";
+import {BudgetService} from "../services/budget.service";
 import {Rubrique} from "../model/rubrique.model";
 import { PlatformLocation } from '@angular/common';
 import { Router } from '@angular/router';
@@ -27,7 +27,7 @@ export class RubriqueAdminViewComponent implements OnInit {
   status = true;
 
   constructor(
-    private rubriqueService: RubriqueService,
+    private budgetService: BudgetService,
     private profService: ProfesseurService,
     private formBuilder: FormBuilder,
     private clipboard: Clipboard,
@@ -56,7 +56,7 @@ export class RubriqueAdminViewComponent implements OnInit {
       } else {
         console.error('User ID not found in sessionStorage');
       }
-      this.rubriqueService.getAllRubriques().subscribe(
+      this.budgetService.getAllRubriques().subscribe(
         { next:(data)=>{
             this.rubriques = data;
           },
@@ -95,7 +95,7 @@ export class RubriqueAdminViewComponent implements OnInit {
       event.preventDefault();
     }
 
-    this.rubriqueService.getRubriqueById(id).subscribe({
+    this.budgetService.getRubriqueById(id).subscribe({
       next: (rubrique) => {
         this.selectedRubrique = rubrique;
 
@@ -113,10 +113,10 @@ export class RubriqueAdminViewComponent implements OnInit {
   search() {
     // If both prenom and nom are empty, reset the table to show all professors
     if (!this.searchTerm) {
-      this.rubriqueService.getAllRubriques();
+      this.budgetService.getAllRubriques();
       return;
     }
-    this.rubriqueService.searchRubriques(this.searchTerm).subscribe({
+    this.budgetService.searchRubriques(this.searchTerm).subscribe({
       next: (data) => {
         this.rubriques = data;
       },
@@ -134,7 +134,7 @@ export class RubriqueAdminViewComponent implements OnInit {
     }
 
     if (confirm("Êtes-vous sûr de vouloir supprimer cette rubrique ?")) {
-      this.rubriqueService.deleteRubrique(id).subscribe({
+      this.budgetService.deleteRubrique(id).subscribe({
         next: () => {
           window.alert("Rubrique supprimée avec succès !");
           window.location.reload();
@@ -186,7 +186,7 @@ export class RubriqueAdminViewComponent implements OnInit {
 
   saveNewRubrique() {
     let rubrique: Rubrique = this.newRubriqueForm.value;
-    this.rubriqueService.addRubrique(rubrique).subscribe({
+    this.budgetService.addRubrique(rubrique).subscribe({
       next: (newRubrique) => {
         this.rubriques.push(newRubrique);
         window.alert("Rubrique ajoutée avec succès !");
@@ -213,7 +213,7 @@ export class RubriqueAdminViewComponent implements OnInit {
 
   saveRubriqueChanges() {
     const updatedRubrique: Rubrique = this.detailsForm.value;
-    this.rubriqueService.updateRubrique(this.selectedRubrique.id, updatedRubrique).subscribe({
+    this.budgetService.updateRubrique(this.selectedRubrique.id, updatedRubrique).subscribe({
       next: () => {
         window.alert("Rubrique mise à jour avec succès !");
         window.location.reload();

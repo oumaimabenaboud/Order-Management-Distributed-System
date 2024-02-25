@@ -212,7 +212,7 @@ public class StructureRestController {
             }
         }
 
-        if (updatedStructure.getParentLabId() == null && updatedStructure.getParentLabId()!= null && !updatedStructure.getParentLabNom().isEmpty() &&  !laboratoiresNames.contains(updatedStructure.getParentLabNom())) {
+        if (updatedStructure.getParentLabId() == null && updatedStructure.getParentLabNom()!= null && !updatedStructure.getParentLabNom().isEmpty() &&  !laboratoiresNames.contains(updatedStructure.getParentLabNom())) {
             return ResponseEntity.badRequest().body("Ce laboratoire parent n'existe pas");
         }
         // Check if child equipe is changing lab parents
