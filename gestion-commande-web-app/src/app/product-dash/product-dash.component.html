@@ -1,1 +1,211 @@
-<p>product-dash works!</p>
+<!-- SIDEBAR -->
+<section id="sidebar" [ngClass]="status ? 'hide' : ''">
+    <a href="/prof-dash" class="brand">
+      <i class='bx bxs-smile'></i>
+      <span class="text">Admin Dashboard</span>
+    </a>
+    <ul class="side-menu top">
+      <li >
+        <a routerLink="/prof-dash">
+          <i class='bx bxs-dashboard' ></i>
+          <span class="text">Accueil</span>
+        </a>
+      </li>
+      <li class="active">
+        <a routerLink="/product">
+          <i class='bx bx-package'></i>
+          <span class="text">Produits</span>
+        </a>
+      </li>
+    </ul>
+    <ul class="side-menu">
+      <li>
+        <a href="#">
+          <i class='bx bxs-cog' ></i>
+          <span class="text">Paramètres</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="logout">
+          <i class='bx bxs-log-out-circle' (click)="logout()"></i>
+          <span class="text" (click)="logout()">Se déconnecter</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+  <!-- SIDEBAR -->
+  
+  <!-- CONTENT -->
+  <section id="content" class="front-page">
+    <!-- NAVBAR -->
+    <nav>
+      <i (click)="addToggle()" class='bx bx-menu'></i>
+      <div>
+        <a class="">
+          Bonjour,
+          <ng-container *ngIf="userId !== -1; else adminGreeting">
+            {{ professeur?.prenom }} {{ professeur?.nom }}
+          </ng-container>
+          <ng-template #adminGreeting>
+            ADMIN
+          </ng-template>
+        </a>
+      </div>
+    </nav>
+    <!-- NAVBAR -->
+  
+    <!-- MAIN -->
+    <main>
+      <div class="head-title">
+        <div class="left">
+          <h1>Produits</h1>
+          <ul class="breadcrumb">
+            <li>
+              <a href="#">Accueil</a>
+            </li>
+            <li><i class='bx bx-chevron-right'></i></li>
+            <li>
+              <a class="active" routerLink="/product-admin">Produits</a>
+            </li>
+            <form (submit)="search()" class="search-form">
+              <div class="form-input">
+                <input type="text" placeholder="Rechercher..." [(ngModel)]="searchTerm" name="searchTerm" class="search-input" (input)="search()">
+                <button type="submit" class="search-button"><i class='bx bx-search'></i></button>
+              </div>
+            </form>
+          </ul>
+        </div>
+        <button class="btn btn-outline-danger" (click)="openNewProductForm()"><i class="fa-solid fa-box-open"></i> Ajouter un produit</button>
+      </div>
+  
+      <div class="table-data">
+        <div class="order">
+          <table>
+            <thead>
+              <tr>
+                <th><i class="fa-solid fa-box-open"></i> Nom</th>
+                <th><i class="fa-solid fa-info-circle"></i> Description</th>
+                <th><i class="fa-solid fa-label"></i> Rubrique</th>
+                <th><i class="fa-solid fa-money-bill"></i> Prix HT</th>
+                <th><i class="fa-solid fa-money-bill"></i> Prix TTC</th>
+                <th><i class="fa-solid fa-magnifying-glass-plus"></i> Détails</th>
+                <th><i class="fa-solid fa-trash"></i> Supprimer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="mail" *ngFor="let product of products">
+                <td>{{ product.nom }}</td>
+                <td>{{ product.Desc }}</td>
+                <td>{{ product.Rubrique }}</td>
+                <td>{{ product.PrixHT }}</td>
+                <td>{{ product.PrixTTC }}</td>
+                <td>
+                  <button class="btnd detail-button" (click)="getProducts(product.id)">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                  </button>
+                </td>
+                <td>
+                  <button class="btnf btn-outline-danger" (click)="deleteProduct(product.id)">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+      <!-- Popup card for details -->
+      <div class="popup card" *ngIf="isDetailsFormOpen">
+        <div class="card-body">
+          <div class="hh">
+            <h4><i class="fa-solid fa-magnifying-glass-plus"></i> Détails du Produit</h4>
+            <button class="btnfp btn-outline-secondary ms-3" (click)="closeDetailsForm()"> <i class="fa-solid fa-circle-xmark" id="detail-button"></i></button>
+          </div>
+          <form class="row" [formGroup]="detailsForm">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" id="nom" formControlName="nom" [readonly]="!isEditMode">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" id="desc" formControlName="desc" [readonly]="!isEditMode">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" id="rubrique" formControlName="rubrique" [readonly]="!isEditMode">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="number" class="form-control" id="prixHT" formControlName="prixHT" [readonly]="!isEditMode">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="number" class="form-control" id="prixTTC" formControlName="prixTTC" [readonly]="!isEditMode">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer bg-transparent">
+          <button class="btn btn-outline-primary" (click)="toggleEditMode()">
+            <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
+            {{ isEditMode ? 'Annuler' : 'Modifier' }}
+          </button>
+          <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="saveProductChanges()">
+            <i class="fa-solid fa-bookmark" id="detail-button"></i> Enregistrer les modifications
+          </button>
+        </div>
+      </div>
+      <div class="overlay" [ngClass]="{'show': isDetailsFormOpen}"></div>
+  
+      <!-- Popup card for adding a new product -->
+      <div class="popup card" *ngIf="isNewProductFormOpen">
+        <div class="card-body">
+          <div class="hh">
+            <h4><i class="fa-solid fa-box-open"></i> Ajouter un nouveau produit</h4>
+            <button class="btnfp btn-outline-primary" (click)="closeNewProductForm()">
+              <i class="fa-solid fa-circle-xmark" id="detail-button"></i>
+            </button>
+          </div>
+          <form class="row" [formGroup]="newProductForm" (ngSubmit)="saveNewProduct()">
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" id="nom" formControlName="nom" placeholder="Nom">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" id="desc" formControlName="desc" placeholder="Description">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="number" class="form-control" id="prixHT" formControlName="prixHT" placeholder="Prix HT">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <input type="number" class="form-control" id="prixTTC" formControlName="prixTTC" placeholder="Prix TTC">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer bg-transparent">
+          <button class="btn btn-outline-success ms-3" (click)="saveNewProduct()"><i class="fa-solid fa-plus" id="detail-button"></i> Ajouter</button>
+        </div>
+      </div>
+      <div class="overlay" [ngClass]="{'show': isNewProductFormOpen}"></div>
+    </main>
+    <!-- MAIN -->
+  </section>
+  <!-- CONTENT -->
+  

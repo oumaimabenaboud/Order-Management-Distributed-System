@@ -15,8 +15,8 @@ public class Product {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String nom;
-    private String Desc;
-    private String Rubrique;
-    private float PrixHT;
-    private float PrixTTC;
+    private String desc;
+    private String rubrique;
+    private float prixHT;
+    private float prixTTC;
 }

@@ -80,7 +80,7 @@
         </a>
       </li>
       <li>
-        <a href="#" class="logout">
+        <a class="logout">
           <i class='bx bxs-log-out-circle' (click)="logout()" ></i>
           <span class="text" (click)="logout()">Se déconnecter</span>
         </a>
@@ -255,7 +255,7 @@
                           {{ isEditMode ? 'Annuler' : 'Modifier' }}
                         </button>
                         <!-- Save changes button (visible in edit mode) -->
-                        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="Enregistrer()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
+                        <!-- <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="Enregistrer()"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button> -->
                       </div>
                     </div>
                     </div>

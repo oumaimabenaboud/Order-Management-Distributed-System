@@ -9,19 +9,19 @@ import {ChangePasswordComponent} from "./change-password/change-password.compone
 import { WelcomeComponent } from './welcome/welcome.component';
 import { authGuard } from './guards/auth.guard';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
-import {ProductDashComponent} from "./product-dash/product-dash.component";
+import { ProductDashComponent } from "./product-dash/product-dash.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path:'prof-dash', component: ProfDashboardComponent , canActivate: [authGuard]},
-  {path:'login' , component:LoginComponent},
-  {path:'welcome' , component:WelcomeComponent},
-  {path:'prof-admin' , component:ProfAdminViewComponent , canActivate: [authGuard]},
-  {path:'structure-admin' , component:StructureAdminViewComponent, canActivate: [authGuard]},
-  {path:'rubrique-admin' , component:RubriqueAdminViewComponent, canActivate: [authGuard]},
-  {path:'change-password' , component:ChangePasswordComponent},
-  {path:"structuredetail/:structureId" , component:StructuredetailsComponent, canActivate: [authGuard]},
-  {path:"product" , component:ProductDashComponent, canActivate: [authGuard]}
+  { path:'login' , component: LoginComponent },
+  { path:'welcome' , component: WelcomeComponent },
+  { path:'prof-admin' , component: ProfAdminViewComponent , canActivate: [authGuard] },
+  { path:'structure-admin' , component: StructureAdminViewComponent, canActivate: [authGuard] },
+  { path:'rubrique-admin' , component: RubriqueAdminViewComponent, canActivate: [authGuard] },
+  { path:'change-password' , component: ChangePasswordComponent },
+  { path:"structuredetail/:structureId" , component: StructuredetailsComponent, canActivate: [authGuard] },
+  { path:"product" , component: ProductDashComponent, canActivate: [authGuard] }
 ];
 
 @NgModule({
