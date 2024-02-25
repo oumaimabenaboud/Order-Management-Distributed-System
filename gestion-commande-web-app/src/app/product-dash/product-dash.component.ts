@@ -47,7 +47,7 @@ export class ProductDashComponent implements OnInit{
       this.userId = id ? parseInt(id, 10) : null;
       const isAdmin = sessionStorage.getItem('isAdmin');
       this.isAdmin = isAdmin === "true" ? true : false;
-      console.log(this.isAdmin);
+      // console.log(this.isAdmin);
 
       if (this.userId) {
         this.profService.getProfessor(this.userId).subscribe(
@@ -64,7 +64,7 @@ export class ProductDashComponent implements OnInit{
       this.productService.getAllProducts().subscribe(
         { next:(data)=>{
             this.products = data;
-            console.log(this.products);
+            console.log(data);
           },
           error : (err)=>console.error(err)
         });
@@ -80,7 +80,7 @@ export class ProductDashComponent implements OnInit{
   }
 
   logout() {
-    sessionStorage.removeItem('id');
+    sessionStorage.clear();
     this.router.navigate(['/login']);
   }
 

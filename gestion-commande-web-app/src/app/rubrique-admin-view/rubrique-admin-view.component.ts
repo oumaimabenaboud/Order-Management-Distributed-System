@@ -91,15 +91,12 @@ export class RubriqueAdminViewComponent implements OnInit {
 
   getRubrique(id: any, event?: DragEvent): void  {
     if (event) {
-      // If the function is called from a drag event, prevent the default behavior
       event.preventDefault();
     }
 
     this.budgetService.getRubriqueById(id).subscribe({
       next: (rubrique) => {
         this.selectedRubrique = rubrique;
-
-        // Pre-fill the detailsForm with the selected professor's information
         this.detailsForm.patchValue({
           nom: rubrique.nom,
         });
