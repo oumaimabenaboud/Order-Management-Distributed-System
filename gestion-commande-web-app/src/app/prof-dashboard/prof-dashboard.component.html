@@ -27,7 +27,7 @@
     </li>
     <li>
       <a href="#" class="logout">
-        <i class='bx bxs-log-out-circle' ></i>
+        <i class='bx bxs-log-out-circle' (click)="logout()"></i>
         <span class="text" (click)="logout()">Se déconnecter</span>
       </a>
     </li>
@@ -57,12 +57,8 @@
       <img src="https://secure.gravatar.com/avatar/d09eaad01aea86c51b4f892b4f8abf6f?s=100&d=wavatar&r=g">
     </a> -->
 
-    <div *ngIf="userId != -1">
+    <div>
       <a class="">Bonjour, {{ professeur?.prenom }} {{ professeur?.nom }}</a>
-    </div>
-
-    <div *ngIf="userId === -1">
-      <a class="">Bonjour, ADMIN</a>
     </div>
 
   </nav>

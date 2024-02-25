@@ -6,4 +6,5 @@ export interface Professeur {
   mdp: string;
   droit_daccee: boolean;
   first_cnx: boolean;
+  isAdmin:boolean;
 }
