@@ -261,6 +261,7 @@ tr:nth-child(odd) {
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 9999;
+
 }
 
 .order {
@@ -269,8 +270,9 @@ tr:nth-child(odd) {
 
 .filter-popup select {
   width: 100%;
-  padding: 5px;
+  padding: 0px;
   border-radius: 5px;
   border: 1px solid #ccc;
   outline: none;
+  margin:0px;
 }

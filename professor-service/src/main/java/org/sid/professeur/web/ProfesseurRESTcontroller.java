@@ -32,7 +32,7 @@ public class ProfesseurRESTcontroller {
     }
     @GetMapping
     public List<professeur> professeur(){
-        return ProfesseurRepo.findAll();
+        return ProfesseurRepo.findAllByIsAdminFalse();
     }
     @GetMapping("{id}")
     public professeur professeur(@PathVariable Long id){
@@ -113,7 +113,7 @@ public class ProfesseurRESTcontroller {
     public List<professeur> searchProfesseurs(@RequestParam(required = false) String searchTerm) {
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
             // Search by both prenom and nom
-            return ProfesseurRepo.findByPrenomContainingIgnoreCaseOrNomContainingIgnoreCase(searchTerm, searchTerm);
+            return ProfesseurRepo.findByPrenomContainingIgnoreCaseAndIsAdminFalseOrNomContainingIgnoreCaseAndIsAdminFalse(searchTerm, searchTerm);
         } else {
             // If no search parameter provided or if it's empty, return all professeurs
             return ProfesseurRepo.findAll();
