@@ -189,7 +189,6 @@ export class StructuredetailsComponent implements OnInit{
           // Convert selectedYear to number before comparison
           return budget.budgetYear === Number(this.selectedYear);
         });
-        console.log("selected",selectedBudget);
         if (selectedBudget) {
           selectedBudget.rubriqueAllocations.forEach((rubriqueAllocation: any) => {
             this.addRubriqueAllocation(rubriqueAllocation);
