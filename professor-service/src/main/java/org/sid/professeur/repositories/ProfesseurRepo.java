@@ -13,4 +13,7 @@ public interface ProfesseurRepo extends JpaRepository<professeur, Long> {
 
     List<professeur> findByPrenomContainingIgnoreCaseOrNomContainingIgnoreCase(String searchTerm, String searchTerm1);
 
+    List<professeur> findByPrenomContainingIgnoreCaseAndIsAdminFalseOrNomContainingIgnoreCaseAndIsAdminFalse(String prenom, String nom);
+
+    List<professeur> findAllByIsAdminFalse();
 }

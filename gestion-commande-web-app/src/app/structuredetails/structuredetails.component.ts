@@ -24,7 +24,7 @@ export class StructuredetailsComponent implements OnInit{
   status = true;
   enabled: boolean = false; // Define the enabled property
   structuredetail : any;
-  budget:any;
+  listBudgetsStructure:any;
   structureId !:number;
   userId: number | null = null;
   professeurConnecté : Professeur | undefined;
@@ -34,6 +34,13 @@ export class StructuredetailsComponent implements OnInit{
   rubriqueAllocations: any[] = [];
   rubriqueAllocationForm!: FormGroup;
   isEditMode: boolean = false;
+  listYears: number[] =[];
+  selectedYear: number | null = null;
+  isNewCommandeFormOpen: boolean = false;
+  public newCommandeForm! : FormGroup;
+  isDetailsFormOpen: boolean = false;
+  selectedBudget:any;
+
   constructor(
     private structureService: StructuresService,
     private router : Router,
@@ -75,7 +82,21 @@ export class StructuredetailsComponent implements OnInit{
       },
       (error)=> console.error(error)
     );
-
+    this.budgetService.getBugetByStructureId(this.structureId).subscribe(
+      (budget: any) => {
+        this.listBudgetsStructure = budget;
+        this.listBudgetsStructure.forEach((budget: any) => {
+          this.listYears.push(budget.budgetYear);
+          this.listYears.sort((a, b) => a - b);
+          if (this.listYears.length > 0) {
+            this.selectedYear = this.listYears[this.listYears.length - 1];
+          }
+        });
+        },
+      (err) => {
+        console.log(err);
+      }
+    );
     this.repartitionBudgetForm();
 
     this.structureService.getStructureById(this.structureId).subscribe({
@@ -106,6 +127,19 @@ export class StructuredetailsComponent implements OnInit{
         this.loading = false;
       },
     });
+  }
+
+  onYearChange(year: number | null) {
+    if (year !== null) {
+      // Store the selected year in the selectedYear property
+      this.selectedYear = year;
+      console.log('Selected year:', year);
+      this.clearRubriqueAllocationsFormArray();
+      this.repartitionBudgetForm();
+   } else {
+      // Handle the case when the selected year is null
+      console.error('Selected year is null.');
+    }
   }
 
   toggleEditMode() {
@@ -141,22 +175,38 @@ export class StructuredetailsComponent implements OnInit{
     }
     return p;
   }
+
+
   repartitionBudgetForm() {
     this.rubriqueAllocationForm = this.formBuilder.group({
       rubriqueAllocations: this.formBuilder.array([]) // Initialize as an empty FormArray
     });
-
     this.budgetService.getBugetByStructureId(this.structureId).subscribe(
-      (budget: any) => {
-        this.budget = budget;
-        this.budget.rubriqueAllocations.forEach((rubriqueAllocation: any) => {
-          this.addRubriqueAllocation(rubriqueAllocation);
+      (budgets: Budget[]) => { // Assuming Budget is the correct type
+        this.listBudgetsStructure = budgets;
+        console.log("all budgets", this.listBudgetsStructure);
+        const selectedBudget = this.listBudgetsStructure.find((budget: Budget) => {
+          // Convert selectedYear to number before comparison
+          return budget.budgetYear === Number(this.selectedYear);
         });
+        console.log("selected",selectedBudget);
+        if (selectedBudget) {
+          selectedBudget.rubriqueAllocations.forEach((rubriqueAllocation: any) => {
+            this.addRubriqueAllocation(rubriqueAllocation);
+          });
+        }
       },
       (err) => {
         console.log(err);
       }
     );
+  }
+// Function to clear existing controls in the rubriqueAllocations FormArray
+  clearRubriqueAllocationsFormArray() {
+    const rubriqueAllocationsFormArray = this.rubriqueAllocationForm.get('rubriqueAllocations') as FormArray;
+    while (rubriqueAllocationsFormArray.length !== 0) {
+      this.removeRubriqueAllocation(0);
+    }
   }
 
   addRubriqueAllocation(rubriqueAllocation: any = null) {
@@ -251,4 +301,14 @@ export class StructuredetailsComponent implements OnInit{
 
     }
   }*/
+
+
+  openNewCommandeForm() {
+    this.isNewCommandeFormOpen = true;
+    this.isDetailsFormOpen = false;
+  }
+
+  closeNewCommandeForm() {
+    this.isNewCommandeFormOpen = false;
+  }
 }

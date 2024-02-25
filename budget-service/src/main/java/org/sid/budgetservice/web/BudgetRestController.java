@@ -90,12 +90,12 @@ public class BudgetRestController {
                 .orElseThrow(() -> new RuntimeException("Budget not found with id: " + id));
     }
     @GetMapping("/budget/byStructure/{id}")
-    public Budget getBudgetByStructureId(@PathVariable Long id) {
-        Budget budget = budgetRepository.findByStructureId(id);
-        if (budget == null) {
+    public List<Budget> getBudgetByStructureId(@PathVariable Long id) {
+        List<Budget> budgets = budgetRepository.findByStructureId(id);
+        if (budgets == null || budgets.isEmpty() ) {
             throw new RuntimeException("Budget not found with id: " + id);
         }
-        return budget;
+        return budgets;
     }
 
     // Delete a budget

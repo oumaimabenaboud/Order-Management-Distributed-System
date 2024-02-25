@@ -25,13 +25,21 @@ public class BudgetServiceApplication {
 	CommandLineRunner init(BudgetRepository budgetRepository, RubriqueRepository rubriqueRepository, RubriqueAllocationRepository rubriqueAllocationRepository) {
 		return args -> {
 			// Create a new budget for the year 2024
-			Budget budget = Budget.builder()
+			Budget budget2024 = Budget.builder()
 					.structureId(1L)
 					.budgetYear(2024)
 					.totalAlloue(10000)
 					.totalRestant(10000) // Assuming totalAlloue and totalRestant are initially equal
 					.build();
-			budgetRepository.save(budget);
+			budgetRepository.save(budget2024);
+			// Create a new budget for the year 2024
+			Budget budget2023 = Budget.builder()
+					.structureId(1L)
+					.budgetYear(2023)
+					.totalAlloue(5000)
+					.totalRestant(5000) // Assuming totalAlloue and totalRestant are initially equal
+					.build();
+			budgetRepository.save(budget2023);
 
 			// Add rubriques for different allocations
 			List<Rubrique> rubriques = List.of(
@@ -46,25 +54,45 @@ public class BudgetServiceApplication {
 			rubriqueRepository.saveAll(rubriques);
 
 			List<Double> allocationAmounts = List.of(1000.0, 500.0, 4000.0,600.0,500.0,400.0,3000.0); // Corrected syntax
+			List<Double> allocationAmounts2023 = List.of(500.0, 500.0, 2000.0,600.0,250.0,400.0,750.0); // Corrected syntax
 
 			// Save RubriqueAllocations
-			List<RubriqueAllocation> rubriqueAllocations = new ArrayList<>();
+			List<RubriqueAllocation> rubriqueAllocations1 = new ArrayList<>();
 			int i = 0; // Counter for allocationAmounts
 			for (Rubrique rubrique : rubriques) {
 				Double allocationAmount = allocationAmounts.get(i);
 				RubriqueAllocation allocation = RubriqueAllocation.builder()
 						.rubriqueId(rubrique.getId())
-						.budgetId(budget.getId())
+						.budgetId(budget2024.getId())
 						.rubriqueName(rubrique.getNom())
 						.montantAlloue(allocationAmount)
 						.montantRestant(allocationAmount)
 						.build();
-				rubriqueAllocations.add(allocation);
+				rubriqueAllocations1.add(allocation);
 				i++; // Move to the next allocationAmount
 			}
-			rubriqueAllocationRepository.saveAll(rubriqueAllocations);
-			budget.setRubriqueAllocations(rubriqueAllocations);
-			budgetRepository.save(budget);
+			// Save RubriqueAllocations
+			List<RubriqueAllocation> rubriqueAllocations2 = new ArrayList<>();
+			int b = 0; // Counter for allocationAmounts
+			for (Rubrique rubrique : rubriques) {
+				Double allocationAmount = allocationAmounts2023.get(b);
+				RubriqueAllocation allocation = RubriqueAllocation.builder()
+						.rubriqueId(rubrique.getId())
+						.budgetId(budget2023.getId())
+						.rubriqueName(rubrique.getNom())
+						.montantAlloue(allocationAmount)
+						.montantRestant(allocationAmount)
+						.build();
+				rubriqueAllocations2.add(allocation);
+				b++; // Move to the next allocationAmount
+			}
+			rubriqueAllocationRepository.saveAll(rubriqueAllocations1);
+			budget2024.setRubriqueAllocations(rubriqueAllocations1);
+			budgetRepository.save(budget2024);
+
+			rubriqueAllocationRepository.saveAll(rubriqueAllocations2);
+			budget2023.setRubriqueAllocations(rubriqueAllocations2);
+			budgetRepository.save(budget2023);
 		};
 	}
 
