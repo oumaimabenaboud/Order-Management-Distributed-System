@@ -77,7 +77,7 @@ export class ProfAdminViewComponent implements OnInit {
     }
 
     logout() {
-      sessionStorage.removeItem('id');
+      sessionStorage.clear();
       this.router.navigate(['/login']);
     }
 

@@ -17,11 +17,11 @@ const routes: Routes = [
   {path:'login' , component:LoginComponent},
   {path:'welcome' , component:WelcomeComponent},
   {path:'prof-admin' , component:ProfAdminViewComponent , canActivate: [authGuard]},
-  {path:'structure-admin' , component:StructureAdminViewComponent},
-  {path:'rubrique-admin' , component:RubriqueAdminViewComponent},
+  {path:'structure-admin' , component:StructureAdminViewComponent, canActivate: [authGuard]},
+  {path:'rubrique-admin' , component:RubriqueAdminViewComponent, canActivate: [authGuard]},
   {path:'change-password' , component:ChangePasswordComponent},
-  {path:"structuredetail/:structureId" , component:StructuredetailsComponent},
-  {path:"product" , component:ProductDashComponent}
+  {path:"structuredetail/:structureId" , component:StructuredetailsComponent, canActivate: [authGuard]},
+  {path:"product" , component:ProductDashComponent, canActivate: [authGuard]}
 ];
 
 @NgModule({

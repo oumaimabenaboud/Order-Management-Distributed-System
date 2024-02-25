@@ -13,26 +13,32 @@ export class authGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean | UrlTree {
+      let new_router = '/';
     
     // Check if code is running in a browser environment
     if (!isPlatformBrowser(this.platformId)) {
-      // Handle server-side rendering or other non-browser environments
       return false;
     }
 
     // Check if user is logged in
     const isLoggedIn = !!sessionStorage.getItem('id');
     const id = sessionStorage.getItem('id');
-    if (state.url === '/admin' && id === '-1') {
-      this.router.navigate(['/prof-admin']);
-    }
+    const isAdmin = sessionStorage.getItem('isAdmin');
 
-    console.log('isLoggedIn:', isLoggedIn, 'id : ',id);
-    if (isLoggedIn) {
-      return true;
-    } else {
-      // Redirect to login page
+    if (!isLoggedIn) {
       return this.router.createUrlTree(['/login']);
     }
-  }
+
+    const restrictedRoutesForAdmin = ['/prof-admin', '/structure-admin', '/rebrique-admin','/product'];
+    const allowedRoutesForNonAdmin = ['/prof-dash', '/structuredetail','/product'];
+
+    if (isAdmin == "true" && restrictedRoutesForAdmin.includes(state.url)) {
+      return true;
+    }else if (isAdmin == "false" && allowedRoutesForNonAdmin.includes(state.url)) {
+      return true; 
+    } else {
+      const defaultRoute = isAdmin === "true" ? '/prof-admin' : '/prof-dash';
+      return this.router.createUrlTree([defaultRoute]);
+    }
+  };
 }
