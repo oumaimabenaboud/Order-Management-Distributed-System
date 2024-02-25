@@ -108,7 +108,7 @@ export class ProfDashboardComponent implements OnInit {
     this.status = !this.status;
   }
   logout() {
-    sessionStorage.clear();
+    sessionStorage.removeItem('id');
     this.router.navigate(['/login']);
   }
 }

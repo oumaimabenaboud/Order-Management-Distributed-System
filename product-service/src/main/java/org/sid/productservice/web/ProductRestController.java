@@ -48,7 +48,7 @@ public class ProductRestController {
 
     @GetMapping("/rubProd")
     public List<Rubrique> getAllRubriques() {
-        List<String> rubriqueNames = getAllRubriqueNames();
+        //List<String> rubriqueNames = getAllRubriqueNames();
 
         return budgetRestClient.getAllRubriques();
     }
@@ -82,15 +82,6 @@ public class ProductRestController {
         }
     }
 */
-
-    @GetMapping("/search/byName")
-    public Product getProductByName(@RequestParam(name="name") String name) {
-        Product product = productRepository.findByNom(name);
-        if (product == null) {
-            throw new RuntimeException("Product not found with name: " + name);
-        }
-        return product;
-    }
 
 
     @DeleteMapping("/{id}")
@@ -140,5 +131,13 @@ public class ProductRestController {
 
         // Save and return the updated Product
         return productRepository.save(existingProduct);
+    }
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam(required = false) String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            return productRepository.findByNomContainingIgnoreCase(searchTerm);
+        } else {
+            return productRepository.findAll();
+        }
     }
 }

@@ -181,6 +181,8 @@ export class StructuredetailsComponent implements OnInit{
     this.rubriqueAllocationForm = this.formBuilder.group({
       rubriqueAllocations: this.formBuilder.array([]) // Initialize as an empty FormArray
     });
+
+    this.clearRubriqueAllocationsFormArray();
     this.budgetService.getBugetByStructureId(this.structureId).subscribe(
       (budgets: Budget[]) => { // Assuming Budget is the correct type
         this.listBudgetsStructure = budgets;
