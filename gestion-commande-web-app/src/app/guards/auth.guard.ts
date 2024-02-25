@@ -30,11 +30,14 @@ export class authGuard implements CanActivate {
     }
 
     const restrictedRoutesForAdmin = ['/prof-admin', '/structure-admin', '/rebrique-admin','/product'];
-    const allowedRoutesForNonAdmin = ['/prof-dash', '/structuredetail','/product'];
+    const allowedRoutesForNonAdmin = ['/prof-dash', '/structuredetail/*','/product'];
+
+    // console.log(state.url," ",allowedRoutesForNonAdmin.some(route => state.url.startsWith(route))," ",state.url.startsWith('/structuredetail'))
+
 
     if (isAdmin == "true" && restrictedRoutesForAdmin.includes(state.url)) {
       return true;
-    }else if (isAdmin == "false" && allowedRoutesForNonAdmin.includes(state.url)) {
+    }else if (isAdmin == "false" && allowedRoutesForNonAdmin.includes(state.url) || state.url.startsWith('/structuredetail')) {
       return true; 
     } else {
       const defaultRoute = isAdmin === "true" ? '/prof-admin' : '/prof-dash';
