@@ -91,8 +91,11 @@ export class ProductDashComponent implements OnInit{
     this.productService.getProductById(id).subscribe(
       { next:(product)=>{
           this.products = product;
+          // console.log(product);
           this.detailsForm.patchValue({
             nom: product.nom,
+            desc: product.Desc,
+            rubrique: product.Rubrique
           })
           this.openDetailsForm();
         }, 
@@ -139,6 +142,7 @@ export class ProductDashComponent implements OnInit{
   allowDrop(event: DragEvent): void {
     event.preventDefault();
   }
+
   openDetailsForm() {
     this.isDetailsFormOpen = true;
     this.isNewProductFormOpen = false;
@@ -170,7 +174,7 @@ export class ProductDashComponent implements OnInit{
         this.products.push(newProduct);
         window.alert("Produit ajouté avec succès !");
         window.location.reload();
-        this.closeNewProductForm(); // Optionally close the form
+        this.closeNewProductForm();
       },
       error: (error) => {
         console.error(error);
