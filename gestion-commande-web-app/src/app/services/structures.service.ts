@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Structure} from "../model/structure.model";
+import {droitAcces} from "../model/droitAcces.model";
 import {Professeur} from "../model/professeur.model";
 import {Rubrique} from "../model/rubrique.model";
 
@@ -42,11 +43,20 @@ export class StructuresService {
     return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures/search", { params })
   }
 
-  getStructuresByResponsable(professorId: number): Observable<Structure[]> {
+  public getStructuresByResponsable(professorId: number): Observable<Structure[]> {
     return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures/byResponsable/"+professorId);
   }
 
-  getStructuresByEquipeMember(professorId: number): Observable<Structure[]> {
+  public getStructuresByEquipeMember(professorId: number): Observable<Structure[]> {
     return this.http.get<Structure[]>("http://localhost:1818/STRUCTURE-SERVICE/structures/byEquipeMember/"+professorId);
   }
+
+  public getAllDroitAcces():Observable<Array<droitAcces>>{
+    return this.http.get<Array<droitAcces>>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces")
+  }
+
+  public getDroitAccessByProfessorId(id: any):Observable<droitAcces>{
+    return this.http.get<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/"+id)
+  }
+
 }

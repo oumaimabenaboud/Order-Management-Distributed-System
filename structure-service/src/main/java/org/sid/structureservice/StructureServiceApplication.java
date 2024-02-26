@@ -1,12 +1,12 @@
 package org.sid.structureservice;
 
 import jakarta.transaction.Transactional;
-import org.sid.structureservice.entities.DroitAccess;
+import org.sid.structureservice.entities.DroitAcces;
 import org.sid.structureservice.entities.Structure;
 import org.sid.structureservice.enums.structurestype;
 import org.sid.structureservice.feign.ProfesseurRestClient;
 import org.sid.structureservice.model.Professeur;
-import org.sid.structureservice.repository.DroitAccessRepository;
+import org.sid.structureservice.repository.DroitAccesRepository;
 import org.sid.structureservice.repository.StructureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,13 +23,13 @@ import java.util.List;
 public class StructureServiceApplication {
 	private ProfesseurRestClient professeurRestClient;
 	private StructureRepository structureRepository;;
-	private DroitAccessRepository droitAccessRepository;
+	private DroitAccesRepository droitAccesRepository;
 
 	@Autowired
-	public StructureServiceApplication(ProfesseurRestClient professeurRestClient, StructureRepository structureRepository, DroitAccessRepository droitAccessRepository) {
+	public StructureServiceApplication(ProfesseurRestClient professeurRestClient, StructureRepository structureRepository, DroitAccesRepository droitAccesRepository) {
 		this.professeurRestClient = professeurRestClient;
 		this.structureRepository = structureRepository;
-		this.droitAccessRepository = droitAccessRepository;
+		this.droitAccesRepository = droitAccesRepository;
 	}
 
 	public static void main(String[] args) {
@@ -38,7 +38,7 @@ public class StructureServiceApplication {
 
 	@Bean
 	@Transactional
-	CommandLineRunner start(StructureRepository structureRepository, ProfesseurRestClient professeurRestClient, DroitAccessRepository droitAccessRepository ) {
+	CommandLineRunner start(StructureRepository structureRepository, ProfesseurRestClient professeurRestClient, DroitAccesRepository droitAccesRepository) {
 		return args -> {
 			// Fetch professor IDs from your service or database
 			Long professorId1 = 2L;
@@ -57,25 +57,25 @@ public class StructureServiceApplication {
 			List<Structure> allStructures = structureRepository.findAll();
 			populateEquipeProfesseurs(allStructures, professeurRestClient);
 			populateEquipeChild(allStructures,structureRepository);
-			addExampleDroitAccess(droitAccessRepository);
+			addExampleDroitAccess(droitAccesRepository);
 		};
 	}
-	private void addExampleDroitAccess(DroitAccessRepository droitAccessRepository) {
+	private void addExampleDroitAccess(DroitAccesRepository droitAccesRepository) {
 		// Example DroitAccess instances
-		DroitAccess droitAccess1 = DroitAccess.builder()
+		DroitAcces droitAccess1 = DroitAcces.builder()
 				.idProfessor(2L)
 				.idStructure(1L)
 				.droitAcces(true)
 				.build();
 
-		DroitAccess droitAccess2 = DroitAccess.builder()
+		DroitAcces droitAccess2 = DroitAcces.builder()
 				.idProfessor(3L)
 				.idStructure(2L)
 				.droitAcces(false)
 				.build();
 
 		// Save example DroitAccess instances
-		droitAccessRepository.saveAll(List.of(droitAccess1, droitAccess2));
+		droitAccesRepository.saveAll(List.of(droitAccess1, droitAccess2));
 	}
 
 	private Structure addStructure(StructureRepository structureRepository, String name, String type, double budget, Long responsibleId, String nomResponsable, List<Long> equipeProfIds, ProfesseurRestClient professeurRestClient, Long parentLabId ,String parentLabNom, List<Long> childEquipesIds) {

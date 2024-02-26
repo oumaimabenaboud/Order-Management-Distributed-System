@@ -1,9 +1,8 @@
 package org.sid.structureservice.web;
 
-import com.netflix.discovery.converters.Auto;
 import lombok.AllArgsConstructor;
-import org.sid.structureservice.entities.DroitAccess;
-import org.sid.structureservice.repository.DroitAccessRepository;
+import org.sid.structureservice.entities.DroitAcces;
+import org.sid.structureservice.repository.DroitAccesRepository;
 import org.sid.structureservice.model.Professeur;
 import org.sid.structureservice.feign.ProfesseurRestClient;
 import org.sid.structureservice.entities.Structure;
@@ -21,41 +20,41 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/droitAcces")
-public class DroitAccessController {
+public class DroitAccesController {
 
-    Logger logger = LoggerFactory.getLogger(DroitAccessController.class);
+    Logger logger = LoggerFactory.getLogger(DroitAccesController.class);
 
 
     @Autowired
-    private DroitAccessRepository droitAccessRepository;
+    private DroitAccesRepository droitAccesRepository;
     @Autowired
     private StructureRepository structureRepository;
     @Autowired
     private ProfesseurRestClient professeurRestClient;
 
     @Autowired
-    public DroitAccessController(ProfesseurRestClient professeurRestClient, StructureRepository structureRepository){
+    public DroitAccesController(ProfesseurRestClient professeurRestClient, StructureRepository structureRepository){
         this.professeurRestClient = professeurRestClient;
         this.structureRepository = structureRepository;
 
     }
 
 
-    @GetMapping("/getAllDroitAcces")
-    public List<DroitAccess> getAllDroitAcces(){
-        return droitAccessRepository.findAll();
+    @GetMapping
+    public List<DroitAcces> getAllDroitAcces(){
+        return droitAccesRepository.findAll();
     }
 
-    @GetMapping("/getAllDroitAccesById")
-    public ResponseEntity<DroitAccess> getDroitAccessById(@RequestParam Long id) {
-        Optional<DroitAccess> droitAccessOptional = droitAccessRepository.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<DroitAcces> getDroitAccessById(@PathVariable Long id) {
+        Optional<DroitAcces> droitAccessOptional = droitAccesRepository.findById(id);
         return droitAccessOptional.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
     // Get DroitAccess by Professor ID
     @GetMapping("/getAllDroitAccesByProfessorId")
-    public ResponseEntity<List<DroitAccess>> getDroitAccessByProfessorId(@RequestParam Long professorId) {
-        List<DroitAccess> droitAccessList = droitAccessRepository.findByIdProfessor(professorId);
+    public ResponseEntity<List<DroitAcces>> getDroitAccessByProfessorId(@RequestParam Long IdProfessor) {
+        List<DroitAcces> droitAccessList = droitAccesRepository.findByIdProfessor(IdProfessor);
         if (!droitAccessList.isEmpty()) {
             return ResponseEntity.ok(droitAccessList);
         } else {
@@ -65,8 +64,8 @@ public class DroitAccessController {
 
     // Get DroitAccess by Structure ID
     @GetMapping("/getAllDroitAccesByStructureId")
-    public ResponseEntity<List<DroitAccess>> getDroitAccessByStructureId(@RequestParam Long structureId) {
-        List<DroitAccess> droitAccessList = droitAccessRepository.findByIdStructure(structureId);
+    public ResponseEntity<List<DroitAcces>> getDroitAccessByStructureId(@RequestParam Long structureId) {
+        List<DroitAcces> droitAccessList = droitAccesRepository.findByIdStructure(structureId);
         if (!droitAccessList.isEmpty()) {
             return ResponseEntity.ok(droitAccessList);
         } else {
@@ -76,8 +75,8 @@ public class DroitAccessController {
 
     // Get DroitAccess by Professor ID and Structure ID
     @GetMapping("/byProfessorIdAndStructureId")
-    public ResponseEntity<List<DroitAccess>> getDroitAccessByProfessorIdAndStructureId(@RequestParam Long professorId, @RequestParam Long structureId) {
-        List<DroitAccess> droitAccessList = droitAccessRepository.findByIdProfessorAndIdStructure(professorId, structureId);
+    public ResponseEntity<List<DroitAcces>> getDroitAccessByProfessorIdAndStructureId(@RequestParam Long IdProfessor, @RequestParam Long Idstructure) {
+        List<DroitAcces> droitAccessList = droitAccesRepository.findByIdProfessorAndIdStructure(IdProfessor, Idstructure);
         if (!droitAccessList.isEmpty()) {
             return ResponseEntity.ok(droitAccessList);
         } else {
@@ -86,26 +85,26 @@ public class DroitAccessController {
     }
 
     @PostMapping("/createDroitAccess")
-    public ResponseEntity<?> createOrUpdateDroitAccess(@RequestBody DroitAccess addedDroitAccess) {
+    public ResponseEntity<?> createOrUpdateDroitAccess(@RequestBody DroitAcces addedDroitAccess) {
         // Check if professor ID and structure ID exist
         Optional<Professeur> professorOptional = Optional.ofNullable(professeurRestClient.getProfesseurById(addedDroitAccess.getIdProfessor()));
         Optional<Structure> structureOptional = structureRepository.findById(addedDroitAccess.getIdStructure());
 
         if (professorOptional.isPresent() && structureOptional.isPresent()) {
             // Check if a DroitAccess already exists for the given professor and structure
-            List<DroitAccess> existingDroitAccess = droitAccessRepository.findByIdProfessorAndIdStructure(addedDroitAccess.getIdProfessor(), addedDroitAccess.getIdStructure());
+            List<DroitAcces> existingDroitAccess = droitAccesRepository.findByIdProfessorAndIdStructure(addedDroitAccess.getIdProfessor(), addedDroitAccess.getIdStructure());
 
             if (existingDroitAccess.isEmpty()) {
                 // No existing DroitAccess, create a new one
-                DroitAccess createdDroitAccess = droitAccessRepository.save(addedDroitAccess);
+                DroitAcces createdDroitAccess = droitAccesRepository.save(addedDroitAccess);
                 return ResponseEntity.status(HttpStatus.CREATED).body(createdDroitAccess);
             } else {
                 // DroitAccess already exists, check if the droitAcces attribute is different
-                DroitAccess existingAccess = existingDroitAccess.get(0);
+                DroitAcces existingAccess = existingDroitAccess.get(0);
                 if (existingAccess.isDroitAcces() != addedDroitAccess.isDroitAcces()) {
                     // Update the existing DroitAccess with the new droitAcces value
                     existingAccess.setDroitAcces(addedDroitAccess.isDroitAcces());
-                    DroitAccess updatedDroitAccess = droitAccessRepository.save(existingAccess);
+                    DroitAcces updatedDroitAccess = droitAccesRepository.save(existingAccess);
                     return ResponseEntity.ok(updatedDroitAccess);
                 } else {
                     // DroitAcces already exists with the same droitAcces value, return a bad request response
@@ -119,7 +118,7 @@ public class DroitAccessController {
     }
 
     @PutMapping("/updateDroitAccess")
-    public ResponseEntity<DroitAccess> updateDroitAccess(@RequestBody DroitAccess updatedDroitAccess, @RequestParam Long idProfessor, @RequestParam Long idStructure) {
+    public ResponseEntity<DroitAcces> updateDroitAccess(@RequestBody DroitAcces updatedDroitAccess, @RequestParam Long idProfessor, @RequestParam Long idStructure) {
         // Check if professor ID and structure ID exist
         Optional<Professeur> professorOptional = Optional.ofNullable(professeurRestClient.getProfesseurById(idProfessor));
         Optional<Structure> structureOptional = structureRepository.findById(idStructure);
@@ -128,14 +127,14 @@ public class DroitAccessController {
             Professeur professor = professorOptional.get();
             if (!professor.isAdmin()) {
                 // Both professor and structure exist, proceed with updating DroitAccess
-                List<DroitAccess> droitAccessList = droitAccessRepository.findByIdProfessorAndIdStructure(idProfessor, idStructure);
+                List<DroitAcces> droitAccessList = droitAccesRepository.findByIdProfessorAndIdStructure(idProfessor, idStructure);
                 if (!droitAccessList.isEmpty()) {
                     // Assuming there's only one DroitAccess for a given professor and structure
-                    DroitAccess existingDroitAccess = droitAccessList.get(0);
-                    // Update the existing DroitAccess entity
+                    DroitAcces existingDroitAccess = droitAccessList.get(0);
+                    existingDroitAccess.setIdProfessor(updatedDroitAccess.getIdProfessor());
+                    existingDroitAccess.setIdStructure(updatedDroitAccess.getIdStructure());
                     existingDroitAccess.setDroitAcces(updatedDroitAccess.isDroitAcces());
-                    // Save the updated DroitAccess
-                    DroitAccess updatedDroitAccessEntity = droitAccessRepository.save(existingDroitAccess);
+                    DroitAcces updatedDroitAccessEntity = droitAccesRepository.save(existingDroitAccess);
                     return ResponseEntity.ok(updatedDroitAccessEntity);
                 } else {
                     // DroitAccess with the given IDs not found
