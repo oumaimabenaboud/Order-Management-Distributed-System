@@ -8,6 +8,7 @@ import org.sid.productservice.repository.ProductRepository;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class ProductRestController {
     public List<String> getAllRubriqueNames() {
         List<Rubrique> rubriques = budgetRestClient.getAllRubriques();
         List<String> rubriqueNames = new ArrayList<>();
-        logger.error(rubriques.toString());
+        //logger.error(rubriques.toString());
         for (Rubrique rubrique : rubriques) {
             rubriqueNames.add(rubrique.getNom());
         }
@@ -107,7 +108,7 @@ public class ProductRestController {
 
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         List<String> rubriqueNames = getAllRubriqueNames();
@@ -115,16 +116,22 @@ public class ProductRestController {
         // Check and update the fields of the existing Product with non-null values from the updatedProduct
         if (updatedProduct.getNom() != null && !updatedProduct.getNom().isEmpty()) {
             existingProduct.setNom(updatedProduct.getNom());
+        }else {
+            return ResponseEntity.badRequest().body("Le champ 'Nom' ne peut pas être vide.");
         }
         if (updatedProduct.getDesc() != null && !updatedProduct.getDesc().isEmpty()) {
             existingProduct.setDesc(updatedProduct.getDesc());
+        }else {
+            return ResponseEntity.badRequest().body("Le champ 'Description' ne peut pas être vide.");
         }
-        if (updatedProduct.getRubrique() != null && !updatedProduct.getRubrique().isEmpty() && !rubriqueNames.contains(updatedProduct.getRubrique())) {
+        if (updatedProduct.getRubrique() != null && !updatedProduct.getRubrique().isEmpty() && rubriqueNames.contains(updatedProduct.getRubrique())) {
             existingProduct.setRubrique(updatedProduct.getRubrique());
+        }else {
+            return ResponseEntity.badRequest().body("Le champ 'Rubrique' ne peut pas être vide et doit appartenir à la liste des rubriques.");
         }
-
         // Save and return the updated Product
-        return productRepository.save(existingProduct);
+        productRepository.save(existingProduct);
+        return ResponseEntity.ok("Produit mis à jour avec succès !");
     }
     @GetMapping("/search")
     public List<Product> searchProducts(@RequestParam(required = false) String searchTerm) {

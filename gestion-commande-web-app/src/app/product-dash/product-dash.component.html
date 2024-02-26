@@ -135,7 +135,7 @@
                 <input type="text" list="rubriqueNames" type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique" [readonly]="!isEditMode">
 
                 <datalist id="rubriqueNames">
-                    <option *ngFor="let rubrique of listRebriques" [value]="rubrique">{{ rubrique }}</option>
+                    <option *ngFor="let rubrique of listRubriques" [value]="rubrique">{{ rubrique }}</option>
                 </datalist>
               </div>
             </div>
@@ -178,7 +178,7 @@
                 <!-- <input type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique"> -->
                 <input type="text" list="rubriqueNames" type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique">
                 <datalist id="rubriqueNames">
-                    <option *ngFor="let rubrique of listRebriques" [value]="rubrique">{{ rubrique }}</option>
+                    <option *ngFor="let rubrique of listRubriques" [value]="rubrique">{{ rubrique }}</option>
                 </datalist>
 
               </div>

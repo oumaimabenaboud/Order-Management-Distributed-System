@@ -9,6 +9,7 @@ import {Product} from "../model/product.model";
 import { PlatformLocation } from '@angular/common';
 import { Router } from '@angular/router';
 import e from 'express';
+import { Rubrique } from '../model/rubrique.model';
 
 @Component({
   selector: 'app-product-dash',
@@ -25,7 +26,7 @@ export class ProductDashComponent implements OnInit{
   userId: number | null = null;
   isAdmin: boolean = false;
   professeur : Professeur | undefined;
-  listRebriques: any;
+  listRubriques: Rubrique[] = [];
   status = true;
   public newProductForm! : FormGroup;
   detailsForm!: FormGroup;
@@ -70,7 +71,7 @@ export class ProductDashComponent implements OnInit{
       
       this.productService.getListRubriqueNames().subscribe(
         { next:(data)=>{
-            this.listRebriques = data;
+            this.listRubriques = data;
             console.log(data);
           },
           error : (err)=>console.error(err)
@@ -209,6 +210,9 @@ export class ProductDashComponent implements OnInit{
 
   saveProductChanges() {
     const updatedProduct: Product = this.detailsForm.value;
+    const selectedRubriqueName = this.detailsForm.get('rubrique')?.value;
+    console.log('Selected Responsible Name:', selectedRubriqueName);
+
     this.productService.updateProduct(this.selectedProduct.id, updatedProduct).subscribe({
       next: () => {
         window.alert("Produit mis à jour avec succès !");
