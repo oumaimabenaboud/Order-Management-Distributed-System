@@ -87,6 +87,7 @@ export class StructuredetailsComponent implements OnInit{
     this.budgetService.getBudgetByStructureId(this.structureId).subscribe(
       (budget: any) => {
         this.listBudgetsStructure = budget;
+        this.repartitionBudgetForm();
         this.listBudgetsStructure.forEach((budget: any) => {
           this.listYears.push(budget.budgetYear);
           this.listYears.sort((a, b) => a - b);
@@ -100,6 +101,7 @@ export class StructuredetailsComponent implements OnInit{
       }
     );
     this.repartitionBudgetForm();
+    
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {

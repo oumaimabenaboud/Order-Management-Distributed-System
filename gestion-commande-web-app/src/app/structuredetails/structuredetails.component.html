@@ -285,7 +285,6 @@
             </div>
     </section>-->
 
-
       <!-- NEW Repartition Budget -->
       <section class="container px-4 mx-auto" style="background-color: transparent"id="repbudget">
 
@@ -296,7 +295,21 @@
               <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-solid fa-wallet"></i> Répartition du Budget</h2>
             </div>
           </div>
-          <div class="flex items-center mt-4 gap-x-3">
+          <div class="mt-6 sm:flex sm:items-center sm:justify-between ">
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              <div class="card-footer bg-transparent">
+                <button type="button" class="btnp btn-primary" (click)="addRubriqueAllocation()" *ngIf="isEditMode" style="color: #4C86A7;"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
+                &nbsp;
+                <!-- Toggle edit mode button -->
+                <button class="btn btn-outline-primary" (click)="toggleEditMode()" style="color: rgb(88, 88, 88);">
+                  <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
+                  {{ isEditMode ? 'Annuler' : 'Modifier' }}
+                </button>
+                <!-- Save changes button (visible in edit mode) -->
+                <button *ngIf="isEditMode" (click)="Enregistrer()" class="btns btn-outline-success ms-3" style="color: #FB8B03;"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
+              </div>
+            </div>
+            &nbsp;
             <button class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600" style="background-color: #4C86A7;">
               <!-- <span>Année</span> -->
               <label for="dropdown"><i class="fa-solid fa-calendar-days"></i> Année : </label>
@@ -311,45 +324,48 @@
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div  [formGroup]="rubriqueAllocationForm" class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg" style="border: none;">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700" >
-                  <thead class="bg-gray-50 dark:bg-gray-800">
-                  <tr>
-                    <th scope="col" class="px-3 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 50%;">
-                      <i class="fa-solid fa-box-open"></i> Rubrique
-                    </th>
-                    <th scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 20%;">
-                      <i class="fa-solid fa-wallet"></i> Montant Alloué
-                    </th>
-                    <th scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 20%;">
-                      <i class="fa-solid fa-sack-dollar"></i> Montant Restant
-                    </th>
-                    <th  *ngIf="isEditMode" scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 10%;">
-                      <i class="fa-solid fa-trash"></i> Supprimer
-                    </th>
-                  </tr>
-                  </thead>
+                <div style="max-height: 400px; overflow-y: auto;"> <!-- Adjust the max-height value as needed -->
+                  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                      <th scope="col" class="px-3 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 50%;">
+                        <i class="fa-solid fa-box-open"></i> Rubrique
+                      </th>
+                      <th scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 20%;">
+                        <i class="fa-solid fa-wallet"></i> Montant Alloué
+                      </th>
+                      <th scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 20%;">
+                        <i class="fa-solid fa-sack-dollar"></i> Montant Restant
+                      </th>
+                      <th *ngIf="isEditMode" scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 10%;">
+                        <i class="fa-solid fa-trash"></i> Supprimer
+                      </th>
+                    </tr>
+                    </thead>
 
-                  <tbody formArrayName="rubriqueAllocations" class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                  <tr *ngFor="let allocation of rubriqueAllocations; let i = index" [formGroupName]="i">
-                    <td class="px-3 py-4 text-sm font-medium whitespace-nowrap"> <!-- Adjusted width for Rubrique -->
-                      <input type="text" placeholder="Nom de la Rubrique" class="form-control" style="width: 100%;" id="rubriqueName" formControlName="rubriqueName" list="rubriquesList" [value]="allocation.rubriqueName" [readonly]="!isEditMode">
-                      <datalist id="rubriquesList">
-                        <option *ngFor="let s of listrubriques" [value]="s.nom"></option>
-                      </datalist>
-                    </td>
-                    <td class="px-2 py-4 text-sm font-medium whitespace-nowrap"> <!-- Adjusted width for Montant Alloué -->
-                      <input type="number" placeholder="Montant Alloué en Dhs" id="montantAlloue" class="form-control" style="width: 100%;" formControlName="montantAlloue" [readonly]="!isEditMode">
-                    </td>
-                    <td class="px-2 py-4 text-sm font-medium whitespace-nowrap"> <!-- Adjusted width for Montant Restant -->
-                      <input type="number" id="montantRestant" placeholder="Montant Restant" class="form-control" style="width: 100%;" formControlName="montantRestant" readonly>
-                    </td>
+                    <tbody formArrayName="rubriqueAllocations" class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                    <tr *ngFor="let allocation of rubriqueAllocations; let i = index" [formGroupName]="i">
+                      <td class="px-3 py-4 text-sm font-medium whitespace-nowrap"> <!-- Adjusted width for Rubrique -->
+                        <input type="text" placeholder="Nom de la Rubrique" class="form-control" style="width: 100%;" id="rubriqueName" formControlName="rubriqueName" list="rubriquesList" [value]="allocation.rubriqueName" [readonly]="!isEditMode">
+                        <datalist id="rubriquesList">
+                          <option *ngFor="let s of listrubriques" [value]="s.nom"></option>
+                        </datalist>
+                      </td>
+                      <td class="px-2 py-4 text-sm font-medium whitespace-nowrap"> <!-- Adjusted width for Montant Alloué -->
+                        <input type="number" placeholder="Montant Alloué en Dhs" id="montantAlloue" class="form-control" style="width: 100%;" formControlName="montantAlloue" [readonly]="!isEditMode">
+                      </td>
+                      <td class="px-2 py-4 text-sm font-medium whitespace-nowrap"> <!-- Adjusted width for Montant Restant -->
+                        <input type="number" id="montantRestant" placeholder="Montant Restant" class="form-control" style="width: 100%;" formControlName="montantRestant" readonly>
+                      </td>
 
-                    <td *ngIf="isEditMode" class="px-2 py-4 text-sm font-medium whitespace-nowrap "> <!-- Adjusted width for Supprimer -->
-                      <button type="button" style="color: red"  class="btnp btn-primary" (click)="removeRubriqueAllocation(i)"><i class="fa-solid fa-square-minus"></i></button>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
+                      <td *ngIf="isEditMode" class="px-2 py-4 text-sm font-medium whitespace-nowrap"> <!-- Adjusted width for Supprimer -->
+                        <button type="button" style="color: red" class="btnp btn-primary" (click)="removeRubriqueAllocation(i)"><i class="fa-solid fa-square-minus"></i></button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+
 
                 <!-- Sum row -->
                 <div class="flex justify-end">
@@ -365,44 +381,8 @@
           </div>
         </div>
 
-        <div class="mt-6 sm:flex sm:items-center sm:justify-between ">
-          <!-- <div class="text-sm text-gray-500 dark:text-gray-400">
-            Page <span class="font-medium text-black-700 dark:text-black-100">{{ currentPageIndex + 1 }} of {{ totalPages }}</span>
-          </div> -->
-          <div class="text-sm text-gray-500 dark:text-gray-400">
-            <div class="card-footer bg-transparent">
-              <button type="button" class="btnp btn-primary" (click)="addRubriqueAllocation()" *ngIf="isEditMode" style="color: #4C86A7;"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
-              &nbsp;
-              <!-- Toggle edit mode button -->
-              <button class="btn btn-outline-primary" (click)="toggleEditMode()" style="color: rgb(88, 88, 88);">
-                <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
-                {{ isEditMode ? 'Annuler' : 'Modifier' }}
-              </button>
-              <!-- Save changes button (visible in edit mode) -->
-              <button *ngIf="isEditMode" (click)="Enregistrer()" class="btns btn-outline-success ms-3" style="color: #FB8B03;"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
-            </div>
-          </div>
-
-          <!-- <div class="flex items-center mt-4 gap-x-4 sm:mt-0">
-             <a href="#" (click)="previousPage($event)" style="background-color: transparent; color:#4C86A7; border:none;font-weight:600" class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800">
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 rtl:-scale-x-100">
-                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
-               </svg>
-               <span>Previous</span>
-             </a>
-             <a href="#" (click)="nextPage($event)" style="background-color: #4C86A7;" class="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800">
-               <span>Next</span>
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 rtl:-scale-x-100">
-                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-               </svg>
-             </a>
-
-           </div>-->
-
-        </div>
       </section>
       <!-- NEW Repartition Budget -->
-
 
       <div class="min-h-screen bg-gray-100 flex flex-col justify-center" style="background-color: transparent" id="commandes" >
         <div class="max-w-2xl mx-auto text-center">
@@ -515,7 +495,7 @@
         </div>
     </div>
 </div> -->
-<!-- Popup card for adding a new structure -->
+<!-- Popup card for adding a new commande -->
 <div class="popup card" *ngIf="isNewCommandeFormOpen">
   <div class="card-body">
     <div class="hh">
