@@ -19,7 +19,7 @@ public class ProfesseurApplication {
     CommandLineRunner start(ProfesseurRepo ProfesseurRepo, RepositoryRestConfiguration RepoConfig, BCryptPasswordEncoder passwordEncoder){
         RepoConfig.exposeIdsFor(professeur.class);
         return args -> {
-            ProfesseurRepo.save(new professeur(null, "admin", "admin","admin", passwordEncoder.encode("admin"),true,true));
+            ProfesseurRepo.save(new professeur(null, "admin", "admin","admin", passwordEncoder.encode("admin"),false,true));
             ProfesseurRepo.save(new professeur(null, "Bekri", "My.Ali","a.bekri@umi.ac.ma", passwordEncoder.encode("4444"),true,false));
             ProfesseurRepo.save(new professeur(null, "Oubelkacem", "Ali","a.oubelkacem@umi.ac.ma", passwordEncoder.encode("4555"),true,false));
             ProfesseurRepo.save(new professeur(null, "Bourray", "Hamid","h.bourray@umi.ac.ma", passwordEncoder.encode("1111"),true,false));
