@@ -46,17 +46,17 @@ public class ProductRestController {
                 .orElseThrow((()-> new RuntimeException(String.format("Account % not found",id))));
     }
 
-    @GetMapping("/rubProd")
+
     public List<Rubrique> getAllRubriques() {
         //List<String> rubriqueNames = getAllRubriqueNames();
 
         return budgetRestClient.getAllRubriques();
     }
-
+    @GetMapping("/getListRubriqueNames")
     public List<String> getAllRubriqueNames() {
         List<Rubrique> rubriques = budgetRestClient.getAllRubriques();
         List<String> rubriqueNames = new ArrayList<>();
-
+        logger.error(rubriques.toString());
         for (Rubrique rubrique : rubriques) {
             rubriqueNames.add(rubrique.getNom());
         }
@@ -121,12 +121,6 @@ public class ProductRestController {
         }
         if (updatedProduct.getRubrique() != null && !updatedProduct.getRubrique().isEmpty() && !rubriqueNames.contains(updatedProduct.getRubrique())) {
             existingProduct.setRubrique(updatedProduct.getRubrique());
-        }
-        if (updatedProduct.getPrixHT() > 0) {
-            existingProduct.setPrixHT(updatedProduct.getPrixHT());
-        }
-        if (updatedProduct.getPrixTTC() > 0) {
-            existingProduct.setPrixTTC(updatedProduct.getPrixTTC());
         }
 
         // Save and return the updated Product

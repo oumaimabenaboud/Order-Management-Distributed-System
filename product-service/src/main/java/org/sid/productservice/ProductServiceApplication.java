@@ -21,10 +21,10 @@ public class ProductServiceApplication {
     CommandLineRunner start(ProductRepository productRepository, RepositoryRestConfiguration restConfiguration){
         restConfiguration.exposeIdsFor(Product.class);
         return args -> {
-            productRepository.save(new Product(1, "Ordinateur portable Dell XPS 15", "Puissant ordinateur portable avec processeur Intel Core i7, design fin.", "Matériel Informatique", 8000, 9600));
-            productRepository.save(new Product(2, "Kit de verrerie de laboratoire", "Ensemble complet de verrerie pour expériences scientifiques comprenant des éprouvettes, des pipettes et des béchers.", "Équipement de laboratoire", 500, 600));
-            productRepository.save(new Product(3, "Stylos à encre gel Pilot G2", "Stylos à encre gel de haute qualité pour une écriture fluide et précise.", "Fournitures de bureau", 10, 11));
-            productRepository.save(new Product(4, "Tables de bureau ajustables", "Tables réglables en hauteur pour offrir une flexibilité ergonomique.", "Mobilier", 1000, 1200));
+            productRepository.save(new Product(1, "Ordinateur portable Dell XPS 15", "Puissant ordinateur portable avec processeur Intel Core i7, design fin.", "Achat de fournitures informatiques"));
+            productRepository.save(new Product(2, "Kit de verrerie de laboratoire", "Ensemble complet de verrerie pour expériences scientifiques comprenant des éprouvettes, des pipettes et des béchers.", "Achat de matériel scientifique"));
+            productRepository.save(new Product(3, "Matériau pour imprimante 3D", "Filament PLA de haute qualité pour l'impression 3D précise et fiable.", "Achat de matières premières"));
+            productRepository.save(new Product(4, "Billets de train ONCF", "Billets de train pour les déplacements professionnels à l'intérieur du Royaume.", "Indemnités de déplacement à l'intérieur du Royaume"));
             productRepository.findAll().forEach((c->{
                 System.out.println((c.toString()));
             }));

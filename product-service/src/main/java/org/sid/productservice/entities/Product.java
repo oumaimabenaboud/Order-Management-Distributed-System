@@ -17,6 +17,4 @@ public class Product {
     private String nom;
     private String desc;
     private String rubrique;
-    private float prixHT;
-    private float prixTTC;
 }

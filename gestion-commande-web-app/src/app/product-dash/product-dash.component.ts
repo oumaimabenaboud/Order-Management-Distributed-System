@@ -25,7 +25,7 @@ export class ProductDashComponent implements OnInit{
   userId: number | null = null;
   isAdmin: boolean = false;
   professeur : Professeur | undefined;
-
+  listRebriques: any;
   status = true;
   public newProductForm! : FormGroup;
   detailsForm!: FormGroup;
@@ -64,6 +64,13 @@ export class ProductDashComponent implements OnInit{
       this.productService.getAllProducts().subscribe(
         { next:(data)=>{
             this.products = data;
+          },
+          error : (err)=>console.error(err)
+        });
+      
+      this.productService.getListRubriqueNames().subscribe(
+        { next:(data)=>{
+            this.listRebriques = data;
             console.log(data);
           },
           error : (err)=>console.error(err)

@@ -19,8 +19,8 @@ export class ProductService {
     return this.http.get<Product>("http://localhost:1818/PRODUCT-SERVICE/products/" + id);
   }
 
-  public getAllRubriques(): Observable<Array<Rubrique>> {
-    return this.http.get<Array<Rubrique>>("http://localhost:1818/PRODUCT-SERVICE/products/rubProd");
+  public getListRubriqueNames(): Observable<Array<Rubrique>> {
+    return this.http.get<Array<Rubrique>>("http://localhost:1818/PRODUCT-SERVICE/products/getListRubriqueNames");
   }
 
   public searchProducts(searchTerm: string): Observable<Product> {

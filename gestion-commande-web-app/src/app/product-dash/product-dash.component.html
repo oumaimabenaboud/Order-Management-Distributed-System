@@ -131,7 +131,12 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <input type="text" class="form-control" id="rubrique" formControlName="rubrique" [readonly]="!isEditMode">
+                <!-- <input type="text" class="form-control" id="rubrique" formControlName="rubrique" [readonly]="!isEditMode"> -->
+                <input type="text" list="rubriqueNames" type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique" [readonly]="!isEditMode">
+
+                <datalist id="rubriqueNames">
+                    <option *ngFor="let rubrique of listRebriques" [value]="rubrique">{{ rubrique }}</option>
+                </datalist>
               </div>
             </div>
           </form>
@@ -170,7 +175,12 @@
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <input type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique">
+                <!-- <input type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique"> -->
+                <input type="text" list="rubriqueNames" type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique">
+                <datalist id="rubriqueNames">
+                    <option *ngFor="let rubrique of listRebriques" [value]="rubrique">{{ rubrique }}</option>
+                </datalist>
+
               </div>
             </div>
           </form>
