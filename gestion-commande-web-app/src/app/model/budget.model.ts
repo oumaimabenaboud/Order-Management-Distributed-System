@@ -6,7 +6,6 @@ export interface Budget {
   budgetYear: number;
   totalAlloue: number;
   totalRestant: number;
-  rubriqueAllocations: [RubriqueAllocation];
-
+  rubriqueAllocations: RubriqueAllocation[];
 }
 

@@ -1,13 +1,16 @@
 package org.sid.budgetservice.web;
+
 import org.sid.budgetservice.repositories.BudgetRepository;
 import org.sid.budgetservice.entities.*;
 import org.sid.budgetservice.repositories.RubriqueAllocationRepository;
 import org.sid.budgetservice.repositories.RubriqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +25,7 @@ public class BudgetRestController {
     private BudgetRepository budgetRepository;
 
     @Autowired
-    private RubriqueAllocationRepository rubriqueAllocation;
+    private RubriqueAllocationRepository rubriqueAllocationRepository;
 
 
     //Rubriques
@@ -74,20 +77,64 @@ public class BudgetRestController {
         return budgetRepository.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/budget")
     public Budget createBudget(@RequestBody Budget newBudget) {
         Budget budget = new Budget();
         budget.setBudgetYear(newBudget.getBudgetYear());
+        budget.setStructureId(newBudget.getStructureId());
         budget.setTotalAlloue(newBudget.getTotalAlloue());
         budget.setTotalRestant(newBudget.getTotalRestant());
-        budget.setRubriqueAllocations(new ArrayList<>()); // Default with 0 rubriques
+        budgetRepository.save(budget);
+
+        // Iterate over the rubriqueAllocations and set the budgetId
+        for (RubriqueAllocation rubriqueAllocation : newBudget.getRubriqueAllocations()) {
+            rubriqueAllocation.setBudgetId(budget.getId());
+        }
+
+        // Save all rubriqueAllocations
+        rubriqueAllocationRepository.saveAll(newBudget.getRubriqueAllocations());
+
+        // Set the rubriqueAllocations to the budget
+        budget.setRubriqueAllocations(newBudget.getRubriqueAllocations());
+
+        // Save the updated budget
         return budgetRepository.save(budget);
+    }
+    @PutMapping("/budget/{id}")
+    @Transactional
+    public Budget UpdateBudget(@PathVariable Long id, @RequestBody Budget newBudget) {
+        Budget existingBudget = budgetRepository.getBudgetById(id);
+        System.out.println(existingBudget);
+
+        existingBudget.setBudgetYear(newBudget.getBudgetYear());
+        existingBudget.setStructureId(newBudget.getStructureId());
+        existingBudget.setTotalAlloue(newBudget.getTotalAlloue());
+        existingBudget.setTotalRestant(newBudget.getTotalRestant());
+
+        // Clear existing rubriqueAllocations associated with the budget
+        rubriqueAllocationRepository.deleteAllByBudgetId(existingBudget.getId());
+
+        // Iterate over the rubriqueAllocations and set the budgetId
+        List<RubriqueAllocation> updatedAllocations = new ArrayList<>();
+        for (RubriqueAllocation rubriqueAllocation : newBudget.getRubriqueAllocations()) {
+                rubriqueAllocation.setBudgetId(existingBudget.getId());
+                updatedAllocations.add(rubriqueAllocation);
+        }
+
+        // Save all updated rubriqueAllocations
+        rubriqueAllocationRepository.saveAll(updatedAllocations);
+
+        // Set the updated rubriqueAllocations to the existing budget
+        existingBudget.setRubriqueAllocations(updatedAllocations);
+
+        // Save and return the updated budget
+        return budgetRepository.save(existingBudget);
     }
 
     @GetMapping("/budget/{id}")
     public Budget getBudgetById(@PathVariable Long id) {
         return budgetRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Budget not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Budget not found with structure id: " + id));
     }
     @GetMapping("/budget/byStructure/{id}")
     public List<Budget> getBudgetByStructureId(@PathVariable Long id) {
@@ -99,7 +146,7 @@ public class BudgetRestController {
     }
 
     // Delete a budget
-    @DeleteMapping("/{id}")
+    @DeleteMapping("budget/{id}")
     public void deleteBudget(@PathVariable Long id) {
         budgetRepository.deleteById(id);
     }
