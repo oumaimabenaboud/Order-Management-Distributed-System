@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, catchError} from "rxjs";
 import {Structure} from "../model/structure.model";
 import {droitAcces} from "../model/droitAcces.model";
 import {Professeur} from "../model/professeur.model";
@@ -55,8 +55,26 @@ export class StructuresService {
     return this.http.get<Array<droitAcces>>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces")
   }
 
-  public getDroitAccessByProfessorId(id: any):Observable<droitAcces>{
-    return this.http.get<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/"+id)
+  public getDroitAccessById(id: any): Observable<droitAcces> {
+    return this.http.get<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/" + id);
   }
 
+  public getDroitAccessByProfessorId(idProfessor: any):Observable<droitAcces>{
+    return this.http.get<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/"+idProfessor)
+  }
+
+  public getDroitAccessByStructureId(idStructure: any):Observable<droitAcces>{
+    return this.http.get<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/"+idStructure)
+  }
+
+  public updateDroitAccess(updatedDroitAccess: droitAcces, idProfessor: any, idStructure: any): Observable<droitAcces>{
+    const params = new HttpParams()
+      .set('idProfessor', idProfessor)
+      .set('idStructure', idStructure);
+  
+    return this.http.put<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/updateDroitAccess", updatedDroitAccess, { params });
+  }
+  
+  
 }
+
