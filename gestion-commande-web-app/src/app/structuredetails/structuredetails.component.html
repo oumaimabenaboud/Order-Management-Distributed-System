@@ -495,57 +495,7 @@
         </div>
     </div>
 </div> -->
-<!-- Popup card for adding a new commande -->
-<div class="popup card" *ngIf="isNewCommandeFormOpen">
-  <div class="card-body">
-    <div class="hh">
-      <button class="btnfp btn-outline-primary" (click)="closeNewCommandeForm()"><i class="fa-solid fa-circle-xmark" id="detail-button"></i></button>
-    </div>
-    <form class="row" [formGroup]="newCommandeForm" >
-      <div class="relative m-3 flex flex-wrap mx-auto justify-center">
-        <div class="relative max-w-sm min-w-[450px] bg-white shadow-md rounded-3xl p-2 mx-1 my-3 cursor-pointer">
-          <div class="overflow-x-hidden rounded-2xl relative">
-            <img src="assets/images/commande.svg" alt="SVG Image">
 
-            <div class="mt-4 pl-2 mb-2 flex justify-between " >
-              <div >
-                <p class="absolute left-1 top-1 bg-white rounded-full p-2 cursor-pointer group">
-                  <input type="text" style="color: #FB8B03; border:solid 1px  #FB8B03;" class="bg-white rounded-full p-1 cursor-pointer group" id="np" formControlName="np" placeholder="nom & prenom">
-                </p>
-                <p class="relative left-1 bottom-1 bg-white rounded-full p-1 cursor-pointer group">
-                  <!-- <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;"> jj/mm/yyyy</span> -->
-                  <input type="date" style="color: #FB8B03; border:solid 1px  #FB8B03;" class=" bg-white rounded-full p-1 cursor-pointer group"  id="date" formControlName="date" >
-                </p>
-                <p class="relative left-1 bottom-1 bg-white rounded-full p-1 cursor-pointer group">
-                  <!-- <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;"> jj/mm/yyyy</span> -->
-                  <input type="text" style="color: #FB8B03; border:solid 1px  #FB8B03;" class=" bg-white rounded-full p-1 cursor-pointer group"  id="typecommande" formControlName="typecommande" placeholder="type commande">
-
-                </p>
-                <p class="relative left-1 bottom-1 bg-white rounded-full p-1 cursor-pointer group">
-                  <input type="number" style="color: #FB8B03; border:solid 1px  #FB8B03;" class=" bg-white rounded-full p-1 cursor-pointer group"  id="prixht" formControlName="prixht"  placeholder="Dhs / HT">
-                </p>
-                <p class="relative left-1 bottom-1 bg-white rounded-full p-1 cursor-pointer group">
-
-                  <input type="number" style="color: #FB8B03; border:solid 1px  #FB8B03;" class=" bg-white rounded-full p-1 cursor-pointer group"  id="prixttc"  formControlName="prixttc" placeholder="Dhs / TTC">
-                </p>                    </div>
-              <a href="#" title="" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
-                <i class="fa-solid fa-circle-plus" style="color: #4C86A7;"></i> Ajouter
-
-              </a>
-
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </form>
-  </div>
-
-
-
-
-</div>
 
 <style>
   /* Tab content - closed */
