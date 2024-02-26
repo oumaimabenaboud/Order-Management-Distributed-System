@@ -42,8 +42,14 @@ export class BudgetService {
 
   //Budget
 
-  public getBugetByStructureId(id: any):Observable<Budget[]>{
+  public getBudgetByStructureId(id: any):Observable<Budget[]>{
     return this.http.get<Budget[]>("http://localhost:1818/BUDGET-SERVICE/budget-management/budget/byStructure/"+id)
   }
+  public addBudget(Budget: any) {
+    return this.http.post("http://localhost:1818/BUDGET-SERVICE/budget-management/budget", Budget)
+  }
 
+  public updateBudget(id: any, Budget: any) {
+    return this.http.put("http://localhost:1818/BUDGET-SERVICE/budget-management/budget/"+id, Budget)
+  }
 }

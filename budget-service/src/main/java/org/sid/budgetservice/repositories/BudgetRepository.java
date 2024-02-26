@@ -11,4 +11,8 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
     List<Budget> findAll();
 
     List<Budget> findByStructureId(Long id);
+
+    Budget getBudgetById(Long id);
+
+    Budget getBudgetByStructureIdAndBudgetYear(Long id, int year);
 }
