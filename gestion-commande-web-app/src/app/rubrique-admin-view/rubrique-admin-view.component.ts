@@ -82,7 +82,7 @@ export class RubriqueAdminViewComponent implements OnInit {
   }
 
   logout() {
-    sessionStorage.removeItem('id');
+    sessionStorage.clear();
     this.router.navigate(['/login']);
   }
 

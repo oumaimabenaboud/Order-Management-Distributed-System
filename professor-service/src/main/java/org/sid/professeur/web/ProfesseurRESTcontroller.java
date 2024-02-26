@@ -43,7 +43,6 @@ public class ProfesseurRESTcontroller {
     @PostMapping
     public ResponseEntity<?> save(@RequestBody professeur professeur) {
         // Set the default value for droit_daccee to false
-        professeur.setDroit_daccee(false);
         professeur.setFirst_cnx(true);
 
         if (!isValidEmail(professeur.getMail())) {
@@ -86,19 +85,7 @@ public class ProfesseurRESTcontroller {
         if (updatedProfesseur.getMdp() != null) {
             existingProf.setMdp(passwordEncoder.encode(updatedProfesseur.getMdp()));
         }
-        if (updatedProfesseur.isDroit_daccee()) {
-            existingProf.setDroit_daccee(true);
-        }
 
-        if (updatedProfesseur.isFirst_cnx()) {
-            existingProf.setDroit_daccee(true);
-        }
-        // Only update droit_daccee if it's provided and different from the current value
-        if (updatedProfesseur.isFirst_cnx() && !existingProf.isDroit_daccee()) {
-            existingProf.setDroit_daccee(true);
-        } else if (!updatedProfesseur.isFirst_cnx()) {
-            existingProf.setDroit_daccee(updatedProfesseur.isDroit_daccee());
-        }
         // Save the updated professor
         professeur savedProfesseur = ProfesseurRepo.save(existingProf);
         return new ResponseEntity<>(savedProfesseur, HttpStatus.OK);
