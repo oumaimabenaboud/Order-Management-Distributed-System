@@ -18,6 +18,7 @@ import { Routes } from '@angular/router';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
 import { ProductDashComponent } from './product-dash/product-dash.component';
+import {AddcommandeComponent} from "./addcommande/addcommande.component";
 
 // const appRoutes: Routes = [
 //   // { path: 'login', component: LoginComponent },
@@ -55,7 +56,8 @@ import { ProductDashComponent } from './product-dash/product-dash.component';
     ChangePasswordComponent,
     WelcomeComponent,
     StructuredetailsComponent,
-    ProductDashComponent
+    ProductDashComponent,
+    AddcommandeComponent
   ],
   imports: [
     BrowserModule,

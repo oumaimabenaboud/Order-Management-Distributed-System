@@ -100,8 +100,7 @@ export class StructuredetailsComponent implements OnInit{
         console.log(err);
       }
     );
-    this.repartitionBudgetForm();
-    
+
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
