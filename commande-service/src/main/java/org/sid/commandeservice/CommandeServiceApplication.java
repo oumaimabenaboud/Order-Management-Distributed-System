@@ -29,7 +29,7 @@ public class CommandeServiceApplication {
 	CommandLineRunner start(CommandeRepository commandeRepository, CommandeLineRepository productItemRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient){
 		return args -> {
 
-			Professeur professeur = professeurRestClient.professeur(1L);
+			Professeur professeur = professeurRestClient.getProfesseurById(1L);
 			Commande commande1 = commandeRepository.save(new Commande(null,new Date(),null, professeur.getId(),null,0.0,0.0,commandestype.encours));
 			double totalHT = 0.0;
 			double totalTTC = 0.0;

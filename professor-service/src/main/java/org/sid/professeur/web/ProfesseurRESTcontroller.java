@@ -31,11 +31,11 @@ public class ProfesseurRESTcontroller {
         this.ProfesseurRepo=ProfesseurRepo;
     }
     @GetMapping
-    public List<professeur> professeur(){
+    public List<professeur> getAllProfesseurs(){
         return ProfesseurRepo.findAllByIsAdminFalse();
     }
     @GetMapping("{id}")
-    public professeur professeur(@PathVariable Long id){
+    public professeur getProfesseurById(@PathVariable Long id){
         return ProfesseurRepo.findById(id)
                 .orElseThrow(()->new RuntimeException(String.format("Account %s not found",id)));
     }

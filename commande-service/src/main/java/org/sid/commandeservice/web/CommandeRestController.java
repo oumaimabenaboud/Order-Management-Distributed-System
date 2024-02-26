@@ -34,10 +34,9 @@ public class CommandeRestController {
     @GetMapping(path = "{id}")
     public Commande getCommande(@PathVariable(name="id") Long id){
         Commande commande= commandeRepository.findById(id).get();
-        System.out.println(commande.getProfID());
+        System.out.println(commande.getProfId());
         //System.out.println(commande.getCommandeLines());
-        Professeur professeur = professeurRestClient.getProfesseurById(commande.getProfID());
-        commande.setProfesseur(professeur);
+        Professeur professeur = professeurRestClient.getProfesseurById(commande.getProfId());
         commande.getCommandeLines().forEach(pi->{
             Product product = productRestClient.getProductById(pi.getId());
             //pi.setProduct(product);
