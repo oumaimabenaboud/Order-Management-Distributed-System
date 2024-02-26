@@ -77,6 +77,8 @@ export class StructuredetailsComponent implements OnInit{
       }
     }
 
+    
+
     this.budgetService.getAllRubriques().subscribe(
       (data)=>{
         this.listrubriques = data;
@@ -101,6 +103,7 @@ export class StructuredetailsComponent implements OnInit{
       }
     );
 
+    
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
@@ -119,6 +122,14 @@ export class StructuredetailsComponent implements OnInit{
             this.profService.getProfessor(id).subscribe({
               next: (prof) => {
                 this.profs.push(prof);
+                this.structureService.getDroitAccessByProfessorId(prof.id).subscribe(
+                  (droitAcces: any) => {
+                    this.droit_daccee = droitAcces.droit_daccee;
+                  },
+                  (error) => {
+                    console.error('Error fetching professor:', error);
+                  }
+                );
               },
               error: (err) => console.error(err)
             });
@@ -132,6 +143,7 @@ export class StructuredetailsComponent implements OnInit{
     });
   }
 
+  
   onYearChange(year: number | null) {
     if (year !== null) {
       // Store the selected year in the selectedYear property
@@ -240,7 +252,16 @@ export class StructuredetailsComponent implements OnInit{
     return total;
   }
 
+  droit_daccee: boolean = false; // Define droit_daccee property with an initial value
 
+  toggleAccess(prof: Professeur, droit_daccee: boolean): void {
+    const idProfessor = prof.id;
+    const idStructure = this.structuredetail.id;
+    console.log(droit_daccee);
+    console.log('idProfessor:', idProfessor);
+    console.log('idStructure:', idStructure);
+    
+  }
   /*toggleAccess(prof: Professeur): void {
     const updatedAccess = !prof.droit_daccee; // Toggle the access
     console.log("updatedAccess", updatedAccess);
@@ -415,13 +436,10 @@ export class StructuredetailsComponent implements OnInit{
 
 
 
-  // @ts-ignore
-  //state: RouterStateSnapshot;
   openNewCommandeForm() {
-    //console.log(this.state.url)
-    this.router.parseUrl("/addcommande");
+    const structureId = this.route.snapshot.paramMap.get('structureId');
+    this.router.navigate(['structuredetail', structureId, 'addcommande']);
   }
-
 
 
 }

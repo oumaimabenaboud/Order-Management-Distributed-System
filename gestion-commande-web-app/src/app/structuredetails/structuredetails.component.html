@@ -452,11 +452,10 @@
 
                 </div>
 
-
-                <h3 class="mt-8 text-lg font-semibold text" style="color: #FB8B03;">{{p.nom}} {{p.prenom}} </h3>
+                <h3 class="mt-8 text-lg font-semibold text" style="color: #FB8B03;">{{p.nom}} {{p.prenom}} {{p.droit_daccee}} </h3>
                 <p class="mt-2 text-base text-600" style="color: #4C86A7;">
-                  <!--[class.active]="p.droit_daccee" (click)="toggleAccess(p)"-->
-                  <button class="btnac mt-4 text-base text-gray-600" >
+                  <!-- [class.active]="p.droit_daccee" (click)="toggleAccess(p)" -->
+                  <button class="btnac mt-4 text-base text-gray-600" [class.active]="p.droit_daccee" (click)="toggleAccess(p,droit_daccee)">
                     <ng-container *ngIf="p.droit_daccee; else enableIcon">
                       <i class="fa-solid fa-square-xmark" style="color: red;"></i>
                     </ng-container>
@@ -466,6 +465,19 @@
                     <label class="label">{{ p.droit_daccee ? ' Désactiver ' : ' Activer ' }}</label>
                   </button>  Droit d'accées
                 </p>
+                
+                <!-- <h3 class="mt-8 text-lg font-semibold text" style="color: #FB8B03;">{{p.nom}} {{p.prenom}} </h3>
+                <p class="mt-2 text-base text-600" style="color: #4C86A7;">
+                  <button class="btnac mt-4 text-base text-gray-600" [class.active]="p.droit_daccee" (click)="toggleAccess(p)" >
+                    <ng-container *ngIf="p.droit_daccee; else enableIcon">
+                      <i class="fa-solid fa-square-xmark" style="color: red;"></i>
+                    </ng-container>
+                    <ng-template #enableIcon>
+                      <i class="fa-solid fa-square-check" style="color: green;"></i>
+                    </ng-template>
+                    <label class="label">{{ p.droit_daccee ? ' Désactiver ' : ' Activer ' }}</label>
+                  </button>  Droit d'accées
+                </p> -->
 
               </div>
             </div>

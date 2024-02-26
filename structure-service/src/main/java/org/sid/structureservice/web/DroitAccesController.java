@@ -52,7 +52,7 @@ public class DroitAccesController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
     // Get DroitAccess by Professor ID
-    @GetMapping("/getAllDroitAccesByProfessorId")
+    @GetMapping("/getAllDroitAccesByProfessorId/{id}")
     public ResponseEntity<List<DroitAcces>> getDroitAccessByProfessorId(@RequestParam Long IdProfessor) {
         List<DroitAcces> droitAccessList = droitAccesRepository.findByIdProfessor(IdProfessor);
         if (!droitAccessList.isEmpty()) {

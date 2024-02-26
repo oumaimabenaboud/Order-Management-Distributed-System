@@ -63,19 +63,25 @@ public class StructureServiceApplication {
 	private void addExampleDroitAccess(DroitAccesRepository droitAccesRepository) {
 		// Example DroitAccess instances
 		DroitAcces droitAccess1 = DroitAcces.builder()
-				.idProfessor(2L)
+				.idProfessor(3L)
 				.idStructure(1L)
 				.droitAcces(true)
 				.build();
 
 		DroitAcces droitAccess2 = DroitAcces.builder()
-				.idProfessor(3L)
-				.idStructure(2L)
+				.idProfessor(4L)
+				.idStructure(1L)
 				.droitAcces(false)
 				.build();
 
+		DroitAcces droitAccess3 = DroitAcces.builder()
+				.idProfessor(5L)
+				.idStructure(1L)
+				.droitAcces(true)
+				.build();
+
 		// Save example DroitAccess instances
-		droitAccesRepository.saveAll(List.of(droitAccess1, droitAccess2));
+		droitAccesRepository.saveAll(List.of(droitAccess1, droitAccess2, droitAccess3));
 	}
 
 	private Structure addStructure(StructureRepository structureRepository, String name, String type, double budget, Long responsibleId, String nomResponsable, List<Long> equipeProfIds, ProfesseurRestClient professeurRestClient, Long parentLabId ,String parentLabNom, List<Long> childEquipesIds) {

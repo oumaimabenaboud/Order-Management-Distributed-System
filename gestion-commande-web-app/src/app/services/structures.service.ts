@@ -60,7 +60,7 @@ export class StructuresService {
   }
 
   public getDroitAccessByProfessorId(idProfessor: any):Observable<droitAcces>{
-    return this.http.get<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/"+idProfessor)
+    return this.http.get<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/getAllDroitAccesByProfessorId"+idProfessor)
   }
 
   public getDroitAccessByStructureId(idStructure: any):Observable<droitAcces>{
@@ -74,7 +74,6 @@ export class StructuresService {
   
     return this.http.put<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/updateDroitAccess", updatedDroitAccess, { params });
   }
-  
-  
+
 }
 
