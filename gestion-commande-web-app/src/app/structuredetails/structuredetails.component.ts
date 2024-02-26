@@ -5,7 +5,7 @@ import {Professeur} from "../model/professeur.model";
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {StructuresService} from "../services/structures.service";
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {PlatformLocation} from "@angular/common";
 import {Structure} from "../model/structure.model";
 import {BudgetService} from "../services/budget.service";
@@ -87,6 +87,7 @@ export class StructuredetailsComponent implements OnInit{
     this.budgetService.getBudgetByStructureId(this.structureId).subscribe(
       (budget: any) => {
         this.listBudgetsStructure = budget;
+        this.repartitionBudgetForm();
         this.listBudgetsStructure.forEach((budget: any) => {
           this.listYears.push(budget.budgetYear);
           this.listYears.sort((a, b) => a - b);
@@ -99,7 +100,7 @@ export class StructuredetailsComponent implements OnInit{
         console.log(err);
       }
     );
-    this.repartitionBudgetForm();
+
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
@@ -414,15 +415,13 @@ export class StructuredetailsComponent implements OnInit{
 
 
 
-
+  // @ts-ignore
+  //state: RouterStateSnapshot;
   openNewCommandeForm() {
-    this.isNewCommandeFormOpen = true;
-    this.isDetailsFormOpen = false;
+    //console.log(this.state.url)
+    this.router.parseUrl("/addcommande");
   }
 
-  closeNewCommandeForm() {
-    this.isNewCommandeFormOpen = false;
-  }
 
 
 }

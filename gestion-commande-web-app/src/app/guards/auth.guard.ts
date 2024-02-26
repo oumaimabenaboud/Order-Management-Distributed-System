@@ -14,7 +14,7 @@ export class authGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean | UrlTree {
       let new_router = '/';
-    
+
     // Check if code is running in a browser environment
     if (!isPlatformBrowser(this.platformId)) {
       return false;
@@ -30,7 +30,7 @@ export class authGuard implements CanActivate {
     }
 
     const allowedRoutesForAdmin = ['/prof-admin', '/structure-admin', '/rubrique-admin','/product'];
-    const allowedRoutesForNonAdmin = ['/prof-dash', '/structuredetail','/product'];
+    const allowedRoutesForNonAdmin = ['/prof-dash', '/structuredetail','/product','/addcomande'];
 
     // console.log(state.url," ",allowedRoutesForNonAdmin.some(route => state.url.startsWith(route))," ",state.url.startsWith('/structuredetail'))
 
@@ -38,7 +38,7 @@ export class authGuard implements CanActivate {
     if (isAdmin == "true" && allowedRoutesForAdmin.includes(state.url)) {
       return true;
     }else if (isAdmin == "false" && allowedRoutesForNonAdmin.includes(state.url) || state.url.startsWith('/structuredetail')) {
-      return true; 
+      return true;
     } else {
       const defaultRoute = isAdmin === "true" ? '/prof-admin' : '/prof-dash';
       return this.router.createUrlTree([defaultRoute]);

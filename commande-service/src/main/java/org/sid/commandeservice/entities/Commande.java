@@ -19,7 +19,7 @@ public class Commande {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date commandeDate;
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
+    @OneToMany
     private List<CommandeLine> commandeLines;
     private Long profId;
     private Long structureId;

@@ -53,6 +53,7 @@ public class CommandeServiceApplication {
 				commandeLine.setTotal_prixTTC_ligne(totalHTligne+totalHTligne*0.20); // Set total prix TTC (if applicable)
 				commandeLine.setProductName(product.getNom());
 				commandeLine.setProductId(product.getId());
+				commandeLine.setProduitRubriqueId(product.getRubriqueId());
 				commandeLine.setCommandeId(commande.getId()); // Set this when creating Commande
 				totalHT +=totalHTligne;
 				commandeLines.add(commandeLine);

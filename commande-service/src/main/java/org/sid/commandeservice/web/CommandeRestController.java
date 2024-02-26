@@ -46,14 +46,10 @@ public class CommandeRestController {
 
     }
 
-    @PostMapping
+    /*@PostMapping
     public Commande addCommande(@RequestBody Commande nouvelleCommande) {
-        Professeur professeur = nouvelleCommande.getProfId();
+        Long professeur = nouvelleCommande.getProfId();
 
-        if (professeur != null && professeur.getId() != null) {
-            if (!professeur.isDroit_daccee()) {
-                throw new RuntimeException("Access denied!");
-            }
 
             double totalHT = 0.0;
             double totalTTC = 0.0;
@@ -180,6 +176,7 @@ public class CommandeRestController {
         return ResponseEntity.ok("Commande with ID: " + id + " has been deleted successfully");
     }*/
 
+
     @DeleteMapping("{id}")
     public void deleteCommande(@PathVariable String id){
         commandeRepository.deleteById(Long.valueOf(id));
@@ -188,18 +185,6 @@ public class CommandeRestController {
     @GetMapping
     public List<Commande> getAllCommandes() {
         List<Commande> commandes = commandeRepository.findAll();
-
-        for (Commande commande : commandes) {
-            System.out.println(commande.getProfID());
-            Professeur professeur = professeurRestClient.getProfesseurById(commande.getProfID());
-            commande.setProfesseur(professeur);
-
-            commande.getCommandeLines().forEach(pi -> {
-                Product product = productRestClient.getProductById(pi.getId());
-                pi.setProductName(product.getNom());
-            });
-        }
-
         return commandes;
     }
 

@@ -10,6 +10,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { authGuard } from './guards/auth.guard';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
 import { ProductDashComponent } from "./product-dash/product-dash.component";
+import {AddcommandeComponent} from "./addcommande/addcommande.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path:'rubrique-admin' , component: RubriqueAdminViewComponent, canActivate: [authGuard] },
   { path:'change-password' , component: ChangePasswordComponent },
   { path:"structuredetail/:structureId" , component: StructuredetailsComponent, canActivate: [authGuard] },
-  { path:"product" , component: ProductDashComponent, canActivate: [authGuard] }
+  { path:"product" , component: ProductDashComponent, canActivate: [authGuard] },
+  { path:"addcomande" , component: AddcommandeComponent, canActivate: [authGuard]}
 ];
 
 @NgModule({
