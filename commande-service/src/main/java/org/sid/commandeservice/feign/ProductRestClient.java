@@ -11,10 +11,9 @@ import java.util.List;
 @FeignClient(name="PRODUCT-SERVICE")
 public interface ProductRestClient {
     @GetMapping(path="/products")
-    List<Product> products();
+    List<Product> getAllProducts();
     //@RequestParam(name="page") int page, @RequestParam(name="size")  int size
     @GetMapping(path="/products/{id}")
     Product getProductById (@PathVariable(name="id")  Long id);
-    @GetMapping(path="/products/search/byName")
-    Product getProductByName(@RequestParam(name="name") String name);
+
 }

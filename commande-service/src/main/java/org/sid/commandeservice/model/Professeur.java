@@ -7,11 +7,12 @@ import lombok.Data;
 
 @Data
 public class Professeur {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
     private String prenom;
     private String mail;
     private String mdp;
     private boolean droit_daccee;
+    private boolean first_cnx;
+    private boolean isAdmin;
 }
