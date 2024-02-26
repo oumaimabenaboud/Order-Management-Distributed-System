@@ -11,10 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,13 +46,8 @@ public class ProductRestController {
     }
 
 
-    public List<Rubrique> getAllRubriques() {
-        //List<String> rubriqueNames = getAllRubriqueNames();
-
-        return budgetRestClient.getAllRubriques();
-    }
     @GetMapping("/getListRubriqueNames")
-    public List<String> getAllRubriqueNames() {
+    public List<String> getAllRubriquesNames() {
         List<Rubrique> rubriques = budgetRestClient.getAllRubriques();
         List<String> rubriqueNames = new ArrayList<>();
         //logger.error(rubriques.toString());
@@ -96,13 +89,23 @@ public class ProductRestController {
 
     @PostMapping
     public Product createProduct(@RequestBody Product newProduct) {
-        List<String> rubriqueNames = getAllRubriqueNames();
+        List<Rubrique> rubriquesList = budgetRestClient.getAllRubriques();
+        String rubriqueName = newProduct.getRubriqueName();
 
-        logger.error(rubriqueNames.toString());
+        // Find the rubrique object by name
+        Optional<Rubrique> optionalRubrique = rubriquesList.stream()
+                .filter(rubrique -> rubrique.getNom().equals(rubriqueName))
+                .findFirst();
 
-        if (!rubriqueNames.contains(newProduct.getRubrique())) {
-            throw new RuntimeException("Rubrique name does not exist: " + newProduct.getRubrique());
+        if (optionalRubrique.isEmpty()) {
+            throw new RuntimeException("Rubrique name does not exist: " + rubriqueName);
         }
+
+        // Set the rubrique ID in the newProduct
+        Rubrique rubrique = optionalRubrique.get();
+        newProduct.setRubriqueId(rubrique.getId());
+
+        // Save and return the new product
         return productRepository.save(newProduct);
     }
 
@@ -111,7 +114,7 @@ public class ProductRestController {
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        List<String> rubriqueNames = getAllRubriqueNames();
+        List<Rubrique> rubriqueList = budgetRestClient.getAllRubriques();
 
         // Check and update the fields of the existing Product with non-null values from the updatedProduct
         if (updatedProduct.getNom() != null && !updatedProduct.getNom().isEmpty()) {
@@ -124,11 +127,30 @@ public class ProductRestController {
         }else {
             return ResponseEntity.badRequest().body("Le champ 'Description' ne peut pas être vide.");
         }
-        if (updatedProduct.getRubrique() != null && !updatedProduct.getRubrique().isEmpty() && rubriqueNames.contains(updatedProduct.getRubrique())) {
-            existingProduct.setRubrique(updatedProduct.getRubrique());
+
+        List<String> rubriqueNames = new ArrayList<>();
+        //logger.error(rubriques.toString());
+        for (Rubrique rubrique : rubriqueList) {
+            rubriqueNames.add(rubrique.getNom());
+        }
+        if (updatedProduct.getRubriqueName() != null && !updatedProduct.getRubriqueName().isEmpty() && rubriqueNames.contains(updatedProduct.getRubriqueName())) {
+            existingProduct.setRubriqueName(updatedProduct.getRubriqueName());
         }else {
             return ResponseEntity.badRequest().body("Le champ 'Rubrique' ne peut pas être vide et doit appartenir à la liste des rubriques.");
         }
+        // Find the rubrique object by name
+        Optional<Rubrique> optionalRubrique = rubriqueList.stream()
+                .filter(rubrique -> rubrique.getNom().equals(updatedProduct.getRubriqueName()))
+                .findFirst();
+
+        if (optionalRubrique.isEmpty()) {
+            return ResponseEntity.badRequest().body("La rubrique avec le nom '" + updatedProduct.getRubriqueName() + "' n'existe pas.");
+        }
+
+        // Set the rubrique ID in the existingProduct
+        Rubrique rubrique = optionalRubrique.get();
+        existingProduct.setRubriqueId(rubrique.getId());
+
         // Save and return the updated Product
         productRepository.save(existingProduct);
         return ResponseEntity.ok("Produit mis à jour avec succès !");

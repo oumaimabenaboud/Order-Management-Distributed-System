@@ -104,24 +104,6 @@ loadProfessors(): void {
   );
 }
 
-toggleAccess(prof: Professeur): void {
-  const updatedAccess = !prof.droit_daccee; // Toggle the access
-  this.profService.updateProfessorAccess(prof.id, updatedAccess).subscribe(
-    () => {
-      console.log("L'accès a été mis à jour avec succès");
-      // Update the local object's access
-      prof.droit_daccee = updatedAccess;
-    },
-    (error) => {
-      console.error("Erreur de mise à jour de l'accès :", error);
-      // If the backend call fails, update the local object's access anyway
-      prof.droit_daccee = updatedAccess;
-    }
-  );
-}
-
-
-
 
   getProf(id: any, event?: DragEvent): void  {
     if (event) {

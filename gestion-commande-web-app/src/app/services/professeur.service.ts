@@ -29,14 +29,6 @@
     }
 
 
-    public updateProfessorAccess(id: number, access: boolean): Observable<Professeur> {
-      // Create an object with the updated access
-      const updatedProf: Partial<Professeur> = { droit_daccee: access };
-      return this.http.put<Professeur>(`${this.baseUrl}/${id}`, updatedProf);
-    }
-
-    
-
     public searchProfessors(searchTerm: string): Observable<Professeur[]> {
       let params = new HttpParams();
       if (searchTerm) {

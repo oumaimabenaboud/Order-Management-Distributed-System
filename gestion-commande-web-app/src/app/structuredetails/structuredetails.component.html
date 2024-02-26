@@ -475,7 +475,8 @@
 
                 <h3 class="mt-8 text-lg font-semibold text" style="color: #FB8B03;">{{p.nom}} {{p.prenom}} </h3>
                 <p class="mt-2 text-base text-600" style="color: #4C86A7;">
-                  <button class="btnac mt-4 text-base text-gray-600" [class.active]="p.droit_daccee" (click)="toggleAccess(p)">
+                  <!--[class.active]="p.droit_daccee" (click)="toggleAccess(p)"-->
+                  <button class="btnac mt-4 text-base text-gray-600" >
                     <ng-container *ngIf="p.droit_daccee; else enableIcon">
                       <i class="fa-solid fa-square-xmark" style="color: red;"></i>
                     </ng-container>

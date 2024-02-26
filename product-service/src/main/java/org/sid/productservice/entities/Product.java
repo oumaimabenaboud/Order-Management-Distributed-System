@@ -16,5 +16,6 @@ public class Product {
     private long id;
     private String nom;
     private String desc;
-    private String rubrique;
+    private String rubriqueName;
+    private Long rubriqueId;
 }

@@ -15,5 +15,6 @@ public class CommandeLine {
     private double total_prixTTC_ligne;
     private String productName;
     private Long productId;
+    private Long produitRubriqueId;
     private Long commandeId;
 }
