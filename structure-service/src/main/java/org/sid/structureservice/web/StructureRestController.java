@@ -1,11 +1,13 @@
 package org.sid.structureservice.web;
 
 import lombok.AllArgsConstructor;
+import org.sid.structureservice.entities.DroitAccess;
 import org.sid.structureservice.entities.Structure;
 import org.sid.structureservice.enums.structurestype;
 import org.sid.structureservice.feign.BudgetRestClient;
 import org.sid.structureservice.feign.ProfesseurRestClient;
 import org.sid.structureservice.model.Professeur;
+import org.sid.structureservice.repository.DroitAccessRepository;
 import org.sid.structureservice.repository.StructureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +85,10 @@ public class StructureRestController {
         // Save or perform necessary actions with the new structure
         structureRepository.save(newStructure);
 
+
+        /*
+        * Code droitacces here
+        * */
 
         return ResponseEntity.ok("Structure créée avec succès !");
     }
@@ -344,7 +350,9 @@ public class StructureRestController {
         existingStructure.setChildEquipesIds(updatedStructure.getChildEquipesIds());
         existingStructure.setChildEquipesNoms(updatedStructure.getChildEquipesNoms());
 
-
+        /*
+        * add code droit acces here
+        * */
 
         // Save the updated structure to the database
         structureRepository.save(existingStructure);
@@ -382,6 +390,5 @@ public class StructureRestController {
             return structures;
         }
     }
-
 
 }

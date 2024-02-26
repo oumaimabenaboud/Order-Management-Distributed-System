@@ -153,7 +153,7 @@ export class StructuredetailsComponent implements OnInit{
   }
 
   logout() {
-    sessionStorage.removeItem('id');
+    sessionStorage.clear();
     this.router.navigate(['/login']);
   }
   convertStructureTypes(structure: Structure): string {
@@ -242,6 +242,7 @@ export class StructuredetailsComponent implements OnInit{
 
   toggleAccess(prof: Professeur): void {
     const updatedAccess = !prof.droit_daccee; // Toggle the access
+    console.log("updatedAccess", updatedAccess);
     this.profService.updateProfessorAccess(prof.id, updatedAccess).subscribe(
       () => {
         console.log("L'accès a été mis à jour avec succès");
