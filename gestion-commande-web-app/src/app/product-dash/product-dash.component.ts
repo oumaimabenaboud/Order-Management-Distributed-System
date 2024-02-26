@@ -84,21 +84,21 @@ export class ProductDashComponent implements OnInit{
     this.router.navigate(['/login']);
   }
 
-  getProducts(id: any, event?: DragEvent):void {
+  getProduct(id: any, event?: DragEvent):void {
     if (event) {
       event.preventDefault();
     }
     this.productService.getProductById(id).subscribe(
       { next:(product)=>{
-          this.products = product;
+          this.selectedProduct = product;
           // console.log(product);
           this.detailsForm.patchValue({
             nom: product.nom,
-            desc: product.Desc,
-            rubrique: product.Rubrique
+            desc: product.desc,
+            rubrique: product.rubrique,
           })
           this.openDetailsForm();
-        }, 
+        },
         error : (err)=>console.error(err)
       });
   }
@@ -163,7 +163,9 @@ export class ProductDashComponent implements OnInit{
 
   private initNewProductFormBuilder() {
     this.newProductForm = this.formBuilder.group({
-      nom: this.formBuilder.control('', [Validators.required])
+      nom: this.formBuilder.control('', [Validators.required]),
+      desc: this.formBuilder.control('', [Validators.required]),
+      rubrique: this.formBuilder.control('', [Validators.required]),
     });
   }
 
@@ -185,7 +187,10 @@ export class ProductDashComponent implements OnInit{
 
   private initDetailsFormBuilder() {
     this.detailsForm = this.formBuilder.group({
-      nom: this.formBuilder.control('', [Validators.required])
+      nom: this.formBuilder.control('', [Validators.required]),
+      desc: this.formBuilder.control('', [Validators.required]),
+      rubrique: this.formBuilder.control('', [Validators.required]),
+
     });
   }
 

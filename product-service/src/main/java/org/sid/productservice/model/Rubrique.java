@@ -11,6 +11,4 @@ public class Rubrique {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nom;
-    private double allocatedAmount;
-    private Long budget_id;
 }

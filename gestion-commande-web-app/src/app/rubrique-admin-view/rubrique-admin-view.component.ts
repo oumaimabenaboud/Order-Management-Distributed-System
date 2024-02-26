@@ -36,9 +36,6 @@ export class RubriqueAdminViewComponent implements OnInit {
     private router: Router
   ) { }
 
-
-
-
   ngOnInit(): void {
     if (this.isBrowser()) {
       const id = sessionStorage.getItem('id');

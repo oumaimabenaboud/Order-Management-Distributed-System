@@ -248,60 +248,37 @@ export class StructuredetailsComponent implements OnInit{
 
 
   /*Enregistrer() {
-    const rubriquesAllocations: RubriqueAllocation[] = [];
-    for (let i = 0; i < this.rubriqueAllocations.length; i++) {
-      const selectedName = this.rubriqueAllocations.get(dropdownControlName)?.value;
-      const selectedProfessor = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedName);
-      if (selectedProfessor) {
-        selectedIds.push(selectedProfessor.id);
-      }
-    }
-    structure.equipeProfIds = selectedIds;
-      const structure = this.rubriqueAllocationForm.value;
-      structure.type = this.mapStructureType(structure.type);
+    const budget: Budget = this.rubriqueAllocationForm.value;
+    let rubriquesAllocations: [RubriqueAllocation];
 
-      // Extract selected professor ID for the responsible person
-      const selectedResponsableName = this.newStructureForm.get('idResponsable')?.value;
-      const selectedResponsable = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedResponsableName);
-      if (selectedResponsable) {
-        structure.idResponsable = selectedResponsable.id;
-      }
+    if (this.selectedBudget === null) {
+      rubriquesAllocations = this.rubriqueAllocationForm.value.rubriqueAllocations.map((allocation: any) => {
+        const selectedRubriqueName = allocation.rubriqueName;
+        const selectedRubrique = this.listrubriques.find(rubrique => rubrique.nom === selectedRubriqueName);
+        const montantAlloue = allocation.montantAlloue;
+        const montantRestant = allocation.montantRestant;
 
-      // Extract selected professor IDs for team members
-
-
-      // Remove individual equipe_prof_ids from the structure object
-      for (let i = 0; i < this.dropdowns.length; i++) {
-        delete structure[`equipe_prof_ids_${i}`];
-      }
-
-      // Call service to add the structure
-      this.structureService.addStructure(structure).subscribe(
-        () => {
-          window.alert('Structure ajoutée avec succès !');
-          window.location.reload();
-          this.closeNewStructureForm();
-        },
-        error => {
-          console.error("Une erreur s'est produite lors de l'ajout de la structure.", error);
-          if (error.status === 200) {
-            window.alert('Structure ajoutée avec succès !');
-            window.location.reload();
-            this.closeNewStructureForm();
-          } else if (error.status === 400) {
-            // Bad request, display error message from server
-            window.alert(error.error);
-          } else {
-            // Other errors, display generic error message
-            window.alert("Une erreur s'est produite lors de l'ajout de la structure. Veuillez réessayer plus tard.");
-          }
+        if (selectedRubrique && montantAlloue) {
+          return {
+            id: 0, // Provide an id (you may need to generate it dynamically)
+            budgetId: 0, // Provide a budgetId (you may need to get it from the selectedBudget or generate it dynamically)
+            rubriqueName: selectedRubriqueName,
+            rubriqueId: selectedRubrique.id,
+            montantAlloue: montantAlloue,
+            montantRestant: montantRestant
+          };
+        } else {
+          return null; // or handle invalid data accordingly
         }
-      );
+      }).filter((allocation: RubriqueAllocation | null) => allocation !== null);
     }
-    if (this.budget === null){
 
-    }
+    budget.rubriqueAllocations = rubriquesAllocations;
+    console.log(budget);
   }*/
+
+
+
 
 
   openNewCommandeForm() {

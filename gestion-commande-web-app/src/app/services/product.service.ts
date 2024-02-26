@@ -23,10 +23,10 @@ export class ProductService {
     return this.http.get<Array<Rubrique>>("http://localhost:1818/PRODUCT-SERVICE/products/rubProd");
   }
 
-  public searchProducts(name: string): Observable<Product> {
-    let params = new HttpParams().set('name', name);
-    if(name){
-      params = params.set('name', name);
+  public searchProducts(searchTerm: string): Observable<Product> {
+    let params = new HttpParams();
+    if(searchTerm){
+      params = params.set('searchTerm', searchTerm);
     }
     return this.http.get<Product>("http://localhost:1818/PRODUCT-SERVICE/products/search", { params });
   }
