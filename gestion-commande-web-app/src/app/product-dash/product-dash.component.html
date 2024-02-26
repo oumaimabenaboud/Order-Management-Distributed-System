@@ -94,7 +94,7 @@
               <tr class="mail" *ngFor="let product of products">
                 <td>{{ product.nom }}</td>
                 <td>{{ product.desc }}</td>
-                <td>{{ product.rubrique }}</td>
+                <td>{{ product.rubriqueName }}</td>
                 <td>
                   <button class="btnd detail-button" (click)="getProduct(product.id)">
                     <i class="fa-solid fa-magnifying-glass-plus"></i>
@@ -132,7 +132,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <!-- <input type="text" class="form-control" id="rubrique" formControlName="rubrique" [readonly]="!isEditMode"> -->
-                <input type="text" list="rubriqueNames" type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique" [readonly]="!isEditMode">
+                <input type="text" list="rubriqueNames" type="text" class="form-control" id="rubriqueName" formControlName="rubriqueName" placeholder="Rubrique" [readonly]="!isEditMode">
 
                 <datalist id="rubriqueNames">
                     <option *ngFor="let rubrique of listRubriques" [value]="rubrique">{{ rubrique }}</option>
@@ -176,7 +176,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <!-- <input type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique"> -->
-                <input type="text" list="rubriqueNames" type="text" class="form-control" id="rubrique" formControlName="rubrique" placeholder="Rubrique">
+                <input type="text" list="rubriqueNames" type="text" class="form-control" id="rubriqueName" formControlName="rubriqueName" placeholder="Rubrique">
                 <datalist id="rubriqueNames">
                     <option *ngFor="let rubrique of listRubriques" [value]="rubrique">{{ rubrique }}</option>
                 </datalist>

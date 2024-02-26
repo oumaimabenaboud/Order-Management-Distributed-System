@@ -2,5 +2,10 @@ package org.sid.commandeservice.enums;
 
 
 public enum commandestype {
-    encours,passed;
+    EN_COURS,
+    PASSE,
+    ANNULÉE,
+    LIVRÉE,
+    EN_ATTENTE
+
 }

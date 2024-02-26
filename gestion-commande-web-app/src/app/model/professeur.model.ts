@@ -4,7 +4,6 @@ export interface Professeur {
   prenom: string;
   mail: string;
   mdp: string;
-  droit_daccee: boolean;
   first_cnx: boolean;
   isAdmin:boolean;
 }

@@ -68,7 +68,7 @@ export class ProductDashComponent implements OnInit{
           },
           error : (err)=>console.error(err)
         });
-      
+
       this.productService.getListRubriqueNames().subscribe(
         { next:(data)=>{
             this.listRubriques = data;
@@ -103,7 +103,7 @@ export class ProductDashComponent implements OnInit{
           this.detailsForm.patchValue({
             nom: product.nom,
             desc: product.desc,
-            rubrique: product.rubrique,
+            rubriqueName: product.rubriqueName,
           })
           this.openDetailsForm();
         },
@@ -173,7 +173,7 @@ export class ProductDashComponent implements OnInit{
     this.newProductForm = this.formBuilder.group({
       nom: this.formBuilder.control('', [Validators.required]),
       desc: this.formBuilder.control('', [Validators.required]),
-      rubrique: this.formBuilder.control('', [Validators.required]),
+      rubriqueName: this.formBuilder.control('', [Validators.required]),
     });
   }
 
@@ -197,7 +197,7 @@ export class ProductDashComponent implements OnInit{
     this.detailsForm = this.formBuilder.group({
       nom: this.formBuilder.control('', [Validators.required]),
       desc: this.formBuilder.control('', [Validators.required]),
-      rubrique: this.formBuilder.control('', [Validators.required]),
+      rubriqueName: this.formBuilder.control('', [Validators.required]),
 
     });
   }

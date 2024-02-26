@@ -48,7 +48,7 @@ public class CommandeRestController {
 
     @PostMapping
     public Commande addCommande(@RequestBody Commande nouvelleCommande) {
-        Professeur professeur = nouvelleCommande.getProfesseur();
+        Professeur professeur = nouvelleCommande.getProfId();
 
         if (professeur != null && professeur.getId() != null) {
             if (!professeur.isDroit_daccee()) {

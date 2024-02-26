@@ -240,7 +240,7 @@ export class StructuredetailsComponent implements OnInit{
   }
 
 
-  toggleAccess(prof: Professeur): void {
+  /*toggleAccess(prof: Professeur): void {
     const updatedAccess = !prof.droit_daccee; // Toggle the access
     console.log("updatedAccess", updatedAccess);
     this.profService.updateProfessorAccess(prof.id, updatedAccess).subscribe(
@@ -255,7 +255,7 @@ export class StructuredetailsComponent implements OnInit{
         prof.droit_daccee = updatedAccess;
       }
     );
-  }
+  }*/
 
 
 
