@@ -388,7 +388,7 @@
 
         <div>
           <div class="flex items-center gap-x-3">
-            <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-solid fa-barcode"></i> Répartition du Budget</h2>
+            <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-solid fa-barcode"></i> Liste des commandes</h2>
           </div>
         </div>
         <div class="mt-6 sm:flex sm:items-center sm:justify-between ">          &nbsp;
@@ -411,28 +411,29 @@
           </div>
         </div>
 
-        <div class="relative m-3 flex flex-wrap mx-auto justify-center">
+        <div class="relative m-3 flex flex-wrap mx-auto justify-center" *ngFor="let c of listCommandes">
           <div class="relative max-w-sm min-w-[340px] bg-white shadow-md rounded-3xl p-2 mx-1 my-3 cursor-pointer">
             <div class="overflow-x-hidden rounded-2xl relative" style="background-image: url('assets/images/shape.png'); background-size: cover; background-position: center;">
               <img src="assets/images/commande.svg" alt="SVG Image">
               <p class="absolute left-2 top-2 bg-white rounded-full p-2 cursor-pointer group">
-                <i style="color: #FB8B03;" class="fa-solid fa-user-tie"></i> <span style="color: #FB8B03;"> PrÃ©nom</span>
+                <i style="color: #FB8B03;" class="fa-solid fa-user-tie"></i> <span style="color: #FB8B03;">{{c.profName}}</span>
 
               </p>
               <p class="absolute right-2 top-2 bg-white rounded-full p-2 cursor-pointer group">
-                <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;"> jj/mm/yyyy</span>
+                <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;">{{c.year}}</span>
 
               </p>
               <div class="inline-flex px-4 py-1.5 mx-auto rounded-full bg-gradient-to-r from-orange-200 to-blue-200" style="margin-top: 1rem;">
-                <p class="text-xs font-semibold tracking-widest text-blue uppercase">type commande</p>
+                <p class="text-xs font-semibold tracking-widest text-blue uppercase">{{ c.type }}</p>
               </div>
+
             </div>
             <div class="mt-4 pl-2 mb-2 flex justify-between " >
               <div >
                 <del>
-                  <p class="text-md text-gray-800 mt-0">340 Dhs / HT</p>
+                  <p class="text-md text-gray-800 mt-0">{{c.prixTotalHT}} Dhs / HT</p>
                 </del>
-                <p class="text-md text-blue-800 mt-0" >359.9 Dhs / TTC</p>
+                <p class="text-md text-blue-800 mt-0" >{{c.prixTotalTTC}} Dhs / TTC</p>
               </div>
               <a href="#" title="" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
                 <p><i class="fa-solid fa-cart-shopping" style="color: #4C86A7;"></i> Voir liste produits</p>

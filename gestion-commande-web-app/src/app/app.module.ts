@@ -19,6 +19,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
 import { ProductDashComponent } from './product-dash/product-dash.component';
 import {AddcommandeComponent} from "./addcommande/addcommande.component";
+import { ListeproduitsComponent } from './listeproduits/listeproduits.component';
 
 // const appRoutes: Routes = [
 //   // { path: 'login', component: LoginComponent },
@@ -57,7 +58,8 @@ import {AddcommandeComponent} from "./addcommande/addcommande.component";
     WelcomeComponent,
     StructuredetailsComponent,
     ProductDashComponent,
-    AddcommandeComponent
+    AddcommandeComponent,
+    ListeproduitsComponent
   ],
   imports: [
     BrowserModule,

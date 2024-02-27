@@ -14,6 +14,7 @@ import {RubriqueAllocation} from "../model/rubriqueAllocation.model";
 import { droitAcces } from '../model/droitAcces';
 import ts from 'typescript';
 import {CommandesService} from "../services/commandes.service";
+import {Commande, commandestype} from "../model/commande.model";
 
 @Component({
   selector: 'app-structuredetails',
@@ -39,10 +40,8 @@ export class StructuredetailsComponent implements OnInit{
   rubriqueAllocationForm!: FormGroup;
   isEditMode: boolean = false;
   listYears: number[] =[];
+  listYearsCommande: number[] = [];
   selectedYear: number | null = null;
-  isNewCommandeFormOpen: boolean = false;
-  public newCommandeForm! : FormGroup;
-  isDetailsFormOpen: boolean = false;
   selectedBudget:any;
   listCommandes: any;
   professeur:any;
@@ -110,12 +109,33 @@ export class StructuredetailsComponent implements OnInit{
       }
     );
 
-    this.commandeService.getCommandesByStructureId(this.structureId).subscribe(
-     (commande)=>{
-      this.listCommandes.push(commande);
+    this.commandeService.getCommandesByStructureId(this.structureId).subscribe({
+      next: (commandes) => {
+        this.listCommandes = commandes;
+        this.listCommandes.forEach((commande: Commande) => {
+          // @ts-ignore
+          commande['year'] = new Date(commande.commandeDate).getFullYear();
+          // @ts-ignore
+          commande["type"] = commande.type;
+          // @ts-ignore
+          this.listYearsCommande.push(commande['year']);
+          console.log(this.listYearsCommande);
+          this.profService.getProfessor(commande.profId).subscribe(
+            (prof) => {
+              // @ts-ignore
+              commande['profName'] = prof.prenom + ' ' + prof.nom;
+            },
+            (error) => {
+              console.error("Error fetching professor:", error);
+            }
+          );
+        });
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
 
-       },(error)=> console.error(error)
-    );
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
@@ -159,6 +179,10 @@ export class StructuredetailsComponent implements OnInit{
         console.log(err);
       },
     });
+  }
+  getTypeString(type: commandestype): string {
+    console.log(commandestype.toString(type));
+    return commandestype.toString(type);
   }
 
 
@@ -459,7 +483,12 @@ export class StructuredetailsComponent implements OnInit{
       // Convert selectedYear to number before comparison
       return budget.budgetYear === new Date().getFullYear();
     });
-    this.router.navigate(['structuredetail', structureId,selectedBudget.id, 'addcommande']);
+    if(selectedBudget){
+      this.router.navigate(['structuredetail', structureId,selectedBudget.id, 'addcommande']);
+    }else{
+      window.alert("Veuillez ajouter une répartition de budget avant de continuer.");
+    }
+
   }
 
 

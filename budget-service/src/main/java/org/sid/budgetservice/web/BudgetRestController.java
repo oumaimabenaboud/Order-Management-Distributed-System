@@ -91,6 +91,7 @@ public class BudgetRestController {
         // Iterate over the rubriqueAllocations and set the budgetId
         for (RubriqueAllocation rubriqueAllocation : newBudget.getRubriqueAllocations()) {
             rubriqueAllocation.setBudgetId(budget.getId());
+            rubriqueAllocation.setMontantRestant(rubriqueAllocation.getMontantAlloue());
         }
 
         // Save all rubriqueAllocations
@@ -160,10 +161,11 @@ public class BudgetRestController {
     @GetMapping("/budget/byStructure/{id}")
     public List<Budget> getBudgetByStructureId(@PathVariable Long id) {
         List<Budget> budgets = budgetRepository.findByStructureId(id);
-        if (budgets == null || budgets.isEmpty() ) {
-            throw new RuntimeException("Budget not found with id: " + id);
+        if (budgets != null || !budgets.isEmpty() ) {
+            return budgets;
+        }else{
+            return null;
         }
-        return budgets;
     }
 
     // Delete a budget

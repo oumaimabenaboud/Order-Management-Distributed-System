@@ -13,6 +13,27 @@ export interface Commande {
   prixTotalTTC: number;
   type: commandestype;
 }
-enum commandestype {
-  encours,passed
+export enum commandestype {
+  EN_COURS = 'En cours',
+  PASSE = 'Passée',
+  ANNULÉE = 'Annulée',
+  LIVRÉE = 'Livrée'
 }
+
+export namespace commandestype {
+  export function toString(type: commandestype): string {
+    switch (type) {
+      case commandestype.EN_COURS:
+        return "En cours";
+      case commandestype.PASSE:
+        return "Passée";
+      case commandestype.ANNULÉE:
+        return "Annulée";
+      case commandestype.LIVRÉE:
+        return "Livrée";
+      default:
+        throw new Error("Invalid commandes type");
+    }
+  }
+}
+

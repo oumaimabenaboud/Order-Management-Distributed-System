@@ -9,6 +9,7 @@ import org.sid.commandeservice.model.Product;
 import org.sid.commandeservice.model.Professeur;
 import org.sid.commandeservice.repository.CommandeRepository;
 import org.sid.commandeservice.repository.CommandeLineRepository;
+import org.sid.commandeservice.web.CommandeRestController;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,48 +28,65 @@ public class CommandeServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CommandeServiceApplication.class, args);
 	}
-	@Bean
-	CommandLineRunner start(CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient){
-		return args -> {
-			Commande commande = Commande.builder()
-					.commandeDate(new Date()) // Set the current date
-					.profId(1L)
-					.structureId(1L)
-					.type(commandestype.EN_COURS)
-					.build();
-			commandeRepository.save(commande);
 
-			// Fetch products from the ProductRestClient
-			List<Product> products = productRestClient.getAllProducts();
-			int totalHT = 0;
-			// Create CommandeLine instances based on the fetched products
-			List<CommandeLine> commandeLines = new ArrayList<>();
-			for (Product product : products) {
-				CommandeLine commandeLine = new CommandeLine();
-				int quantity = (int) (Math.random() * 10) + 1;
-				int priceht= (int) (Math.random() * 10) + 1;
-				int totalHTligne=quantity*priceht;
-				commandeLine.setQuantity(quantity); // Set a default quantity
-				commandeLine.setPrixHT(priceht); // Set total prix HT (if applicable)
-				commandeLine.setPrixTTC(priceht+priceht*0.20); // Set total prix TTC (if applicable)
-				commandeLine.setProductName(product.getNom());
-				commandeLine.setProductId(product.getId());
-				commandeLine.setProduitRubriqueId(product.getRubriqueId());
-				commandeLine.setCommandeId(commande.getId()); // Set this when creating Commande
-				totalHT +=totalHTligne;
-				commandeLines.add(commandeLine);
-			}
-			commandeLineRepository.saveAll(commandeLines);
-			commande.setCommandeDate(new Date()); // Set the current date
-			commande.setCommandeLines(commandeLines); // Set the list of CommandeLines
-			commande.setPrixTotalHT(totalHT); // Set total prix HT (if applicable)
-			commande.setPrixTotalTTC(totalHT+totalHT*0.20); // Set total prix TTC (if applicable)
-			// Save Commande instance
-			commandeRepository.save(commande);
+	@Bean
+	CommandLineRunner start(CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient, CommandeRestController commandeRestController) {
+		return args -> {
+			// Generate Commande instances for the year 2023
+			generateCommandes(commandeRepository, commandeLineRepository, professeurRestClient, productRestClient, commandeRestController, 2023, 5, 2L);
+
+			// Generate Commande instances for the year 2024
+			generateCommandes(commandeRepository, commandeLineRepository, professeurRestClient, productRestClient, commandeRestController, 2024, 5, 1L);
 		};
 	}
 
+	private void generateCommandes(CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient, CommandeRestController commandeRestController, int year, int numberOfCommandes, Long budgetId) {
+		for (int i = 1; i <= numberOfCommandes; i++) { // Change the loop condition to include the last commande
+			Commande commande = generateCommande(year, budgetId, productRestClient, commandeRepository, commandeLineRepository);
+			commandeRestController.addCommande(commande);
+		}
+	}
 
+
+	private Commande generateCommande(int year, Long budgetId, ProductRestClient productRestClient, CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository) {
+		Commande commande = Commande.builder()
+				.commandeDate(new Date(year - 1900, 0, 1)) // Set the date to January 1st of the specified year
+				.profId(2L)
+				.structureId(1L)
+				.budgetId(budgetId)
+				.type(commandestype.EN_COURS)
+				.build();
+		commandeRepository.save(commande);
+
+		List<Product> products = productRestClient.getAllProducts();
+		int totalHT = 0;
+		List<CommandeLine> commandeLines = new ArrayList<>();
+		for (Product product : products) {
+			CommandeLine commandeLine = generateCommandeLine(product);
+			System.out.println(commandeLine);
+			totalHT += commandeLine.getQuantity() * commandeLine.getPrixHT();
+			commandeLine.setCommandeId(commande.getId());
+			commandeLineRepository.save(commandeLine);
+			commandeLines.add(commandeLine);
+
+		}
+		System.out.println(commandeLines);
+		commande.setCommandeLines(commandeLines);
+		commande.setPrixTotalHT(totalHT);
+		commande.setPrixTotalTTC(totalHT + totalHT * 0.20);
+		return commandeRepository.save(commande);
+	}
+
+	private CommandeLine generateCommandeLine(Product product) {
+		CommandeLine commandeLine = new CommandeLine();
+		commandeLine.setQuantity((int) (Math.random() * 10) + 2);
+		commandeLine.setPrixHT((int) (Math.random() * 10) + 2);
+		commandeLine.setPrixTTC(commandeLine.getPrixHT() + commandeLine.getPrixHT() * 0.20);
+		commandeLine.setProductName(product.getNom());
+		commandeLine.setProductId(product.getId());
+		commandeLine.setProduitRubriqueId(product.getRubriqueId());
+		System.out.println(commandeLine);
+		return commandeLine;
+	}
 }
-
 
