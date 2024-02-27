@@ -6,7 +6,9 @@ import org.sid.professeur.repositories.ProfesseurRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -75,7 +77,35 @@ public class LoginController {
         return email.matches("^[a-zA-Z]+\\.[a-zA-Z]+@umi.ac.ma$");
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody professeur updatedProfesseur) {
+        // Retrieve the existing professor by ID
+        professeur existingProf = ProfesseurRepo.findById(id).orElseThrow(() -> new RuntimeException("Professor not found"));
+        logger.error(updatedProfesseur.getMdp());
+        logger.error(String.valueOf(id));
+        logger.error(String.valueOf(existingProf));
+        logger.error(existingProf.getMdp());
+        try {
+            professeur existingProfesseur = ProfesseurRepo.findById(id)
+                    .orElseThrow(() -> new RuntimeException(String.format("Professeur with ID %d not found", id)));
+
+            String newPassword = updatedProfesseur.getMdp();
+            if (newPassword != null && !newPassword.isEmpty()) {
+                // Encode the new password
+                existingProfesseur.setMdp(passwordEncoder.encode(newPassword));
+                existingProfesseur.setFirst_cnx(false);
+
+                // Save the updated professeur
+                professeur savedProfesseur = ProfesseurRepo.save(existingProfesseur);
+                return ResponseEntity.ok(savedProfesseur);
+            } else {
+                return ResponseEntity.badRequest().body("Le champ 'Mot de passe' ne peut pas être vide.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Une erreur s'est produite lors de la mise à jour du mot de passe du professeur.");
+        }
 
 
-}
+    }}
 
