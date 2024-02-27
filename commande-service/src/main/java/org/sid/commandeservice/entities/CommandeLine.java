@@ -11,8 +11,8 @@ public class CommandeLine {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int quantity;
-    private double total_prixHT_ligne;
-    private double total_prixTTC_ligne;
+    private double prixHT;
+    private double prixTTC;
     private String productName;
     private Long productId;
     private Long produitRubriqueId;

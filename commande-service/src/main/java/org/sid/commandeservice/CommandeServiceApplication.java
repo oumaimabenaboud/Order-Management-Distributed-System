@@ -49,8 +49,8 @@ public class CommandeServiceApplication {
 				int priceht= (int) (Math.random() * 10) + 1;
 				int totalHTligne=quantity*priceht;
 				commandeLine.setQuantity(quantity); // Set a default quantity
-				commandeLine.setTotal_prixHT_ligne(totalHTligne); // Set total prix HT (if applicable)
-				commandeLine.setTotal_prixTTC_ligne(totalHTligne+totalHTligne*0.20); // Set total prix TTC (if applicable)
+				commandeLine.setPrixHT(priceht); // Set total prix HT (if applicable)
+				commandeLine.setPrixTTC(priceht+priceht*0.20); // Set total prix TTC (if applicable)
 				commandeLine.setProductName(product.getNom());
 				commandeLine.setProductId(product.getId());
 				commandeLine.setProduitRubriqueId(product.getRubriqueId());
@@ -61,8 +61,8 @@ public class CommandeServiceApplication {
 			commandeLineRepository.saveAll(commandeLines);
 			commande.setCommandeDate(new Date()); // Set the current date
 			commande.setCommandeLines(commandeLines); // Set the list of CommandeLines
-			commande.setPrix_total_HT(totalHT); // Set total prix HT (if applicable)
-			commande.setPrix_total_TTC(totalHT+totalHT*0.20); // Set total prix TTC (if applicable)
+			commande.setPrixTotalHT(totalHT); // Set total prix HT (if applicable)
+			commande.setPrixTotalTTC(totalHT+totalHT*0.20); // Set total prix TTC (if applicable)
 			// Save Commande instance
 			commandeRepository.save(commande);
 		};

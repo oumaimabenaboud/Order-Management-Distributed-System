@@ -20,11 +20,11 @@ public class ProfesseurApplication {
         RepoConfig.exposeIdsFor(professeur.class);
         return args -> {
             ProfesseurRepo.save(new professeur(null, "admin", "admin","admin", passwordEncoder.encode("admin"),false,true));
-            ProfesseurRepo.save(new professeur(null, "Bekri", "My.Ali","a.bekri@umi.ac.ma", passwordEncoder.encode("4444"),true,false));
-            ProfesseurRepo.save(new professeur(null, "Oubelkacem", "Ali","a.oubelkacem@umi.ac.ma", passwordEncoder.encode("4555"),true,false));
-            ProfesseurRepo.save(new professeur(null, "Bourray", "Hamid","h.bourray@umi.ac.ma", passwordEncoder.encode("1111"),true,false));
-            ProfesseurRepo.save(new professeur(null, "Alaoui Ismaili", "Mehdi","m.alaouiismaili@umi.ac.ma", passwordEncoder.encode("2222"),true,false));
-            ProfesseurRepo.save(new professeur(null, "Zitane", "Mohammed","m.zitane@umi.ac.ma", passwordEncoder.encode("3333"),true,false));
+            ProfesseurRepo.save(new professeur(null, "Bekri", "My.Ali","a.bekri@umi.ac.ma", passwordEncoder.encode("bekri_ali"),true,false));
+            ProfesseurRepo.save(new professeur(null, "Oubelkacem", "Ali","a.oubelkacem@umi.ac.ma", passwordEncoder.encode("oubelkacem_ali"),true,false));
+            ProfesseurRepo.save(new professeur(null, "Bourray", "Hamid","h.bourray@umi.ac.ma", passwordEncoder.encode("bourray_hamid"),true,false));
+            ProfesseurRepo.save(new professeur(null, "Alaoui Ismaili", "Mehdi","m.alaouiismaili@umi.ac.ma", passwordEncoder.encode("alaoui_ismaili_mehdi"),true,false));
+            ProfesseurRepo.save(new professeur(null, "Zitane", "Mohammed","m.zitane@umi.ac.ma", passwordEncoder.encode("zitane_mohammed"),true,false));
             ProfesseurRepo.findAll().forEach(c ->{
                         System.out.println(c.toString());
                     }

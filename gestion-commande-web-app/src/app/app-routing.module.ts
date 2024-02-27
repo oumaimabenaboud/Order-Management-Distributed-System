@@ -23,7 +23,7 @@ const routes: Routes = [
   { path:'change-password' , component: ChangePasswordComponent },
   { path:"structuredetail/:structureId" , component: StructuredetailsComponent, canActivate: [authGuard] },
   { path:"product" , component: ProductDashComponent, canActivate: [authGuard] },
-  { path:"structuredetail/:structureId/addcommande" , component: AddcommandeComponent, canActivate: [authGuard]}
+  { path:"structuredetail/:structureId/:budgetId/addcommande" , component: AddcommandeComponent, canActivate: [authGuard]}
 ];
 
 @NgModule({

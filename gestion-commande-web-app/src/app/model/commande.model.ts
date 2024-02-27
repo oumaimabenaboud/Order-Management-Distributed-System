@@ -4,12 +4,13 @@ import {Professeur} from "./professeur.model";
 
 export interface Commande {
   id: number;
-  billingDate: Date;
+  commandeDate: Date;
   commandeLines: CommandeLine[];
-  profID: number;
-  professeur: Professeur;
-  prix_total_HT: number;
-  prix_total_TTC: number;
+  profId: number;
+  structureId: number;
+  budgetId: number;
+  prixTotalHT: number;
+  prixTotalTTC: number;
   type: commandestype;
 }
 enum commandestype {

@@ -1,22 +1,23 @@
 package org.sid.commandeservice.web;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.sid.commandeservice.entities.Commande;
 import org.sid.commandeservice.entities.CommandeLine;
+import org.sid.commandeservice.feign.BudgetRestClient;
 import org.sid.commandeservice.feign.ProductRestClient;
 import org.sid.commandeservice.feign.ProfesseurRestClient;
+import org.sid.commandeservice.model.Budget;
 import org.sid.commandeservice.model.Product;
 import org.sid.commandeservice.model.Professeur;
+import org.sid.commandeservice.model.RubriqueAllocation;
 import org.sid.commandeservice.repository.CommandeRepository;
 import org.sid.commandeservice.repository.CommandeLineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController@AllArgsConstructor
@@ -29,7 +30,8 @@ public class CommandeRestController {
     private ProfesseurRestClient professeurRestClient;
     @Autowired
     private ProductRestClient productRestClient;
-
+    @Autowired
+    private BudgetRestClient budgetRestClient;
 
     @GetMapping(path = "{id}")
     public Commande getCommande(@PathVariable(name="id") Long id){
@@ -46,13 +48,27 @@ public class CommandeRestController {
 
     }
 
-    /*@PostMapping
+    @PostMapping
     public Commande addCommande(@RequestBody Commande nouvelleCommande) {
-        Long professeur = nouvelleCommande.getProfId();
+        Long structureId = nouvelleCommande.getStructureId();
+        Date commandeDate = nouvelleCommande.getCommandeDate();
+        Long budgetId = nouvelleCommande.getBudgetId();
+        Budget budget = budgetRestClient.getBudgetById(budgetId);
+        List<RubriqueAllocation> rubriquesAllocations = budget.getRubriqueAllocations();
+        List<CommandeLine> commandeLines = nouvelleCommande.getCommandeLines();
+        for(RubriqueAllocation rubriqueAllocation : rubriquesAllocations){
+            for(CommandeLine commandeLine : commandeLines){
+                if (rubriqueAllocation.getRubriqueId()== commandeLine.getProduitRubriqueId()){
+                    if(rubriqueAllocation.getMontantAlloue()<commandeLine.getPrixTTC()*commandeLine.getQuantity()){
+
+                    }
+                }
+                }
+            }
+        }
 
 
-            double totalHT = 0.0;
-            double totalTTC = 0.0;
+
 
             // Save the Commande first
             Commande savedCommande = commandeRepository.save(nouvelleCommande);

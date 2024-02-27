@@ -424,7 +424,7 @@ export class StructureAdminViewComponent implements OnInit{
 
     // Initialize form controls for each dropdown box dynamically
     for (let i = 0; i < this.dropdowns.length; i++) {
-      this.newStructureForm.addControl(`equipe_prof_ids_${i}`, this.formBuilder.control(null));
+      this.newStructureForm.addControl(`equipeProfIds${i}`, this.formBuilder.control(null));
     }
   }
   openNewStructureForm() {
@@ -437,7 +437,7 @@ export class StructureAdminViewComponent implements OnInit{
   }
   addDropdown() {
     this.dropdowns.push([]);
-    const formControlName = `equipe_prof_ids_${this.dropdowns.length - 1}`;
+    const formControlName = `equipeProfIds${this.dropdowns.length - 1}`;
 
     // Remove the previously added form control, if exists
     this.newStructureForm.removeControl(formControlName);
@@ -450,7 +450,7 @@ export class StructureAdminViewComponent implements OnInit{
       this.dropdowns.pop(); // Remove the last dropdown from the array
 
       // Remove the corresponding form control from the FormGroup
-      const formControlName = `equipe_prof_ids_${this.dropdowns.length}`;
+      const formControlName = `equipeProfIds${this.dropdowns.length}`;
       this.newStructureForm.removeControl(formControlName);
     }
   }
@@ -471,7 +471,7 @@ export class StructureAdminViewComponent implements OnInit{
     // Extract selected professor IDs for team members
     const selectedIds: number[] = [];
     for (let i = 0; i < this.dropdowns.length; i++) {
-      const dropdownControlName = `equipe_prof_ids_${i}`;
+      const dropdownControlName = `equipeProfIds${i}`;
       const selectedName = this.newStructureForm.get(dropdownControlName)?.value;
       const selectedProfessor = this.listprof.find(prof => prof.prenom + ' ' + prof.nom === selectedName);
       if (selectedProfessor) {
@@ -482,7 +482,7 @@ export class StructureAdminViewComponent implements OnInit{
 
     // Remove individual equipe_prof_ids from the structure object
     for (let i = 0; i < this.dropdowns.length; i++) {
-      delete structure[`equipe_prof_ids_${i}`];
+      delete structure[`equipeProfIds${i}`];
     }
 
     // Call service to add the structure

@@ -23,8 +23,9 @@ public class Commande {
     private List<CommandeLine> commandeLines;
     private Long profId;
     private Long structureId;
-    private double prix_total_HT;
-    private double prix_total_TTC;
+    private Long budgetId;
+    private double prixTotalHT;
+    private double prixTotalTTC;
     @Enumerated(EnumType.STRING)
     private commandestype type;
 

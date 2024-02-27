@@ -43,10 +43,22 @@ public class ProfesseurRESTcontroller {
     @PostMapping
     public ResponseEntity<?> save(@RequestBody professeur professeur) {
         // Set the default value for droit_daccee to false
+
         professeur.setFirst_cnx(true);
 
         if (!isValidEmail(professeur.getMail())) {
             return new ResponseEntity<>("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma' pour les professeurs.", HttpStatus.BAD_REQUEST);
+        }
+
+        if (professeur.getNom() != null && !professeur.getNom().isEmpty() ) {
+            professeur.setNom(professeur.getNom());
+        }else {
+            return ResponseEntity.badRequest().body("Le champ 'Nom' ne peut pas être vide.");
+        }
+        if (professeur.getPrenom() != null && !professeur.getPrenom().isEmpty()) {
+            professeur.setPrenom(professeur.getPrenom());
+        }else {
+            return ResponseEntity.badRequest().body("Le champ 'Prénom' ne peut pas être vide.");
         }
         professeur.setMdp(passwordEncoder.encode((professeur.getNom() + "_" + professeur.getPrenom()).toLowerCase()));
         professeur savedProfesseur = ProfesseurRepo.save(professeur);
@@ -69,18 +81,24 @@ public class ProfesseurRESTcontroller {
         professeur existingProf = ProfesseurRepo.findById(id).orElseThrow(() -> new RuntimeException("Professor not found"));
 
         // Update the properties if provided
-        if (updatedProfesseur.getNom() != null) {
+        if (updatedProfesseur.getNom() != null && !updatedProfesseur.getNom().isEmpty() ) {
             existingProf.setNom(updatedProfesseur.getNom());
+        }else {
+            return ResponseEntity.badRequest().body("Le champ 'Nom' ne peut pas être vide.");
         }
-        if (updatedProfesseur.getPrenom() != null) {
+        if (updatedProfesseur.getPrenom() != null && !updatedProfesseur.getPrenom().isEmpty()) {
             existingProf.setPrenom(updatedProfesseur.getPrenom());
+        }else {
+            return ResponseEntity.badRequest().body("Le champ 'Prenom' ne peut pas être vide.");
         }
-        if (updatedProfesseur.getMail() != null) {
+        if (updatedProfesseur.getMail() != null && !updatedProfesseur.getMail().isEmpty()) {
             // Validate the new email
             if (!isValidEmail(updatedProfesseur.getMail())) {
                 return new ResponseEntity<>("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma' pour les professeurs.", HttpStatus.BAD_REQUEST);
             }
             existingProf.setMail(updatedProfesseur.getMail());
+        }else {
+            return ResponseEntity.badRequest().body("Le champ 'Mail' ne peut pas être vide.");
         }
         if (updatedProfesseur.getMdp() != null) {
             existingProf.setMdp(passwordEncoder.encode(updatedProfesseur.getMdp()));

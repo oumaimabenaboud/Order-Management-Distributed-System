@@ -3,9 +3,10 @@ import {Product} from "./product.model";
 export interface CommandeLine {
   id: number;
   quantity: number;
-  total_prixHT_ligne: number;
-  total_prixTTC_ligne: number;
-  commande: Commande;
-  product: Product;
+  prixHT: number;
+  prixTTC: number;
+  commandeId: Commande;
+  productId: number;
   productName: string;
+  produitRubriqueId : number;
 }

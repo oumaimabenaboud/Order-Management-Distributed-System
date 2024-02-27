@@ -21,7 +21,7 @@ public class ProductServiceApplication {
     CommandLineRunner start(ProductRepository productRepository, RepositoryRestConfiguration restConfiguration){
         restConfiguration.exposeIdsFor(Product.class);
         return args -> {
-            productRepository.save(new Product(1, "Ordinateur portable Dell XPS 15", "Puissant ordinateur portable avec processeur Intel Core i7, design fin.", "Achat de fournitures informatiques",3L));
+            productRepository.save(new Product(1, "Ordinateur portable Dell XPS 15", "Puissant ordinateur portable avec processeur Intel Core i7, design fin.", "Achat de matériel informatique",3L));
             productRepository.save(new Product(2, "Kit de verrerie de laboratoire", "Ensemble complet de verrerie pour expériences scientifiques comprenant des éprouvettes, des pipettes et des béchers.", "Achat de matériel scientifique",7L));
             productRepository.save(new Product(3, "Matériau pour imprimante 3D", "Filament PLA de haute qualité pour l'impression 3D précise et fiable.", "Achat de matières premières",1L));
             productRepository.save(new Product(4, "Billets de train ONCF", "Billets de train pour les déplacements professionnels à l'intérieur du Royaume.", "Indemnités de déplacement à l'intérieur du Royaume",6L));

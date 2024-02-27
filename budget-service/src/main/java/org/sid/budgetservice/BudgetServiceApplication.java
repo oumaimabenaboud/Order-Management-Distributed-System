@@ -45,7 +45,7 @@ public class BudgetServiceApplication {
 			List<Rubrique> rubriques = List.of(
 					Rubrique.builder().nom("Achat de matières premières").build(),
 					Rubrique.builder().nom("Frais de participation aux séminaires, congrés et colloques").build(),
-					Rubrique.builder().nom("Achat de fournitures informatiques").build(),
+					Rubrique.builder().nom("Achat de matériel informatique").build(),
 					Rubrique.builder().nom("Frais de mission à l'étranger des participants").build(),
 					Rubrique.builder().nom("Frais de transport du personnel et des étudiants au Maroc").build(),
 					Rubrique.builder().nom("Indemnités de déplacement à l'intérieur du Royaume").build(),
