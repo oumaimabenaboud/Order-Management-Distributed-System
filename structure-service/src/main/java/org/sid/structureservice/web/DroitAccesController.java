@@ -1,5 +1,7 @@
 package org.sid.structureservice.web;
 
+import com.fasterxml.jackson.databind.JsonSerializer;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.sid.structureservice.entities.DroitAcces;
 import org.sid.structureservice.repository.DroitAccesRepository;
@@ -52,8 +54,8 @@ public class DroitAccesController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
     // Get DroitAccess by Professor ID
-    @GetMapping("/getAllDroitAccesByProfessorId/{id}")
-    public ResponseEntity<List<DroitAcces>> getDroitAccessByProfessorId(@RequestParam Long IdProfessor) {
+    @GetMapping("/getAllDroitAccesByProfessorId/{IdProfessor}")
+    public ResponseEntity<List<DroitAcces>> getDroitAccessByProfessorId(@PathVariable Long IdProfessor) {
         List<DroitAcces> droitAccessList = droitAccesRepository.findByIdProfessor(IdProfessor);
         if (!droitAccessList.isEmpty()) {
             return ResponseEntity.ok(droitAccessList);
@@ -63,9 +65,9 @@ public class DroitAccesController {
     }
 
     // Get DroitAccess by Structure ID
-    @GetMapping("/getAllDroitAccesByStructureId")
-    public ResponseEntity<List<DroitAcces>> getDroitAccessByStructureId(@RequestParam Long structureId) {
-        List<DroitAcces> droitAccessList = droitAccesRepository.findByIdStructure(structureId);
+    @GetMapping("/getAllDroitAccesByStructureId/{Idstructure}")
+    public ResponseEntity<List<DroitAcces>> getDroitAccessByStructureId(@PathVariable Long Idstructure) {
+        List<DroitAcces> droitAccessList = droitAccesRepository.findByIdStructure(Idstructure);
         if (!droitAccessList.isEmpty()) {
             return ResponseEntity.ok(droitAccessList);
         } else {
@@ -74,33 +76,34 @@ public class DroitAccesController {
     }
 
     // Get DroitAccess by Professor ID and Structure ID
-    @GetMapping("/byProfessorIdAndStructureId")
-    public ResponseEntity<List<DroitAcces>> getDroitAccessByProfessorIdAndStructureId(@RequestParam Long IdProfessor, @RequestParam Long Idstructure) {
-        List<DroitAcces> droitAccessList = droitAccesRepository.findByIdProfessorAndIdStructure(IdProfessor, Idstructure);
-        if (!droitAccessList.isEmpty()) {
-            return ResponseEntity.ok(droitAccessList);
+    @GetMapping("/byProfessorIdAndStructureId/{IdProfessor}/{Idstructure}")
+    public DroitAcces getDroitAccessByProfessorIdAndStructureId(@PathVariable Long IdProfessor, @PathVariable Long Idstructure) {
+        DroitAcces droitAccessList = droitAccesRepository.findByIdProfessorAndIdStructure(IdProfessor, Idstructure);
+        if (droitAccessList!= null) {
+            return droitAccessList;
         } else {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Droit d'acces non trouvé pour: " + IdProfessor);
         }
     }
 
     @PostMapping("/createDroitAccess")
     public ResponseEntity<?> createOrUpdateDroitAccess(@RequestBody DroitAcces addedDroitAccess) {
+        logger.error("Structure added is : "+addedDroitAccess);
         // Check if professor ID and structure ID exist
         Optional<Professeur> professorOptional = Optional.ofNullable(professeurRestClient.getProfesseurById(addedDroitAccess.getIdProfessor()));
         Optional<Structure> structureOptional = structureRepository.findById(addedDroitAccess.getIdStructure());
 
         if (professorOptional.isPresent() && structureOptional.isPresent()) {
             // Check if a DroitAccess already exists for the given professor and structure
-            List<DroitAcces> existingDroitAccess = droitAccesRepository.findByIdProfessorAndIdStructure(addedDroitAccess.getIdProfessor(), addedDroitAccess.getIdStructure());
+            DroitAcces existingDroitAccess = droitAccesRepository.findByIdProfessorAndIdStructure(addedDroitAccess.getIdProfessor(), addedDroitAccess.getIdStructure());
 
-            if (existingDroitAccess.isEmpty()) {
+            if (existingDroitAccess == null) {
                 // No existing DroitAccess, create a new one
                 DroitAcces createdDroitAccess = droitAccesRepository.save(addedDroitAccess);
                 return ResponseEntity.status(HttpStatus.CREATED).body(createdDroitAccess);
             } else {
                 // DroitAccess already exists, check if the droitAcces attribute is different
-                DroitAcces existingAccess = existingDroitAccess.get(0);
+                DroitAcces existingAccess = existingDroitAccess;
                 if (existingAccess.isDroitAcces() != addedDroitAccess.isDroitAcces()) {
                     // Update the existing DroitAccess with the new droitAcces value
                     existingAccess.setDroitAcces(addedDroitAccess.isDroitAcces());
@@ -117,6 +120,7 @@ public class DroitAccesController {
         }
     }
 
+    @Transactional
     @PutMapping("/updateDroitAccess")
     public ResponseEntity<DroitAcces> updateDroitAccess(@RequestBody DroitAcces updatedDroitAccess, @RequestParam Long idProfessor, @RequestParam Long idStructure) {
         // Check if professor ID and structure ID exist
@@ -127,15 +131,22 @@ public class DroitAccesController {
             Professeur professor = professorOptional.get();
             if (!professor.isAdmin()) {
                 // Both professor and structure exist, proceed with updating DroitAccess
-                List<DroitAcces> droitAccessList = droitAccesRepository.findByIdProfessorAndIdStructure(idProfessor, idStructure);
-                if (!droitAccessList.isEmpty()) {
-                    // Assuming there's only one DroitAccess for a given professor and structure
-                    DroitAcces existingDroitAccess = droitAccessList.get(0);
-                    existingDroitAccess.setIdProfessor(updatedDroitAccess.getIdProfessor());
-                    existingDroitAccess.setIdStructure(updatedDroitAccess.getIdStructure());
-                    existingDroitAccess.setDroitAcces(updatedDroitAccess.isDroitAcces());
-                    DroitAcces updatedDroitAccessEntity = droitAccesRepository.save(existingDroitAccess);
-                    return ResponseEntity.ok(updatedDroitAccessEntity);
+                DroitAcces droitAccessList = droitAccesRepository.findByIdProfessorAndIdStructure(idProfessor, idStructure);
+                if (droitAccessList!=null) {
+                    logger.error("I want to remove this struct Id: "+updatedDroitAccess.getIdStructure());
+                    deleteStructureById(updatedDroitAccess.getIdStructure());
+                    DroitAcces da = new DroitAcces();
+                    da.setIdStructure(updatedDroitAccess.getIdStructure());
+                    da.setIdProfessor(updatedDroitAccess.getIdProfessor());
+                    da.setDroitAcces(updatedDroitAccess.isDroitAcces());
+
+                    createOrUpdateDroitAccess(da);
+
+                    /*droitAccessList.setIdProfessor(updatedDroitAccess.getIdProfessor());
+                    droitAccessList.setIdStructure(updatedDroitAccess.getIdStructure());
+                    droitAccessList.setDroitAcces(updatedDroitAccess.isDroitAcces());
+                    DroitAcces updatedDroitAccessEntity = droitAccesRepository.save(droitAccessList);*/
+                    return ResponseEntity.ok(da);
                 } else {
                     // DroitAccess with the given IDs not found
                     return ResponseEntity.notFound().build();
@@ -145,10 +156,20 @@ public class DroitAccesController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
-            // Either professor or structure does not exist, return a bad request response
             return ResponseEntity.badRequest().build();
         }
     }
-
+    @Transactional
+    @DeleteMapping("/{structureId}")
+    public ResponseEntity<?> deleteStructureById(@PathVariable Long structureId) {
+        Optional<Structure> structureOptional = structureRepository.findById(structureId);
+        if (structureOptional.isPresent()) {
+            droitAccesRepository.deleteByIdStructure(structureId);
+            logger.error("Removed :"+structureId);
+            return ResponseEntity.ok("Structure supprimée avec succès !");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

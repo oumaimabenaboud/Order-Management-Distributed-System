@@ -1,12 +1,16 @@
 package org.sid.structureservice.web;
 
 import lombok.AllArgsConstructor;
+import org.sid.structureservice.entities.DroitAcces;
 import org.sid.structureservice.entities.Structure;
 import org.sid.structureservice.enums.structurestype;
 import org.sid.structureservice.feign.BudgetRestClient;
 import org.sid.structureservice.feign.ProfesseurRestClient;
 import org.sid.structureservice.model.Professeur;
+import org.sid.structureservice.repository.DroitAccesRepository;
 import org.sid.structureservice.repository.StructureRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +28,16 @@ public class StructureRestController {
     private ProfesseurRestClient professeurRestClient;
     @Autowired
     private BudgetRestClient budgetRestClient;
+    @Autowired
+    private DroitAccesController droitAccesController;
+
+    Logger logger = LoggerFactory.getLogger(StructureRestController.class);
 
     @Autowired
-    public StructureRestController(ProfesseurRestClient professeurRestClient, BudgetRestClient budgetRestClient) {
+    public StructureRestController(ProfesseurRestClient professeurRestClient, BudgetRestClient budgetRestClient, DroitAccesController droitAccesController) {
         this.professeurRestClient = professeurRestClient;
         this.budgetRestClient = budgetRestClient;
+        this.droitAccesController = droitAccesController;
     }
 
     @PostMapping
@@ -80,13 +89,17 @@ public class StructureRestController {
         newStructure.setEquipeProfNames(equipeProfNames);
 
 
-        // Save or perform necessary actions with the new structure
         structureRepository.save(newStructure);
 
+        for (Long profId : addedStructure.getEquipeProfIds()) {
+            //logger.error("Professor ID: " + profId +" Structure Id:" +newStructure.getId());
+            DroitAcces da = new DroitAcces();
+            da.setIdStructure(newStructure.getId());
+            da.setIdProfessor(profId);
+            da.setDroitAcces(false);
+            droitAccesController.createOrUpdateDroitAccess(da);
+        }
 
-        /*
-        * Code droitacces here
-        * */
 
         return ResponseEntity.ok("Structure créée avec succès !");
     }
@@ -347,13 +360,20 @@ public class StructureRestController {
         existingStructure.setParentLabNom(updatedStructure.getParentLabNom());
         existingStructure.setChildEquipesIds(updatedStructure.getChildEquipesIds());
         existingStructure.setChildEquipesNoms(updatedStructure.getChildEquipesNoms());
-
-        /*
-        * add code droit acces here
-        * */
-
         // Save the updated structure to the database
         structureRepository.save(existingStructure);
+
+        droitAccesController.deleteStructureById(existingStructure.getId());
+
+        for (Long profId : existingStructure.getEquipeProfIds()) {
+            logger.error("Professor ID: " + profId +" structure Id:" +existingStructure.getId());
+            DroitAcces da = new DroitAcces();
+            da.setIdStructure(existingStructure.getId());
+            da.setIdProfessor(profId);
+            da.setDroitAcces(false);
+            droitAccesController.createOrUpdateDroitAccess(da);
+        }
+
 
         return ResponseEntity.ok("Structure mise à jour avec succès !");
     }
