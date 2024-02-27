@@ -176,17 +176,7 @@ public class StructureRestController {
     public void deleteStructure(@PathVariable String id){
         structureRepository.deleteById(Long.valueOf(id));
     }
-    /*private List<Professeur> fetchProfessorsForTeam(Collection<Professeur> professors) {
-        List<Professeur> updatedProfessors = new ArrayList<>();
 
-        for (Professeur professor : professors) {
-            // Fetch professor details using the professor's ID from each professor object
-            Professeur fetchedProfessor = professeurRestClient.getProfesseurById(professor.getId());
-            updatedProfessors.add(fetchedProfessor);
-        }
-
-        return updatedProfessors;
-    }*/
     public List<String> getAllLaboratoiresNames() {
         List<Structure> structures = structureRepository.findByType(LabodeRecherche);
         List<String> laboratoiresNames = new ArrayList<>();

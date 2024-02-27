@@ -57,31 +57,21 @@ public class StructureServiceApplication {
 			List<Structure> allStructures = structureRepository.findAll();
 			populateEquipeProfesseurs(allStructures, professeurRestClient);
 			populateEquipeChild(allStructures,structureRepository);
-			addExampleDroitAccess(droitAccesRepository);
+			// Generate random DroitAcces for each professor in each structure
+			for (Structure structure : allStructures) {
+				if (structure.getEquipeProfIds() != null) {
+					for (Long profId : structure.getEquipeProfIds()) {
+						boolean randomAccess = Math.random() < 0.5; // Randomly assign true or false
+						DroitAcces droitAcces = DroitAcces.builder()
+								.idProfessor(profId)
+								.idStructure(structure.getId())
+								.droitAcces(randomAccess)
+								.build();
+						droitAccesRepository.save(droitAcces);
+					}
+				}
+			}
 		};
-	}
-	private void addExampleDroitAccess(DroitAccesRepository droitAccesRepository) {
-		// Example DroitAccess instances
-		DroitAcces droitAccess1 = DroitAcces.builder()
-				.idProfessor(3L)
-				.idStructure(1L)
-				.droitAcces(true)
-				.build();
-
-		DroitAcces droitAccess2 = DroitAcces.builder()
-				.idProfessor(4L)
-				.idStructure(1L)
-				.droitAcces(false)
-				.build();
-
-		DroitAcces droitAccess3 = DroitAcces.builder()
-				.idProfessor(5L)
-				.idStructure(1L)
-				.droitAcces(true)
-				.build();
-
-		// Save example DroitAccess instances
-		droitAccesRepository.saveAll(List.of(droitAccess1, droitAccess2, droitAccess3));
 	}
 
 	private Structure addStructure(StructureRepository structureRepository, String name, String type, double budget, Long responsibleId, String nomResponsable, List<Long> equipeProfIds, ProfesseurRestClient professeurRestClient, Long parentLabId ,String parentLabNom, List<Long> childEquipesIds) {

@@ -13,6 +13,7 @@ import {Budget} from "../model/budget.model";
 import {RubriqueAllocation} from "../model/rubriqueAllocation.model";
 import { droitAcces } from '../model/droitAcces';
 import ts from 'typescript';
+import {CommandesService} from "../services/commandes.service";
 
 @Component({
   selector: 'app-structuredetails',
@@ -43,7 +44,7 @@ export class StructuredetailsComponent implements OnInit{
   public newCommandeForm! : FormGroup;
   isDetailsFormOpen: boolean = false;
   selectedBudget:any;
-
+  listCommandes: any;
   professeur:any;
 
   constructor(
@@ -52,6 +53,7 @@ export class StructuredetailsComponent implements OnInit{
     private route :ActivatedRoute,
     private budgetService: BudgetService,
     private profService: ProfesseurService,
+    private commandeService: CommandesService,
     private snackBar: MatSnackBar,
     private platformLocation: PlatformLocation,
     private formBuilder: FormBuilder) {
@@ -108,6 +110,12 @@ export class StructuredetailsComponent implements OnInit{
       }
     );
 
+    this.commandeService.getCommandesByStructureId(this.structureId).subscribe(
+     (commande)=>{
+      this.listCommandes.push(commande);
+
+       },(error)=> console.error(error)
+    );
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
