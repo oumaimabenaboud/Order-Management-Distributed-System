@@ -188,7 +188,7 @@ export class ProductDashComponent implements OnInit{
       },
       error: (error) => {
         console.error(error);
-        window.alert("Une erreur s'est produite lors de l'ajout du produit. Veuillez réessayer plus tard.");
+        window.alert(error.error);
       }
     });
   }
