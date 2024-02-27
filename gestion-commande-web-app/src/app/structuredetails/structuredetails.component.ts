@@ -11,6 +11,8 @@ import {Structure} from "../model/structure.model";
 import {BudgetService} from "../services/budget.service";
 import {Budget} from "../model/budget.model";
 import {RubriqueAllocation} from "../model/rubriqueAllocation.model";
+import { droitAcces } from '../model/droitAcces';
+import ts from 'typescript';
 
 @Component({
   selector: 'app-structuredetails',
@@ -22,8 +24,9 @@ export class StructuredetailsComponent implements OnInit{
 
   profs: any[] = [];
   status = true;
-  enabled: boolean = false; // Define the enabled property
+  enabled: boolean = false;
   structuredetail : any;
+  droit_daccee: boolean = false;
   listBudgetsStructure:any;
   structureId !:number;
   userId: number | null = null;
@@ -40,6 +43,7 @@ export class StructuredetailsComponent implements OnInit{
   public newCommandeForm! : FormGroup;
   isDetailsFormOpen: boolean = false;
   selectedBudget:any;
+  professeur:any;
 
   constructor(
     private structureService: StructuresService,
@@ -102,7 +106,6 @@ export class StructuredetailsComponent implements OnInit{
         console.log(err);
       }
     );
-
     
 
     this.structureService.getStructureById(this.structureId).subscribe({
@@ -122,19 +125,27 @@ export class StructuredetailsComponent implements OnInit{
             this.profService.getProfessor(id).subscribe({
               next: (prof) => {
                 this.profs.push(prof);
-                this.structureService.getDroitAccessByProfessorId(prof.id).subscribe(
-                  (droitAcces: any) => {
-                    this.droit_daccee = droitAcces.droit_daccee;
-                  },
-                  (error) => {
-                    console.error('Error fetching professor:', error);
-                  }
+                // this.professeur = prof;
+                this.profs.forEach((prof: Professeur) => {  
+                  this.structureService.getDroitAccessByProfessorIdAndStructureId(prof.id,this.structureId).subscribe(
+                    (dAcces: droitAcces) => {
+                      //@ts-ignore
+                      prof['droit_daccee'] = dAcces.droitAcces;
+                      console.log(this.professeur['droit_daccee'])
+                      console.log("userId: ", prof.id, "Droit d'accès: ", dAcces.droitAcces);
+                    },
+                    (error) => {
+                      console.error('Error fetching professor:', error);
+                    }
+                  );
+                }
                 );
               },
               error: (err) => console.error(err)
             });
           });
         }
+        
       },
       error: (err) => {
         console.log(err);
@@ -252,33 +263,32 @@ export class StructuredetailsComponent implements OnInit{
     return total;
   }
 
-  droit_daccee: boolean = false; // Define droit_daccee property with an initial value
 
   toggleAccess(prof: Professeur, droit_daccee: boolean): void {
     const idProfessor = prof.id;
     const idStructure = this.structuredetail.id;
-    console.log(droit_daccee);
-    console.log('idProfessor:', idProfessor);
-    console.log('idStructure:', idStructure);
+    droit_daccee = !droit_daccee; 
+
+    const DA: any = {
+      idProfessor: idProfessor,
+      idStructure: idStructure,
+      droitAcces: droit_daccee
+    };
+    console.log("Droit d'accès updated : ", DA);
     
-  }
-  /*toggleAccess(prof: Professeur): void {
-    const updatedAccess = !prof.droit_daccee; // Toggle the access
-    console.log("updatedAccess", updatedAccess);
-    this.profService.updateProfessorAccess(prof.id, updatedAccess).subscribe(
-      () => {
-        console.log("L'accès a été mis à jour avec succès");
-        // Update the local object's access
-        prof.droit_daccee = updatedAccess;
+    this.structureService.updateDroitAccess(DA, idProfessor, idStructure).subscribe(
+      (updatedDroitAccess: droitAcces) => {
+        console.log('L\'accès a été mis à jour avec succès', updatedDroitAccess);
+        // @ts-ignore
+        prof['droit_daccee'] = updatedDroitAccess.droitAcces;
       },
       (error) => {
-        console.error("Erreur de mise à jour de l'accès :", error);
-        // If the backend call fails, update the local object's access anyway
-        prof.droit_daccee = updatedAccess;
+        console.error('Erreur de mise à jour de l\'accès :', error);
+        // @ts-ignore
+        prof['droit_daccee'] = updatedDroitAccess.droitAcces;
       }
     );
-  }*/
-
+  }
 
 
   Enregistrer(): void {

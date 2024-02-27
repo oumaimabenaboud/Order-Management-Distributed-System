@@ -11,5 +11,7 @@ public interface DroitAccesRepository extends JpaRepository<DroitAcces,Long> {
 
     List<DroitAcces> findByIdStructure(Long structureId);
 
-    List<DroitAcces> findByIdProfessorAndIdStructure(Long professorId, Long structureId);
+    DroitAcces findByIdProfessorAndIdStructure(Long professorId, Long structureId);
+
+    void deleteByIdStructure(Long Idstructure);
 }
