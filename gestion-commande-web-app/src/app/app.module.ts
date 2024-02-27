@@ -19,31 +19,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
 import { ProductDashComponent } from './product-dash/product-dash.component';
 import {AddcommandeComponent} from "./addcommande/addcommande.component";
+import { SettingsComponent } from './settings/settings.component';
 
-// const appRoutes: Routes = [
-//   // { path: 'login', component: LoginComponent },
-//   {
-//     path: "login",
-//     loadChildren:
-//       "./modules/authentication/authentication.module#AuthenticationModule"
-//   }, // {path: 'login', component: ReactiveLoginComponent},
-//   {
-//     path: "logout",
-//     loadChildren:
-//       "./modules/authentication/authentication.module#AuthenticationModule"
-//   },
-//   {
-//     path: "home",
-//     component: HomeComponent,
-//     canActivate: [AuthGuard],
-//     children: [
-//       { path: "employeeList", component: EmployeeListComponent },
-//       { path: "addEmployee", component: AddEmployeeComponent },
-//       { path: "employee/:key", component: EmployeeComponent }
-//     ]
-//   },
-//   { path: "**", component: PageNotFoundComponent }
-// ];
 
 @NgModule({
   declarations: [
@@ -57,7 +34,8 @@ import {AddcommandeComponent} from "./addcommande/addcommande.component";
     WelcomeComponent,
     StructuredetailsComponent,
     ProductDashComponent,
-    AddcommandeComponent
+    AddcommandeComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

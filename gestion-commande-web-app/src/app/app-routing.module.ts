@@ -11,6 +11,7 @@ import { authGuard } from './guards/auth.guard';
 import { StructuredetailsComponent } from './structuredetails/structuredetails.component';
 import { ProductDashComponent } from "./product-dash/product-dash.component";
 import {AddcommandeComponent} from "./addcommande/addcommande.component";
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -23,7 +24,8 @@ const routes: Routes = [
   { path:'change-password' , component: ChangePasswordComponent },
   { path:"structuredetail/:structureId" , component: StructuredetailsComponent, canActivate: [authGuard] },
   { path:"product" , component: ProductDashComponent, canActivate: [authGuard] },
-  { path:"structuredetail/:structureId/:budgetId/addcommande" , component: AddcommandeComponent, canActivate: [authGuard]}
+  { path:"structuredetail/:structureId/:budgetId/addcommande" , component: AddcommandeComponent, canActivate: [authGuard]},
+  { path:"settings" , component: SettingsComponent}
 ];
 
 @NgModule({

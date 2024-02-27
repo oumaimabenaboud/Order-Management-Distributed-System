@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.sid.professeur.entities.professeur;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -75,6 +76,16 @@ public class LoginController {
     private boolean isValidEmailPattern(String email) {
         // Check if the email follows the specified pattern
         return email.matches("^[a-zA-Z]+\\.[a-zA-Z]+@umi.ac.ma$");
+    }
+
+    @GetMapping("/matchPasswords/{formPassword}")
+    public ResponseEntity<?> isSamePassword(@PathVariable String formPassword, @RequestParam professeur prof){
+        if(passwordEncoder.matches(formPassword, prof.getMdp())){
+            logger.error("MATCHY MATCHY");
+        }else {
+            logger.error("No matchy matchy");
+        }
+        return ResponseEntity.ok("");
     }
 
     @PutMapping("{id}")

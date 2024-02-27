@@ -191,12 +191,12 @@ public class StructureRestController {
     @DeleteMapping("{id}")
     public void deleteStructure(@PathVariable String id){
         structureRepository.deleteById(Long.valueOf(id));
+        droitAccesController.deleteStructureById(Long.valueOf(id));
     }
 
     public List<String> getAllLaboratoiresNames() {
         List<Structure> structures = structureRepository.findByType(LabodeRecherche);
         List<String> laboratoiresNames = new ArrayList<>();
-
         for (Structure structure : structures) {
             laboratoiresNames.add(structure.getNom());
         }
