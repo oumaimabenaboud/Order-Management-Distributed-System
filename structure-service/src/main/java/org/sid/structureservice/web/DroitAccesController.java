@@ -88,6 +88,7 @@ public class DroitAccesController {
 
     @PostMapping("/createDroitAccess")
     public ResponseEntity<?> createOrUpdateDroitAccess(@RequestBody DroitAcces addedDroitAccess) {
+        logger.error("Structure added is : "+addedDroitAccess);
         // Check if professor ID and structure ID exist
         Optional<Professeur> professorOptional = Optional.ofNullable(professeurRestClient.getProfesseurById(addedDroitAccess.getIdProfessor()));
         Optional<Structure> structureOptional = structureRepository.findById(addedDroitAccess.getIdStructure());
@@ -134,7 +135,6 @@ public class DroitAccesController {
                 if (droitAccessList!=null) {
                     logger.error("I want to remove this struct Id: "+updatedDroitAccess.getIdStructure());
                     deleteStructureById(updatedDroitAccess.getIdStructure());
-
                     DroitAcces da = new DroitAcces();
                     da.setIdStructure(updatedDroitAccess.getIdStructure());
                     da.setIdProfessor(updatedDroitAccess.getIdProfessor());
@@ -156,7 +156,6 @@ public class DroitAccesController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } else {
-            // Either professor or structure does not exist, return a bad request response
             return ResponseEntity.badRequest().build();
         }
     }
@@ -165,15 +164,12 @@ public class DroitAccesController {
     public ResponseEntity<?> deleteStructureById(@PathVariable Long structureId) {
         Optional<Structure> structureOptional = structureRepository.findById(structureId);
         if (structureOptional.isPresent()) {
-            structureRepository.deleteById(structureId);
             droitAccesRepository.deleteByIdStructure(structureId);
-            logger.error("Removed");
+            logger.error("Removed :"+structureId);
             return ResponseEntity.ok("Structure supprimée avec succès !");
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 
 }

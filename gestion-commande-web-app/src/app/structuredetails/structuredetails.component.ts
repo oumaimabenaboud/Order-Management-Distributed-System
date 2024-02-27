@@ -448,7 +448,11 @@ export class StructuredetailsComponent implements OnInit{
 
   openNewCommandeForm() {
     const structureId = this.route.snapshot.paramMap.get('structureId');
-    this.router.navigate(['structuredetail', structureId, 'addcommande']);
+    const selectedBudget = this.listBudgetsStructure.find((budget: Budget) => {
+      // Convert selectedYear to number before comparison
+      return budget.budgetYear === new Date().getFullYear();
+    });
+    this.router.navigate(['structuredetail', structureId,selectedBudget.id, 'addcommande']);
   }
 
 

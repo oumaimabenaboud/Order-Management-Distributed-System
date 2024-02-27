@@ -363,13 +363,15 @@ public class StructureRestController {
         // Save the updated structure to the database
         structureRepository.save(existingStructure);
 
+        droitAccesController.deleteStructureById(existingStructure.getId());
+
         for (Long profId : existingStructure.getEquipeProfIds()) {
-            logger.error("Professor ID: " + profId +" Equipe membre Id:" +profId);
+            logger.error("Professor ID: " + profId +" structure Id:" +existingStructure.getId());
             DroitAcces da = new DroitAcces();
             da.setIdStructure(existingStructure.getId());
             da.setIdProfessor(profId);
             da.setDroitAcces(false);
-            droitAccesController.updateDroitAccess(da,profId,existingStructure.getId());
+            droitAccesController.createOrUpdateDroitAccess(da);
         }
 
 
