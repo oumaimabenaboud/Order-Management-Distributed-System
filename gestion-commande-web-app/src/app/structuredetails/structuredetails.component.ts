@@ -307,7 +307,7 @@ export class StructuredetailsComponent implements OnInit{
     };
     console.log("Droit d'accès updated : ", DA);
 
-    this.structureService.updateDroitAccess(DA, idProfessor, idStructure).subscribe(
+    this.structureService.updateDroitAccess(DA).subscribe(
       (updatedDroitAccess: droitAcces) => {
         console.log('L\'accès a été mis à jour avec succès', updatedDroitAccess);
         // @ts-ignore

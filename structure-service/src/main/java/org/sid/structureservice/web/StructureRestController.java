@@ -45,7 +45,23 @@ public class StructureRestController {
         // Fetch responsible professor from the professor service
         Professeur responsibleProfessor = professeurRestClient.getProfesseurById(addedStructure.getIdResponsable());
 
-        // Vérifier que le responsable n'est pas membre de l'équipe
+
+        if (addedStructure.getNom() == null  || addedStructure.getNom().isEmpty()) {
+            return ResponseEntity.badRequest().body("Le champ 'nom' ne peut pas être vide.");
+        }
+
+        if (addedStructure.getAcronyme() == null  ||addedStructure.getAcronyme().isEmpty()) {
+            return ResponseEntity.badRequest().body("Le champ 'acronyme' ne peut pas être vide.");
+        }
+
+        if (addedStructure.getType() == null) {
+            return ResponseEntity.badRequest().body("Le champ 'type' ne peut pas être vide.");
+        }
+
+        if (addedStructure.getNomResponsable() == null  || addedStructure.getNomResponsable().isEmpty()) {
+            return ResponseEntity.badRequest().body("Le champ 'Nom du Responsable' ne peut pas être vide.");
+        }
+
         if (addedStructure.getEquipeProfIds().contains(addedStructure.getIdResponsable())) {
             return ResponseEntity.badRequest().body("Le responsable ne peut pas être membre de l'équipe.");
         }
@@ -175,12 +191,12 @@ public class StructureRestController {
     @DeleteMapping("{id}")
     public void deleteStructure(@PathVariable String id){
         structureRepository.deleteById(Long.valueOf(id));
+        droitAccesController.deleteStructureById(Long.valueOf(id));
     }
 
     public List<String> getAllLaboratoiresNames() {
         List<Structure> structures = structureRepository.findByType(LabodeRecherche);
         List<String> laboratoiresNames = new ArrayList<>();
-
         for (Structure structure : structures) {
             laboratoiresNames.add(structure.getNom());
         }
@@ -223,7 +239,7 @@ public class StructureRestController {
             return ResponseEntity.badRequest().body("Ce laboratoire parent n'existe pas");
         }
         // Check if child equipe is changing lab parents
-        if (existingStructure.getParentLabId()!= updatedStructure.getParentLabId()) {
+        if (!Objects.equals(existingStructure.getParentLabId(), updatedStructure.getParentLabId())) {
 
             System.out.println("Child Equip with ID : "+ existingStructure.getId() +" moving from one parent lab to another");
             // Fetch the old parent lab from the database

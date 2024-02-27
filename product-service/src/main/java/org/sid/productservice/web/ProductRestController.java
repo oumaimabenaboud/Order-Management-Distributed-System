@@ -88,7 +88,7 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product newProduct) {
+    public ResponseEntity<?> createProduct(@RequestBody Product newProduct) {
         List<Rubrique> rubriquesList = budgetRestClient.getAllRubriques();
         String rubriqueName = newProduct.getRubriqueName();
 
@@ -97,8 +97,14 @@ public class ProductRestController {
                 .filter(rubrique -> rubrique.getNom().equals(rubriqueName))
                 .findFirst();
 
+        if (newProduct.getNom() == null || newProduct.getNom().isEmpty()) {
+            return ResponseEntity.badRequest().body("Le champ 'Nom' ne peut pas être vide.");
+        }
+        if (newProduct.getDesc() == null || newProduct.getDesc().isEmpty()) {
+            return ResponseEntity.badRequest().body("Le champ 'Description' ne peut pas être vide.");
+        }
         if (optionalRubrique.isEmpty()) {
-            throw new RuntimeException("Rubrique name does not exist: " + rubriqueName);
+            return ResponseEntity.badRequest().body("Le champ 'Rebrique' n'existe pas");
         }
 
         // Set the rubrique ID in the newProduct
@@ -106,7 +112,8 @@ public class ProductRestController {
         newProduct.setRubriqueId(rubrique.getId());
 
         // Save and return the new product
-        return productRepository.save(newProduct);
+        productRepository.save(newProduct);
+        return ResponseEntity.badRequest().body("Produit ajouté avec succès !");
     }
 
 

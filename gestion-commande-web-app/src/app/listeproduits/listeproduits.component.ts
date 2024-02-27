@@ -7,4 +7,15 @@ import { Component } from '@angular/core';
 })
 export class ListeproduitsComponent {
 
+  status = true;
+  isEditMode: boolean = false;
+
+
+  addToggle() {
+    this.status = !this.status;
+  }
+toggleEditMode() {
+  this.isEditMode = !this.isEditMode;
+}
+
 }

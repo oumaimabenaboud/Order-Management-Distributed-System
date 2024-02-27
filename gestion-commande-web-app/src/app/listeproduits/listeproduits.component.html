@@ -1,1 +1,150 @@
-<p>listeproduits works!</p>
+<!-- SIDEBAR -->
+<section id="sidebar" [ngClass]="status ? 'hide' : ''">
+    <a href="/prof-dash" class="brand">
+      <i class='bx bxs-smile'></i>
+      <span class="text" >Admin Dashboard</span>
+    </a>
+    <ul class="side-menu top">
+      <li class="active">
+        <a >
+          <i class='bx bx-arrow-back'></i>
+          <span class="text">Retour</span>
+        </a>
+      </li>
+  
+    </ul>
+      <ul class="side-menu">
+        <li>
+          <a href="#" class="logout">
+            <i class='bx bxs-log-out-circle'  ></i>
+            <span class="text">Se déconnecter</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+<section id="content">
+    <!-- NAVBAR -->
+    <nav>
+      <i (click)="addToggle()" class='bx bx-menu' ></i>
+    </nav>
+    <!-- NAVBAR -->
+
+    <!-- MAIN -->
+    <main class="main" >
+
+      <!-- NEW Liste Produit -->
+      <section class="container px-4 mx-auto" style="background-color: transparent">
+        <div class="sm:flex sm:items-center sm:justify-between">
+          <div>
+            <div class="flex items-center gap-x-3">
+              <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-brands fa-opencart"></i> Liste des produits</h2>
+            </div>
+          </div>
+          <div class="mt-6 sm:flex sm:items-center sm:justify-between ">
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              <div class="card-footer bg-transparent">         <!--(click)="addRubriqueAllocation()"  hna !! -->
+                <button type="button" class="btnp btn-primary" *ngIf="isEditMode" style="color: #4C86A7;"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
+                &nbsp;
+                <!-- Toggle edit mode button -->
+                <button class="btn btn-outline-primary" (click)="toggleEditMode()" style="color: rgb(88, 88, 88);">
+                  <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
+                  {{ isEditMode ? 'Annuler' : 'Modifier' }}
+                </button>
+                <!-- Save changes button (visible in edit mode) (click)="Enregistrer()" hna !!button-->
+                <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" style="color: #FB8B03;"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
+              </div>
+            </div>
+            &nbsp;
+            <button class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600" style="background-color: #4C86A7;">
+                <label for="dropdown"><i class="fa-solid fa-list"></i> Type commande </label>
+              <select style="background:none; color: white;" id="dropdown" >
+                <option style="color: #4C86A7;" >informatique</option>
+              </select>
+
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col mt-6">
+          <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+              <!-- [formGroup]="hna!!" -->
+              <div   class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg" style="border: none;">
+                <div style="max-height: 400px; overflow-y: auto;">
+                  <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-800">
+                      <tr>
+                        <th scope="col" class="px-3 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 35%;">
+                          <i class="fa-solid fa-box-open"></i> Produit
+                        </th>
+                        <th scope="col" class="px-3 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 35%;">
+                          <i class="fa-solid fa-box-open"></i> Rubrique
+                        </th>
+                        <th scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 10%;">
+                          <i class="fa-solid fa-wallet"></i> Prix HT
+                        </th>
+                        <th scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 10%;">
+                          <i class="fa-solid fa-sack-dollar"></i> Prix TTC
+                        </th>
+                        <th scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 5%;">
+                           Quantité
+                        </th>
+                        <th *ngIf="isEditMode" scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 5%;">
+                          Supprimer
+                        </th>
+                      </tr>
+                    </thead>
+                    <!-- formArrayName="hna!!" -->
+                    <tbody  class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                      <!-- *ngFor="let p of products; let i = index" [formGroupName]="i"!!" -->
+                      <tr>
+                        <td class="px-3 py-4 text-sm font-medium whitespace-nowrap"> 
+                          <input type="text" placeholder="Nom du Produit" class="form-control" style="width: 100%;" id="produitName" list="produitsList"  [readonly]="!isEditMode">
+                          <datalist id="produitsList">
+                            <option ></option>
+                          </datalist>
+                        </td>
+                        <td class="px-3 py-4 text-sm font-medium whitespace-nowrap"> 
+                          <input type="text" placeholder="Nom de la Rubrique" class="form-control" style="width: 100%;" id="rubriqueName" list="rubriquesList"  [readonly]="!isEditMode">
+                          <datalist id="rubriquesList">
+                            <option ></option>
+                          </datalist>
+                        </td>
+                        <td class="px-2 py-4 text-sm font-medium whitespace-nowrap">
+                          <input type="number" placeholder="en Dhs" id="prixht" class="form-control" style="width: 100%;" [readonly]="!isEditMode">
+                        </td>
+                        <td class="px-2 py-4 text-sm font-medium whitespace-nowrap"> 
+                          <input type="number" placeholder="en Dhs" id="prixttc" class="form-control" style="width: 100%;" readonly>
+                        </td>
+                        <td class="px-2 py-4 text-sm font-medium whitespace-nowrap"> 
+                          <input type="number" placeholder="" id="quantité" class="form-control" style="width: 100%;" readonly>
+                        </td>
+                
+                        <td *ngIf="isEditMode" class="px-2 py-4 text-sm font-medium whitespace-nowrap"> <!-- (click)="removeRubriqueAllocation(i) hna !!button-->
+                          <button type="button" style="color: red" class="btnp btn-primary" ><i class="fa-solid fa-square-minus"></i></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+      <!-- NEW Liste Produit -->
+    
+
+
+
+
+    </main>
+    <!-- MAIN -->
+  
+</section>
+<!-- CONTENT -->

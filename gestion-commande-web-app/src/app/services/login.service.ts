@@ -50,4 +50,10 @@ export class LoginService {
       })
     );
   }
+
+
+  public isSamePassword(formpassword: any, Professeur: any) {
+    return this.httpClient.get("http://localhost:1818/PROFESSOR-SERVICE/login/matchPasswords/"+formpassword, Professeur)
+  }
+
 }

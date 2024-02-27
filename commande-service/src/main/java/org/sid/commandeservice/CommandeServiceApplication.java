@@ -41,14 +41,13 @@ public class CommandeServiceApplication {
 	}
 
 	private void generateCommandes(CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient, CommandeRestController commandeRestController, int year, int numberOfCommandes, Long budgetId) {
-		for (int i = 1; i <= numberOfCommandes; i++) { // Change the loop condition to include the last commande
-			Commande commande = generateCommande(year, budgetId, productRestClient, commandeRepository, commandeLineRepository);
+		for (int i = 1; i <= numberOfCommandes; i++) {
+			Commande commande = generateCommande(year, budgetId, productRestClient, commandeRepository, commandeLineRepository, i + (numberOfCommandes * (year - 2023)));
 			commandeRestController.addCommande(commande);
 		}
 	}
 
-
-	private Commande generateCommande(int year, Long budgetId, ProductRestClient productRestClient, CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository) {
+	private Commande generateCommande(int year, Long budgetId, ProductRestClient productRestClient, CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, int commandId) {
 		Commande commande = Commande.builder()
 				.commandeDate(new Date(year - 1900, 0, 1)) // Set the date to January 1st of the specified year
 				.profId(2L)
@@ -61,32 +60,32 @@ public class CommandeServiceApplication {
 		List<Product> products = productRestClient.getAllProducts();
 		int totalHT = 0;
 		List<CommandeLine> commandeLines = new ArrayList<>();
-		for (Product product : products) {
-			CommandeLine commandeLine = generateCommandeLine(product);
-			System.out.println(commandeLine);
-			totalHT += commandeLine.getQuantity() * commandeLine.getPrixHT();
-			commandeLine.setCommandeId(commande.getId());
-			commandeLineRepository.save(commandeLine);
-			commandeLines.add(commandeLine);
-
+		Random random = new Random();
+		// Ensure command lines are generated only for odd-numbered command IDs
+		if (commandId % 2 != 0) {
+			for (Product product : products) {
+				CommandeLine commandeLine = generateCommandeLine(product, random);
+				System.out.println(commandeLine);
+				totalHT += commandeLine.getQuantity() * commandeLine.getPrixHT();
+				commandeLine.setCommandeId(commande.getId());
+				commandeLineRepository.save(commandeLine);
+				commandeLines.add(commandeLine);
+			}
 		}
-		System.out.println(commandeLines);
 		commande.setCommandeLines(commandeLines);
 		commande.setPrixTotalHT(totalHT);
 		commande.setPrixTotalTTC(totalHT + totalHT * 0.20);
 		return commandeRepository.save(commande);
 	}
 
-	private CommandeLine generateCommandeLine(Product product) {
+	private CommandeLine generateCommandeLine(Product product, Random random) {
 		CommandeLine commandeLine = new CommandeLine();
-		commandeLine.setQuantity((int) (Math.random() * 10) + 2);
-		commandeLine.setPrixHT((int) (Math.random() * 10) + 2);
-		commandeLine.setPrixTTC(commandeLine.getPrixHT() + commandeLine.getPrixHT() * 0.20);
+		commandeLine.setQuantity(random.nextInt(9) + 2); // Generate quantity between 2 and 10
+		commandeLine.setPrixHT(random.nextDouble() * 10 + 2); // Generate prixHT between 2 and 12
+		commandeLine.setPrixTTC(commandeLine.getPrixHT() * 1.20); // Assuming TVA is 20%
 		commandeLine.setProductName(product.getNom());
 		commandeLine.setProductId(product.getId());
 		commandeLine.setProduitRubriqueId(product.getRubriqueId());
-		System.out.println(commandeLine);
 		return commandeLine;
 	}
 }
-
