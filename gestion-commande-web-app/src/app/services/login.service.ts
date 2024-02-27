@@ -40,4 +40,14 @@ export class LoginService {
       })
     );
   }
+
+  updatePassword(id: number, updatedProfesseur: any): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}/${id}`, updatedProfesseur).pipe(
+      catchError((error: HttpErrorResponse) => {
+        // Handle errors appropriately
+        console.error('Server error:', error);
+        return throwError('Error updating password.'); // You can customize the error message
+      })
+    );
+  }
 }

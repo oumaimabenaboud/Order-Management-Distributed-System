@@ -224,8 +224,8 @@ public newProfForm! : FormGroup;
         this.closeNewProfForm(); // Optionally close the form
       },
       error: (error) => {
-        console.error("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma'", error);
-        window.alert("L'email doit être sous la forme 'p.nom@umi.ac.ma' ou 'pre.nom@umi.ac.ma' ");
+        console.error( error);
+        window.alert(error.error);
       }
     });
   }
@@ -254,7 +254,7 @@ public newProfForm! : FormGroup;
       error: err => {
         console.error("Une erreur s'est produite lors de la mise à jour du professeur:", err);
         // Optionally, display an error message to the user
-        window.alert("Une erreur s'est produite lors de la mise à jour du professeur. Veuillez réessayer plus tard.");
+        window.alert(err.error);
       }
     });
   }

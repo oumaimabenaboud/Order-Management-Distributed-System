@@ -37,6 +37,7 @@ export class ProfDashboardComponent implements OnInit {
       if (this.userId) {
         this.profService.getProfessor(this.userId).subscribe(
           (professor: Professeur) => {
+            // console.log('Professor:', professor);
             this.professeur = professor;
             this.userName = professor.nom + ' ' + professor.prenom;
           },
