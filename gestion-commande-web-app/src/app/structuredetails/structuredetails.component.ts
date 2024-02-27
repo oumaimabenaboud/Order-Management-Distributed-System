@@ -126,7 +126,6 @@ export class StructuredetailsComponent implements OnInit{
           next: professeurRespo => this.professeurRespo = professeurRespo,
           error: err => console.log(err)
         });
-        this.loading = false; // Data received, loading is complete
 
         // Check if equipeProfIds is not null or undefined before iterating over it
         if (this.structuredetail.equipeProfIds) {
@@ -158,7 +157,6 @@ export class StructuredetailsComponent implements OnInit{
       },
       error: (err) => {
         console.log(err);
-        this.loading = false;
       },
     });
   }
