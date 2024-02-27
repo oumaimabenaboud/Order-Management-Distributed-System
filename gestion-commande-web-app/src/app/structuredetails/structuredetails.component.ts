@@ -43,6 +43,7 @@ export class StructuredetailsComponent implements OnInit{
   public newCommandeForm! : FormGroup;
   isDetailsFormOpen: boolean = false;
   selectedBudget:any;
+
   professeur:any;
 
   constructor(
@@ -81,7 +82,7 @@ export class StructuredetailsComponent implements OnInit{
       }
     }
 
-    
+
 
     this.budgetService.getAllRubriques().subscribe(
       (data)=>{
@@ -106,7 +107,7 @@ export class StructuredetailsComponent implements OnInit{
         console.log(err);
       }
     );
-    
+
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
@@ -126,7 +127,7 @@ export class StructuredetailsComponent implements OnInit{
               next: (prof) => {
                 this.profs.push(prof);
                 // this.professeur = prof;
-                this.profs.forEach((prof: Professeur) => {  
+                this.profs.forEach((prof: Professeur) => {
                   this.structureService.getDroitAccessByProfessorIdAndStructureId(prof.id,this.structureId).subscribe(
                     (dAcces: droitAcces) => {
                       //@ts-ignore
@@ -145,7 +146,7 @@ export class StructuredetailsComponent implements OnInit{
             });
           });
         }
-        
+
       },
       error: (err) => {
         console.log(err);
@@ -154,7 +155,7 @@ export class StructuredetailsComponent implements OnInit{
     });
   }
 
-  
+
   onYearChange(year: number | null) {
     if (year !== null) {
       // Store the selected year in the selectedYear property
@@ -267,7 +268,7 @@ export class StructuredetailsComponent implements OnInit{
   toggleAccess(prof: Professeur, droit_daccee: boolean): void {
     const idProfessor = prof.id;
     const idStructure = this.structuredetail.id;
-    droit_daccee = !droit_daccee; 
+    droit_daccee = !droit_daccee;
 
     const DA: any = {
       idProfessor: idProfessor,
@@ -275,7 +276,7 @@ export class StructuredetailsComponent implements OnInit{
       droitAcces: droit_daccee
     };
     console.log("Droit d'accès updated : ", DA);
-    
+
     this.structureService.updateDroitAccess(DA, idProfessor, idStructure).subscribe(
       (updatedDroitAccess: droitAcces) => {
         console.log('L\'accès a été mis à jour avec succès', updatedDroitAccess);
@@ -330,12 +331,12 @@ export class StructuredetailsComponent implements OnInit{
           rubriqueId: selectedRubrique.id,
           rubriqueName: selectedRubriqueName,
           montantAlloue: montantAlloue,
-          montantRestant: montantAlloue
+          montantRestant: montantRestant
         };
 
         // Increment totalAlloue and totalRestant
         totalAlloue += montantAlloue;
-        totalRestant += montantAlloue;
+        totalRestant += montantRestant;
 
         // Push the rubrique allocation to the new budget's allocations
         // @ts-ignore

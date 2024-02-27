@@ -10,6 +10,7 @@ import {Budget} from "../model/budget.model";
 import {Professeur} from "../model/professeur.model";
 import {ProductService} from "../services/product.service";
 import {Commande} from "../model/commande.model";
+import {CommandesService} from "../services/commandes.service";
 
 @Component({
   selector: 'app-addcommande',
@@ -30,6 +31,7 @@ export class AddcommandeComponent implements OnInit{
   newCommandForm!: FormGroup;
   commandLines!: FormArray;
   selectedProductRubrique: string = '';
+  totalTTC: number = 0;
 
 
   constructor(
@@ -39,6 +41,7 @@ export class AddcommandeComponent implements OnInit{
     private budgetService: BudgetService,
     private profService: ProfesseurService,
     private productService: ProductService,
+    private commandesService: CommandesService,
     private snackBar: MatSnackBar,
     private platformLocation: PlatformLocation,
     private formBuilder: FormBuilder) {
@@ -96,6 +99,7 @@ export class AddcommandeComponent implements OnInit{
     );
 
     this.initnewCommandFormBuilder();
+    this.calculateTotalTTC();
 
 }
   isBrowser(): boolean {
@@ -104,7 +108,16 @@ export class AddcommandeComponent implements OnInit{
   addToggle() {
     this.status = !this.status;
   }
-
+  calculateTotalTTC() {
+    this.totalTTC = 0;
+    const commandLines = this.newCommandForm.get('newCommandLines') as FormArray;
+    commandLines.controls.forEach((commandLine: any) => {
+      const quantity = commandLine.get('quantity')?.value;
+      const prixTTC = commandLine.get('prixTTC')?.value;
+      const productTotalTTC = quantity * prixTTC;
+      this.totalTTC += productTotalTTC;
+    });
+  }
   updateRubriqueName(event: any) {
     const productName = event.target.value;
     const selectedProduct = this.listproducts.find(product => product.nom === productName);
@@ -193,6 +206,35 @@ export class AddcommandeComponent implements OnInit{
       newCommande.prixTotalTTC=totalTTC;
       });      // Log the new budget
       console.log(newCommande);
+    this.commandesService.addCommande(newCommande).subscribe(
+      () => {
+        window.alert('Commande ajoutée avec succès !');
+        window.location.reload();
+      },
+      error => {
+        console.error("Une erreur s'est produite lors de l'ajout de la commande.", error);
+        if (error.status === 200) {
+          window.alert('Commande ajoutée avec succès !');
+          window.location.reload();
+        } else if (error.status === 400) {
+          // Bad request, display error message from server
+          window.alert(error.error);
+        } else {
+          // Other errors, display generic error message
+          window.alert("Une erreur s'est produite lors de l'ajout de la commande. Veuillez réessayer plus tard.");
+        }
+      }
+    );
 }
+
+  calculateTotal(field1: string, field2: string): number {
+    const commandLines = this.newCommandForm.get('newCommandLines') as FormArray;
+    let total = 0;
+    commandLines.controls.forEach(commandLine => {
+      total += commandLine.get(field1)?.value * commandLine.get(field2)?.value || 0;
+    });
+    return total;
+  }
+
 
 }

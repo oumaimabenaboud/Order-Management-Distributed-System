@@ -5,6 +5,8 @@ import org.sid.budgetservice.entities.*;
 import org.sid.budgetservice.repositories.RubriqueAllocationRepository;
 import org.sid.budgetservice.repositories.RubriqueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -100,36 +102,55 @@ public class BudgetRestController {
         // Save the updated budget
         return budgetRepository.save(budget);
     }
+
     @PutMapping("/budget/{id}")
     @Transactional
-    public Budget UpdateBudget(@PathVariable Long id, @RequestBody Budget newBudget) {
+    public Budget updateBudget(@PathVariable Long id, @RequestBody Budget newBudget) {
         Budget existingBudget = budgetRepository.getBudgetById(id);
         System.out.println(existingBudget);
 
         existingBudget.setBudgetYear(newBudget.getBudgetYear());
         existingBudget.setStructureId(newBudget.getStructureId());
         existingBudget.setTotalAlloue(newBudget.getTotalAlloue());
-        existingBudget.setTotalRestant(newBudget.getTotalRestant());
 
-        // Clear existing rubriqueAllocations associated with the budget
-        rubriqueAllocationRepository.deleteAllByBudgetId(existingBudget.getId());
+        List<RubriqueAllocation> existingAllocations = rubriqueAllocationRepository.getAllByBudgetId(existingBudget.getId());
+        List<RubriqueAllocation> updatedAllocations = newBudget.getRubriqueAllocations();
+        List<RubriqueAllocation> rubriqueAllocations = new ArrayList<>();
 
-        // Iterate over the rubriqueAllocations and set the budgetId
-        List<RubriqueAllocation> updatedAllocations = new ArrayList<>();
-        for (RubriqueAllocation rubriqueAllocation : newBudget.getRubriqueAllocations()) {
-                rubriqueAllocation.setBudgetId(existingBudget.getId());
-                updatedAllocations.add(rubriqueAllocation);
+        // Delete rubriqueAllocations that are not present in the updatedAllocations
+        for (RubriqueAllocation existingAllocation : existingAllocations) {
+            boolean found = false;
+            for (RubriqueAllocation updatedAllocation : updatedAllocations) {
+                if (existingAllocation.getId().equals(updatedAllocation.getId())) {
+                    existingAllocation.setMontantAlloue(updatedAllocation.getMontantAlloue());
+                    rubriqueAllocations.add(existingAllocation);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                rubriqueAllocationRepository.deleteById(existingAllocation.getId());
+            }
+        }
+
+        // Add new rubriqueAllocations
+        for (RubriqueAllocation updatedAllocation : updatedAllocations) {
+            if (updatedAllocation.getId() == null) {
+                updatedAllocation.setBudgetId(existingBudget.getId());
+                rubriqueAllocations.add(updatedAllocation);
+            }
         }
 
         // Save all updated rubriqueAllocations
-        rubriqueAllocationRepository.saveAll(updatedAllocations);
+        rubriqueAllocationRepository.saveAll(rubriqueAllocations);
 
         // Set the updated rubriqueAllocations to the existing budget
-        existingBudget.setRubriqueAllocations(updatedAllocations);
+        existingBudget.setRubriqueAllocations(rubriqueAllocations);
 
         // Save and return the updated budget
         return budgetRepository.save(existingBudget);
     }
+
 
     @GetMapping("/budget/{id}")
     public Budget getBudgetById(@PathVariable Long id) {
@@ -150,47 +171,32 @@ public class BudgetRestController {
     public void deleteBudget(@PathVariable Long id) {
         budgetRepository.deleteById(id);
     }
-
-    /*@PostMapping("/budgets/{budgetId}/rubriques")
-    public Rubrique addRubriqueToBudget(@PathVariable Long budgetId, @RequestBody Rubrique rubrique) {
+    @PutMapping("/budget/updateAllocations/{budgetId}")
+    public Budget updateAllocations(@PathVariable Long budgetId, @RequestBody List<RubriqueAllocation> updatedAllocations) {
+        // Retrieve the budget
         Budget budget = budgetRepository.findById(budgetId)
                 .orElseThrow(() -> new RuntimeException("Budget not found with id: " + budgetId));
-        rubrique.setBudgetId(budget.getId());
-        return rubriqueRepository.save(rubrique);
-    }
 
+        // Get the existing rubriqueAllocations
+        List<RubriqueAllocation> existingAllocations = budget.getRubriqueAllocations();
 
-
-    // Update an existing budget
-    @PutMapping("/{id}")
-    public ResponseEntity<Budget> updateBudget(@PathVariable Long budgetId, @RequestBody Budget updatedBudget) {
-        Optional<Budget> existingBudgetOptional = budgetRepository.findById(budgetId);
-
-        if (existingBudgetOptional.isPresent()) {
-            Budget existingBudget = existingBudgetOptional.get();
-            existingBudget.setTotalAlloue(updatedBudget.getTotalAlloue());
-            // You might need to handle rubriques here
-
-            Budget savedBudget = budgetRepository.save(existingBudget);
-            return ResponseEntity.ok(savedBudget);
-        } else {
-            return ResponseEntity.notFound().build();
+        // Update the existing allocations with the new values
+        for (RubriqueAllocation updatedAllocation : updatedAllocations) {
+            for (RubriqueAllocation existingAllocation : existingAllocations) {
+                if (existingAllocation.getId().equals(updatedAllocation.getId())) {
+                    // Update the montantAlloue
+                    existingAllocation.setMontantRestant(updatedAllocation.getMontantRestant());
+                    rubriqueAllocationRepository.save(existingAllocation);
+                }
+            }
         }
+
+        // Recalculate the total allocated amount of the budget
+        double totalRestant = existingAllocations.stream().mapToDouble(RubriqueAllocation::getMontantRestant).sum();
+        budget.setTotalRestant(totalRestant);
+
+        // Save the updated budget
+        return budgetRepository.save(budget);
     }
-
-
-
-    @GetMapping("/{budgetId}/rubriques")
-    public ResponseEntity<List<RubriqueAllocation>> getAllRubriquesForBudget(@PathVariable Long budgetId) {
-        Optional<Budget> budgetOptional = budgetRepository.findById(budgetId);
-
-        if (budgetOptional.isPresent()) {
-            Budget budget = budgetOptional.get();
-            List<RubriqueAllocation> rubriques = new ArrayList<>(budget.getRubriqueAllocations());
-            return ResponseEntity.ok(rubriques);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
 
 }
