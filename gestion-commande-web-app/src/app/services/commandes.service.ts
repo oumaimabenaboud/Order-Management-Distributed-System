@@ -27,6 +27,8 @@ export class CommandesService {
     return this.http.put("http://localhost:1818/COMMANDE-SERVICE/commandes/"+commandeId, Commande)
   }
 
-  
+  getCommandesByStructureId(structureId : number):Observable<Array<Commande>>{
+  return this.http.get<Array<Commande>>("http://localhost:1818/COMMANDE-SERVICE/commandes/byStructure/"+structureId)
+  }
 
 }
