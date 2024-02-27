@@ -71,12 +71,8 @@ export class StructuresService {
     return this.http.get<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/byProfessorIdAndStructureId/"+idProfessor+"/"+idStructure)
   }
 
-  public updateDroitAccess(updatedDroitAccess: droitAcces, idProfessor: any, idStructure: any): Observable<droitAcces>{
-    const params = new HttpParams()
-      .set('idProfessor', idProfessor)
-      .set('idStructure', idStructure);
-  
-    return this.http.put<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/updateDroitAccess", updatedDroitAccess, { params });
+  public updateDroitAccess(updatedDroitAccess: droitAcces): Observable<droitAcces>{
+    return this.http.put<droitAcces>("http://localhost:1818/STRUCTURE-SERVICE/droitAcces/updateDroitAccess", updatedDroitAccess);
   }
 
 }

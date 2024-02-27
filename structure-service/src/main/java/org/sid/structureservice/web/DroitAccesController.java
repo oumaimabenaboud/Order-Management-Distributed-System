@@ -122,31 +122,32 @@ public class DroitAccesController {
 
     @Transactional
     @PutMapping("/updateDroitAccess")
-    public ResponseEntity<DroitAcces> updateDroitAccess(@RequestBody DroitAcces updatedDroitAccess, @RequestParam Long idProfessor, @RequestParam Long idStructure) {
+    public ResponseEntity<DroitAcces> updateDroitAccess(@RequestBody DroitAcces updatedDroitAccess) {
         // Check if professor ID and structure ID exist
-        Optional<Professeur> professorOptional = Optional.ofNullable(professeurRestClient.getProfesseurById(idProfessor));
-        Optional<Structure> structureOptional = structureRepository.findById(idStructure);
+        Optional<Professeur> professorOptional = Optional.ofNullable(professeurRestClient.getProfesseurById(updatedDroitAccess.getIdProfessor()));
+        Optional<Structure> structureOptional = structureRepository.findById(updatedDroitAccess.getIdStructure());
 
         if (professorOptional.isPresent() && structureOptional.isPresent()) {
             Professeur professor = professorOptional.get();
             if (!professor.isAdmin()) {
                 // Both professor and structure exist, proceed with updating DroitAccess
-                DroitAcces droitAccessList = droitAccesRepository.findByIdProfessorAndIdStructure(idProfessor, idStructure);
+                DroitAcces droitAccessList = droitAccesRepository.findByIdProfessorAndIdStructure(updatedDroitAccess.getIdProfessor(), updatedDroitAccess.getIdStructure());
                 if (droitAccessList!=null) {
                     logger.error("I want to remove this struct Id: "+updatedDroitAccess.getIdStructure());
-                    deleteStructureById(updatedDroitAccess.getIdStructure());
+                    /*deleteStructureById(updatedDroitAccess.getIdStructure());
                     DroitAcces da = new DroitAcces();
                     da.setIdStructure(updatedDroitAccess.getIdStructure());
                     da.setIdProfessor(updatedDroitAccess.getIdProfessor());
                     da.setDroitAcces(updatedDroitAccess.isDroitAcces());
 
-                    createOrUpdateDroitAccess(da);
+                    createOrUpdateDroitAccess(da);*/
 
-                    /*droitAccessList.setIdProfessor(updatedDroitAccess.getIdProfessor());
+                    droitAccessList.setIdProfessor(updatedDroitAccess.getIdProfessor());
                     droitAccessList.setIdStructure(updatedDroitAccess.getIdStructure());
                     droitAccessList.setDroitAcces(updatedDroitAccess.isDroitAcces());
-                    DroitAcces updatedDroitAccessEntity = droitAccesRepository.save(droitAccessList);*/
-                    return ResponseEntity.ok(da);
+                    DroitAcces updatedDroitAccessEntity = droitAccesRepository.save(droitAccessList);
+
+                    return ResponseEntity.ok(updatedDroitAccessEntity);
                 } else {
                     // DroitAccess with the given IDs not found
                     return ResponseEntity.notFound().build();
