@@ -19,7 +19,7 @@ export class SettingsComponent implements OnInit{
   userId: number | null = null;
   userName: string = '';
   professeur: Professeur | undefined;
-  passwordChangeForm: FormGroup = this.fb.group({
+  passwordUpdateForm: FormGroup = this.fb.group({
     oldPassword: ['', Validators.required],
     newPassword: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', Validators.required],
@@ -69,36 +69,30 @@ export class SettingsComponent implements OnInit{
       }
     }
   }
-  onPasswordChangeSubmit(): void {
-    if (this.passwordChangeForm && this.passwordChangeForm.valid) {
+  onPasswordUpdateSubmit(): void {
+    if (this.passwordUpdateForm && this.passwordUpdateForm.valid && this.professeur) {
       // Handle form submission logic here
-      console.log('this.professeur.mdp:', this.professeur?.mdp);
-      console.log('this.passwordChangeForm.value.oldPass:', this.passwordChangeForm.value.oldPassword);
-      console.log(this.passwordChangeForm.value);
-      this.loginService.isSamePassword(this.passwordChangeForm.value.oldPassword, this.professeur).subscribe(
-        (response: any) => {
-          console.log('response:', response);
-          // if (response === 'true') {
-          //   const newPassword = this.passwordChangeForm.value.newPassword;
-          //   const updatedProfessor = { mdp: newPassword };
-          //   this.loginService.updatePassword(this.userId as number, updatedProfessor).subscribe(
-          //     (response: any) => {
-          //       console.log('Password updated:', response);
-          //       this.passwordChangeForm.reset();
-          //     },
-          //     (error) => {
-          //       console.error('Error updating password:', error);
-          //     }
-          //   );
-          // } else {
-          //   console.error('Old password does not match');
-          // }
-        }, 
-        (error) => {
-          console.error('Error checking old password:', error);
+      
+      const oldPassword = this.passwordUpdateForm.value.oldPassword;
+      const professorPassword = this.professeur.mdp || '';
+      console.log('oldPassword:', oldPassword, 'professorPassword:', professorPassword);
+  
+      this.loginService.isSamePassword(oldPassword, [professorPassword]).subscribe(
+        (response) => { 
+          window.alert("Le mot de passe est correct" + response);
+        },
+        (error: any) => {
+          console.error('Error:', error.error);
+          // Handle the error accordingly, e.g., show an error message
+          window.alert('Une erreur s\'est produite lors de la vérification du mot de passe.');
         }
       );
+    } else {
+      // Handle the case when this.professeur is undefined or null
+      console.error('Professor information is not available.');
+      window.alert('Impossible de vérifier le mot de passe. Les informations du professeur ne sont pas disponibles.');
     }
   }
-
+  
 }
+

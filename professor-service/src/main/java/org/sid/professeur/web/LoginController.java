@@ -15,6 +15,7 @@ import org.sid.professeur.entities.professeur;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -78,24 +79,34 @@ public class LoginController {
         return email.matches("^[a-zA-Z]+\\.[a-zA-Z]+@umi.ac.ma$");
     }
 
-    @GetMapping("/matchPasswords/{formPassword}")
-    public ResponseEntity<?> isSamePassword(@PathVariable String formPassword, @RequestParam professeur prof){
-        if(passwordEncoder.matches(formPassword, prof.getMdp())){
-            logger.error("MATCHY MATCHY");
-        }else {
-            logger.error("No matchy matchy");
+    @GetMapping("/isSamePassword/{formPassword}/{oldPasswordList}")
+    public String isSamePassword(@PathVariable String formPassword, @PathVariable List<String> oldPasswordList) {
+        // Get the BCrypt encoded password from the prof object
+        String oldPassword = oldPasswordList.get(0);
+
+        logger.error(formPassword);
+        logger.error(oldPassword);
+        logger.error(String.valueOf(passwordEncoder.matches(formPassword, oldPassword)));
+
+        // Compare the BCrypt encoded password from the database with the raw form password
+        boolean passwordsMatch = passwordEncoder.matches(formPassword, oldPassword);
+
+        if (passwordsMatch) {
+            logger.error("LESSGO");
+            return "Passwords match";
+        } else {
+            return "Passwords do not match";
         }
-        return ResponseEntity.ok("");
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody professeur updatedProfesseur) {
         // Retrieve the existing professor by ID
         professeur existingProf = ProfesseurRepo.findById(id).orElseThrow(() -> new RuntimeException("Professor not found"));
-        logger.error(updatedProfesseur.getMdp());
+       /* logger.error(updatedProfesseur.getMdp());
         logger.error(String.valueOf(id));
         logger.error(String.valueOf(existingProf));
-        logger.error(existingProf.getMdp());
+        logger.error(existingProf.getMdp());*/
         try {
             professeur existingProfesseur = ProfesseurRepo.findById(id)
                     .orElseThrow(() -> new RuntimeException(String.format("Professeur with ID %d not found", id)));
@@ -116,7 +127,6 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Une erreur s'est produite lors de la mise à jour du mot de passe du professeur.");
         }
-
-
-    }}
+    }
+}
 
