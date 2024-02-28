@@ -30,7 +30,7 @@ export class AddcommandeComponent implements OnInit{
   listBudgetsStructure:any;
   newCommandForm!: FormGroup;
   commandLines!: FormArray;
-  selectedProductRubrique: string = '';
+  selectedProductRubrique: any;
   totalTTC: number = 0;
 
 
@@ -128,21 +128,24 @@ export class AddcommandeComponent implements OnInit{
       this.totalTTC += productTotalTTC;
     });
   }
-  updateRubriqueName(event: any) {
+  updateRubriqueName(event: any, index: number) {
     const productName = event.target.value;
     const selectedProduct = this.listproducts.find(product => product.nom === productName);
     if (selectedProduct) {
-      this.selectedProductRubrique = selectedProduct.rubriqueName;
+      // Update the selectedProductRubrique array at the specified index
+      this.selectedProductRubrique[index] = selectedProduct.rubriqueName;
       console.log(this.selectedProductRubrique);
-      this.newCommandForm.patchValue({
+
+      // Update the produitRubriqueId control for the specific form group
+      // @ts-ignore
+      const ligneGroup = this.newCommandForm.get('newCommandLines').at(index) as FormGroup;
+      ligneGroup.patchValue({
         produitRubriqueId: selectedProduct.rubriqueName
       });
     } else {
       console.log("Product not found");
     }
   }
-
-
 
   createCommandLine(): FormGroup {
     return this.formBuilder.group({
@@ -173,6 +176,7 @@ export class AddcommandeComponent implements OnInit{
     });
 
     this.commandLines = this.newCommandForm.get('newCommandLines') as FormArray;
+    this.selectedProductRubrique = new Array(this.commandLines.length).fill('');
   }
 
   addCommande(){

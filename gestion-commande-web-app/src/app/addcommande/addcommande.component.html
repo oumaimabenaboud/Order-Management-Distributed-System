@@ -61,7 +61,7 @@
                                       formControlName="productName"
                                       placeholder="Exp: Ordinateur portable Dell XPS 15"
                                       class="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
-                                      (change)="updateRubriqueName($event)"
+                                      (change)="updateRubriqueName($event,i)"
                                     />
                                     <datalist id="productList">
                                       <option *ngFor="let s of listproducts" [value]="s.nom" ></option>
@@ -78,7 +78,7 @@
                                       formControlName="produitRubriqueId"
                                       placeholder="Achat de matériel informatique"
                                       class="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
-                                      [value]="selectedProductRubrique"
+                                      [value]="selectedProductRubrique[i]"
                                       readonly
                                     />
                                   </div>

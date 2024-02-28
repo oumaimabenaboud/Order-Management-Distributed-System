@@ -9,8 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlatformLocation } from '@angular/common';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Professeur } from '../model/professeur.model';
-import {Budget} from "../model/budget.model";
-import {Commande} from "../model/commande.model";
+import {ProductService} from "../services/product.service";
 
 @Component({
   selector: 'app-listeproduits',
@@ -24,9 +23,11 @@ export class ListeproduitsComponent implements OnInit {
   status = true;
   isEditMode: boolean = false;
   listrubriques: any[] = [];
+  listproducts: any[] = [];
   commandeLines: any[] = [];
   commandeForm!: FormGroup;
   selectedCommande:any;
+  selectedProductRubrique: any;
 
   constructor(
     private structureService: StructuresService,
@@ -36,6 +37,7 @@ export class ListeproduitsComponent implements OnInit {
     private profService: ProfesseurService,
     private commandeService: CommandesService,
     private snackBar: MatSnackBar,
+    private productService: ProductService,
     private platformLocation: PlatformLocation,
     private formBuilder: FormBuilder,
     private location: Location
@@ -68,7 +70,20 @@ export class ListeproduitsComponent implements OnInit {
         console.log(commande);
       }
     )
+    this.budgetService.getAllRubriques().subscribe(
+      (data)=>{
+        this.listrubriques = data;
+      },
+      (error)=> console.error(error)
+    );
 
+
+    this.productService.getAllProducts().subscribe(
+      (data)=>{
+        this.listproducts = data;
+      },
+      (error)=> console.error(error)
+    );
   }
 
   isBrowser(): boolean {
@@ -90,12 +105,11 @@ export class ListeproduitsComponent implements OnInit {
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
   }
-
   CommandeForm() {
     this.commandeForm = this.formBuilder.group({
       commandeLines: this.formBuilder.array([]) // Initialize as an empty FormArray
     });
-
+    this.selectedProductRubrique = new Array(this.commandeLines.length).fill('');
     this.commandeService.getCommandeById(this.commandeId).subscribe(
       (commande) => { // Assuming Budget is the correct type
         this.selectedCommande = commande;
@@ -110,7 +124,7 @@ export class ListeproduitsComponent implements OnInit {
       }
     );
   }
-// Function to clear existing controls in the commandeLines FormArray
+
   clearCommandeLinesFormArray() {
     const commandeLinesFormArray = this.commandeForm.get('commandeLines') as FormArray;
     while (commandeLinesFormArray.length !== 0) {
@@ -136,7 +150,84 @@ export class ListeproduitsComponent implements OnInit {
       prixHT: [commandeLine ? commandeLine.prixHT : '', [Validators.required]],
       prixTTC: [commandeLine ? commandeLine.prixTTC : '', [Validators.required]],
       quantity: [commandeLine ? commandeLine.quantity : '', [Validators.required]],
-
+      rubriqueName: this.getRubriqueName(commandeLine ? commandeLine.produitRubriqueId : '') // Add rubriqueName control
     });
   }
+
+  toggleEditModeAndReload() {
+    if (this.isEditMode) {
+      // Reload the page
+      window.location.reload();
+    } else {
+      // Toggle edit mode without reloading
+      this.toggleEditMode();
+    }
+  }
+
+  getRubriqueName(produitRubriqueId: any): string {
+    const rubrique = this.listrubriques.find(rubrique => rubrique.id === produitRubriqueId);
+    return rubrique ? rubrique.nom : '';
+  }
+  updateRubriqueName(event: any, index: number) {
+    const productName = event.target.value;
+    const selectedProduct = this.listproducts.find(product => product.nom === productName);
+    if (selectedProduct) {
+      // Update the selectedProductRubrique array at the specified index
+      this.selectedProductRubrique[index] = selectedProduct.rubriqueName;
+      console.log(this.selectedProductRubrique);
+
+      // Update the produitRubriqueId control for the specific form group
+      // @ts-ignore
+      const ligneGroup = this.commandeForm.get('commandeLines').at(index) as FormGroup;
+      ligneGroup.patchValue({
+        produitRubriqueId: selectedProduct.rubriqueName
+      });
+    } else {
+      console.log("Product not found");
+    }
+  }
+
+  Modifier() {
+    const formData = this.commandeForm.value;
+    let totalHT = 0;
+    let totalTTC = 0;
+
+    let existingCommande = this.commandeService.getCommandeById(this.commandeId);
+    const updatedCommande = {
+      prixTotalHT: 0, // Initialize to 0
+      prixTotalTTC: 0, // Initialize to 0
+      commandeLines: [] // Initialize as an empty array
+    };
+    formData.commandeLines.forEach((commandline: any) => {
+      const selectedProductName = commandline.productName;
+      const selectedProduct = this.listproducts.find(product => product.nom === selectedProductName);
+      if (!selectedProduct){
+        window.alert("Veuillez choisir un produit parmi la liste des produits disponibles !");
+      }
+      const prixHT = commandline.prixHT;
+      const prixTTC = commandline.prixTTC;
+      const produitRubriqueId= selectedProduct.rubriqueId;
+      const quantity = commandline.quantity;
+      // Create a new rubrique allocation object
+      const commandeLine = {
+        quantity: commandline.quantity,
+        prixHT: commandline.prixHT,
+        prixTTC: commandline.prixTTC,
+        productId: selectedProduct.id,
+        productName: selectedProductName,
+        produitRubriqueId : selectedProduct.rubriqueId,
+      };
+
+      // Increment totalAlloue and totalRestant
+      totalHT += prixHT*quantity;
+      totalTTC += prixTTC*quantity;
+      // @ts-ignore
+      updatedCommande.commandeLines.push(commandeLine);
+      updatedCommande.prixTotalHT=totalHT;
+      updatedCommande.prixTotalTTC=totalTTC;
+    });      // Log the new budget
+    console.log(updatedCommande);
+
+  }
+
 }
