@@ -49,12 +49,13 @@
                 <button type="button" class="btnp btn-primary" (click)="addCommandeLine()" *ngIf="isEditMode" style="color: #4C86A7;"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
                 &nbsp;
                 <!-- Toggle edit mode button -->
-                <button class="btn btn-outline-primary" (click)="toggleEditMode()" style="color: rgb(88, 88, 88);">
+                <button class="btn btn-outline-primary" (click)="toggleEditModeAndReload()" style="color: rgb(88, 88, 88);">
                   <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
                   {{ isEditMode ? 'Annuler' : 'Modifier' }}
                 </button>
+
                 <!-- Save changes button (visible in edit mode) (click)="Enregistrer()" hna !!button-->
-                <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" style="color: #FB8B03;"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
+                <button *ngIf="isEditMode" (click)="Modifier()" class="btns btn-outline-success ms-3" style="color: #FB8B03;"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer les modifications</button>
               </div>
             </div>
             &nbsp;
@@ -102,26 +103,26 @@
                       <!-- *ngFor="let p of products; let i = index" [formGroupName]="i"!!" -->
                       <tr *ngFor="let cmdLine of commandeLines; let i = index" [formGroupName]="i">
                         <td class="px-3 py-4 text-sm font-medium whitespace-nowrap">
-                          <input type="text" placeholder="Nom du Produit" class="form-control" style="width: 100%;" id="productName" formControlName="productName" list="produitsList"  [readonly]="!isEditMode">
+                          <input type="text" placeholder="Nom du Produit" class="form-control" style="width: 100%;" id="productName" formControlName="productName" list="produitsList" (change)="updateRubriqueName($event,i)" [readonly]="!isEditMode">
                           <datalist id="produitsList">
-                            <option ></option>
+                            <option *ngFor="let s of listproducts" [value]="s.nom" ></option>
                           </datalist>
                         </td>
                         <td class="px-3 py-4 text-sm font-medium whitespace-nowrap">
-                          <input type="text"  class="form-control" style="width: 100%;" id="produitRubriqueId" formControlName="produitRubriqueId" [readonly]="!isEditMode">
+                          <input type="text"  class="form-control" style="width: 100%;" id="produitRubriqueId" formControlName="rubriqueName" [value]="selectedProductRubrique[i]" readonly>
                         </td>
                         <td class="px-2 py-4 text-sm font-medium whitespace-nowrap">
                           <input type="number"  id="prixHT" class="form-control" formControlName="prixHT" style="width: 100%;" [readonly]="!isEditMode">
                         </td>
                         <td class="px-2 py-4 text-sm font-medium whitespace-nowrap">
-                          <input type="number" placeholder="en Dhs" id="prixTTC" class="form-control" formControlName="prixTTC" style="width: 100%;" readonly>
+                          <input type="number" placeholder="en Dhs" id="prixTTC" class="form-control" formControlName="prixTTC" style="width: 100%;" [readonly]="!isEditMode">
                         </td>
                         <td class="px-2 py-4 text-sm font-medium whitespace-nowrap">
-                          <input type="number" placeholder="" id="quantity" class="form-control" formControlName="quantity" style="width: 100%;" readonly>
+                          <input type="number" placeholder="" id="quantity" class="form-control" formControlName="quantity" style="width: 100%;" [readonly]="!isEditMode">
                         </td>
 
                         <td *ngIf="isEditMode" class="px-2 py-4 text-sm font-medium whitespace-nowrap"> <!-- (click)="removeRubriqueAllocation(i) hna !!button-->
-                          <button type="button" style="color: red" class="btnp btn-primary" ><i class="fa-solid fa-square-minus"></i></button>
+                          <button type="button" style="color: red" class="btnp btn-primary" (click)="removeCommandeLine(i)"><i class="fa-solid fa-square-minus"></i></button>
                         </td>
                       </tr>
                     </tbody>
