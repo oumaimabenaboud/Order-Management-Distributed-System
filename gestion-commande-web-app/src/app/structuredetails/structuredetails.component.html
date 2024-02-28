@@ -37,19 +37,26 @@
 <!-- SIDEBAR -->
 <section id="sidebar" [ngClass]="status ? 'hide' : ''">
   <a href="/prof-dash" class="brand">
-    <i class='bx bxs-smile'></i>
-    <span class="text" >Admin Dashboard</span>
+    <!-- <i class='bx bxs-smile'></i> -->
+    <img src="assets/images/logosider.png" alt="">
   </a>
   <ul class="side-menu top">
+    <li >
+      
+      <a [href]="'/structuredetail/' + structureId">
+        <i class='bx bx-arrow-back'></i>
+        <span class="text">Acceuil</span>
+      </a>
+    </li>
     <li class="active">
       <a [href]="'/structuredetail/' + structureId">
-        <i class='bx bxs-info-square' ></i>
+        <i class='bx bxs-buildings' ></i>
         <span class="text">Information</span>
       </a>
     </li>
     <li>
       <a [href]="'/structuredetail/' + structureId + '#chiffres'">
-        <i class='bx bx-label'></i>
+        <i class='bx bx-stats'></i>
         <span class="text">Chiffres</span>
       </a>
     </li>
@@ -61,7 +68,7 @@
     </li>
     <li>
       <a [href]="'/structuredetail/' + structureId + '#commandes'">
-        <i class='bx bxs-building-house' ></i>
+        <i class='bx bxs-cart-alt' ></i>
         <span class="text">Commandes</span>
       </a>
     </li>
@@ -111,7 +118,7 @@
     <section class="py-10 bg-gray-50 sm:py-16 lg:py-24" style="background-color: transparent" *ngIf="structuredetail">
             <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
                 <div class="max-w-2xl mx-auto text-center">
-                    <h2 class="text-3xl font-bold leading-tight  sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> <i class="fa-solid fa-fingerprint"></i>{{structuredetail.nom}}</h2>
+                    <h2 class="text-3xl font-bold leading-tight  sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> <i class="fa-solid fa-building"></i> {{structuredetail.nom}}</h2>
                     <!-- <p class="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-600">Acronyme</p> -->
                     <div class="inline-flex px-4 py-1.5 mx-auto rounded-full bg-gradient-to-r from-orange-200 to-blue-200" style="margin-top: 2px;">
                         <p class="text-xs font-semibold tracking-widest text-blue uppercase"><i class="fa-solid fa-signature"></i> {{structuredetail.acronyme}}</p>
@@ -119,7 +126,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 gap-6 mt-12 lg:mt-16 xl:gap-16 sm:grid-cols-2 lg:grid-cols-3">
-                  <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" >
+                  <div class="overflow-hidden bg-white rounded shadow transition-all duration-200 bg-white hover:shadow-xl" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" >
                     <div class="p-8">
                       <div class="flex items-center" >
                         <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
@@ -132,12 +139,12 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
                       </div>
-                      <p class="text-base leading-relaxed text-gray-600 mt-7">{{structuredetail.nomResponsable}}</p>
-                      <p class="text-base leading-relaxed text-gray-600 mt-7">{{professeurRespo?.mail}}</p>
+                      <p class="text-base leading-relaxed text-gray-600 mt-7" style="color: #4C86A7; font-weight:600;">{{structuredetail.nomResponsable}}</p>
+                      <p class="text-base leading-relaxed text-gray-600 mt-7" style="color: #4C86A7; font-weight:600;"><i class="fa-solid fa-envelope"></i> {{professeurRespo?.mail}}</p>
                     </div>
                   </div>
 
-                    <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
+                    <div class="overflow-hidden bg-white rounded shadow transition-all duration-200 bg-white hover:shadow-xl" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
                         <div class="p-8">
                             <div class="flex items-center" >
                                 <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
@@ -152,7 +159,7 @@
                             <p class="text-base leading-relaxed text-gray-600 mt-7">{{structuredetail.typeAsString}}</p>
                         </div>
                     </div>
-                  <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngIf="structuredetail.type === 'LabodeRecherche'">
+                  <div class="overflow-hidden bg-white rounded shadow transition-all duration-200 bg-white hover:shadow-xl" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngIf="structuredetail.type === 'LabodeRecherche'">
                     <div class="p-8">
                       <div class="flex items-center" >
                         <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
@@ -169,7 +176,7 @@
                     </div>
                   </div>
 
-                  <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngIf="structuredetail.type === 'EquipedeRecherche' ">
+                  <div class="overflow-hidden bg-white rounded shadow transition-all duration-200 bg-white hover:shadow-xl" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngIf="structuredetail.type === 'EquipedeRecherche' ">
                     <div class="p-8">
                       <div class="flex items-center" >
                         <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
@@ -190,7 +197,7 @@
             </div>
     </section>
 
-      <section class="py-10 bg-gray-100 sm:py-16 lg:py-24" style="background-color: transparent" id="chiffres" >
+      <!-- <section class="py-10 bg-gray-100 sm:py-16 lg:py-24" style="background-color: transparent" id="chiffres">
         <div class="max-w-5xl px-4 mx-auto sm:px-6 lg:px-8">
           <div class="grid grid-cols-1 gap-8 mt-10 text-center lg:mt-24 sm:gap-x-8 md:grid-cols-3">
             <div>
@@ -215,76 +222,31 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
 
-   <!-- <section class="py-10 bg-gray-50 sm:py-16 lg:py-24" style="background-color: transparent"id="repbudget" >
-        <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-solid fa-wallet"></i> Répartition du Budget</h2>
+      <div class="py-10 bg-gray-100 sm:py-16 lg:py-24" style="background-color: transparent" id="chiffres">
+        <div class="max-w-2xl mx-auto text-center" style="margin-bottom: 4rem;">
+          <h2 class="text-3xl font-bold leading-tight  sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> Chiffres</h2>
+      </div>
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+          <dl class="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
+            <div class="mx-auto flex max-w-xs flex-col gap-y-4">
 
-              <label for="dropdown">Année : </label>
-              <select id="dropdown" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)">
-                <option *ngFor="let year of listYears" [value]="year">{{ year }}</option>
-              </select>
-
-              <div class="table-data">
-                    <div class="order" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
-                      <form [formGroup]="rubriqueAllocationForm">
-                        <table>
-                          <thead>
-                          <tr>
-                            <th><i class="fa-solid fa-box-open"></i> Rubrique</th>
-                            <th><i class="fa-solid fa-wallet"></i> Montant Alloué</th>
-                            <th><i class="fa-solid fa-wallet"></i> Montant Restant</th>
-                          </tr>
-                          </thead>
-                          <tbody formArrayName="rubriqueAllocations">
-                          <tr *ngFor="let allocation of rubriqueAllocations; let i = index" [formGroupName]="i">
-                            <td>
-                              <input type="text" placeholder="Nom de la Rubrique" class="form-control" id="rubriqueName" formControlName="rubriqueName" list="rubriquesList" [value]="allocation.rubriqueName" [readonly]="!isEditMode">
-                              <datalist id="rubriquesList">
-                                <option *ngFor="let s of listrubriques" [value]="s.nom" ></option>
-                              </datalist>
-                            </td>
-                            <td>
-                              <input type="number" placeholder="Montant Alloué en Dhs" id="montantAlloue" class="form-control" formControlName="montantAlloue" [readonly]="!isEditMode">
-                            </td>
-                            <td>
-                              <input type="number" id="montantRestant" placeholder="Montant Restant" class="form-control" formControlName="montantRestant" readonly>
-                            </td>
-                            <td *ngIf="isEditMode">
-                              <button type="button" style="color: red;" class="btnp btn-primary" (click)="removeRubriqueAllocation(i)"><i class="fa-solid fa-square-minus"></i></button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-
-                        <div class="flex justify-end">
-                          <div class="px-4 py-2">
-                            <p style="color: #FB8B03; font-weight:600">Total Montant Alloué:</p> <strong style="color: #4C86A7;">{{ calculateTotal('montantAlloue') }} Dhs</strong>
-                          </div>
-                          <div class="px-4 py-2">
-                            <p style="color: #FB8B03; font-weight:600">Total Montant Restant:</p> <strong style="color: #4C86A7;">{{ calculateTotal('montantRestant') }} Dhs</strong>
-                          </div>
-                        </div>
-
-                        <button type="button" class="btnp btn-primary" (click)="addRubriqueAllocation()" *ngIf="isEditMode"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
-                      </form>
-                      <div class="card-footer bg-transparent">
-
-                        <button class="btn btn-outline-primary" (click)="toggleEditMode()">
-                          <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
-                          {{ isEditMode ? 'Annuler' : 'Modifier' }}
-                        </button>
-
-                        <button *ngIf="isEditMode" class="btns btn-outline-success ms-3" (click)="Enregistrer()" ><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
-                      </div>
-                    </div>
-                    </div>
-                  </div>
+              <dt class="text-base leading-7 text-gray-600">Budget Annuel</dt>
+              <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl" style="color: #4C86A7;">{{structuredetail.budgetAnnuel}}</dd>
             </div>
-    </section>-->
-
+            <div class="mx-auto flex max-w-xs flex-col gap-y-4">
+              <dt class="text-base leading-7 text-gray-600">Nombre de Professeurs Membres</dt>
+              <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl" style="color: #4C86A7;">{{profs.length}}</dd>
+            </div>
+            <div class="mx-auto flex max-w-xs flex-col gap-y-4">
+              <dt class="text-base leading-7 text-gray-600">Nombre de commandes de l'année en cours : {{currentYear}}</dt>
+              <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl" style="color: #4C86A7;">{{ getCurrentYearCommandesLength() }}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+      
       <!-- NEW Repartition Budget -->
       <section class="container px-4 mx-auto" style="background-color: transparent"id="repbudget">
 
@@ -391,7 +353,19 @@
             <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-solid fa-barcode"></i> Liste des commandes</h2>
           </div>
         </div>
-        <div class="mt-6 sm:flex sm:items-center sm:justify-between ">          &nbsp;
+        <div class="mt-6 sm:flex sm:items-center sm:justify-between ">
+          <div class="text-sm text-gray-500 dark:text-gray-400">
+            <div class="card-footer bg-transparent">
+              <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-1xl" style="margin-top: 2px;">
+                <div class="max-w-1xl mx-auto text-center" >
+                  <button (click)="openNewCommandeForm()" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
+                    <i class="fa-solid fa-circle-plus" style="color: #4C86A7;"></i> Ajouter nouvelle commande
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          &nbsp;
           <button class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600" style="background-color: #4C86A7;">
             <!-- <span>Année</span> -->
             <label for="dropdown"><i class="fa-solid fa-calendar-days"></i> Année : </label>
@@ -402,14 +376,14 @@
           </button>
         </div>
 
-        <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-1xl" style="margin-top: 2px;">
+
+        <!-- <div class="px-4 mx-auto sm:px-6 lg:px-8 max-w-1xl" style="margin-top: 2px;">
           <div class="max-w-1xl mx-auto text-center" >
-            <!-- Button to add a new command -->
             <button (click)="openNewCommandeForm()" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
               <i class="fa-solid fa-circle-plus" style="color: #4C86A7;"></i> Ajouter nouvelle commande
             </button>
           </div>
-        </div>
+        </div> -->
 
         <div class="relative m-3 flex flex-wrap mx-auto justify-center" >
           <div class="relative max-w-sm min-w-[340px] bg-white shadow-md rounded-3xl p-2 mx-1 my-3 cursor-pointer" *ngFor="let c of listCommandesPerYear">
@@ -420,7 +394,7 @@
 
               </p>
               <p class="absolute right-2 top-2 bg-white rounded-full p-2 cursor-pointer group">
-                <i style="margin-left:4rem; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;">{{c.year}}</span>
+                <i style="margin-left:2px; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;">&nbsp;{{c.year}}</span>
 
               </p>
               <div class="inline-flex px-4 py-1.5 mx-auto rounded-full bg-gradient-to-r from-orange-200 to-blue-200" style="margin-top: 1rem;">
@@ -436,7 +410,7 @@
                 <p class="text-md text-blue-800 mt-0" >{{c.prixTotalTTC}} Dhs / TTC</p>
               </div>
               <button href="javascript:void(0)" (click)="getCommandeById(c)" title="" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
-                <p><i class="fa-solid fa-cart-shopping" style="color: #4C86A7;"></i> Voir la liste des produits</p>
+                <p><i class="fa-solid fa-cart-shopping" style="color: #4C86A7;"></i> Voir Produits</p>
               </button>
 
             </div>
@@ -445,14 +419,13 @@
       </div>
 
 
-
       <section class="py-10 bg-gray-50 sm:py-16 lg:py-24" style="background-color: transparent" id="profs" >
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div class="max-w-xl mx-auto text-center">
             <!-- <div class="inline-flex px-4 py-1.5 mx-auto rounded-full bg-gradient-to-r from-fuchsia-600 to-blue-600">
                 <p class="text-xs font-semibold tracking-widest text-white uppercase">1{30+} Handcoded Blocks</p>
             </div> -->
-            <h2 class="mt-6 text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"> <i class="fa-solid fa-list"></i> Professeurs Membres</h2>
+            <h2 class="mt-6 text-3xl font-bold leading-tight sm:text-4xl lg:text-4xl" style="color: #4C86A7;"> <i class="fa-solid fa-list"></i> Professeurs Membres</h2>
             <!-- <p class="mt-4 text-base leading-relaxed text-gray-600">Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit.</p> -->
           </div>
 
@@ -461,8 +434,8 @@
               <div class="py-10 px-9">
                 <div style=" top:0;right:0;">
 
-                  <i class="fa-solid fa-user-tie" style="font-size: 40px; color:#4C86A7"></i>
-                  <p class="mt-4 text-base text-600" style="color: #4C86A7;"><i class="fa-solid fa-envelope"></i>  {{p.mail}}</p>
+                  <i class="fa-solid fa-user-tie" style="font-size: 40px;color:#4C86A7"></i>
+                  <p class="mt-4 text-base leading-relaxed text-gray-600 mt-7" style="color: #4C86A7;font-weight:600; "><i class="fa-solid fa-envelope"></i>  {{p.mail}}</p>
 
                 </div>
 

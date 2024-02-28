@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Directive, ElementRef, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ProfesseurService} from "../services/professeur.service";
 import {Professeur} from "../model/professeur.model";
@@ -15,7 +15,6 @@ import { droitAcces } from '../model/droitAcces';
 import ts from 'typescript';
 import {CommandesService} from "../services/commandes.service";
 import {Commande, commandestype} from "../model/commande.model";
-
 @Component({
   selector: 'app-structuredetails',
   templateUrl: './structuredetails.component.html',
@@ -61,12 +60,12 @@ export class StructuredetailsComponent implements OnInit{
     this.structureId=route.snapshot.params['structureId']
 
   }
-
   addToggle() {
     this.status = !this.status;
   }
 
   ngOnInit(): void {
+    
     if (this.isBrowser()) {
       const id = sessionStorage.getItem('id');
       this.userId = id ? parseInt(id, 10) : null;
