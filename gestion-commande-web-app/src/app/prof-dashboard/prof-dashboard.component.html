@@ -1,8 +1,8 @@
 <!-- SIDEBAR -->
 <section id="sidebar" [ngClass]="status ? 'hide' : ''">
   <a href="/prof-dash" class="brand">
-    <i class='bx bxs-smile'></i>
-    <span class="text">Admin Dashboard</span>
+    <img src="assets/images/logosider.png" alt="">
+    <!-- <span class="text">Admin Dashboard</span> -->
   </a>
   <ul class="side-menu top">
     <li class="active">
@@ -72,7 +72,7 @@
   <main class="main">
     <div class="head-title">
       <div class="left">
-        <h1>Accueil</h1>
+        <h1><i class="fa-solid fa-house"></i> Accueil</h1>
         <!--<ul class="breadcrumb">
           <li>
             <a href="#">Dashboard</a>
@@ -114,7 +114,7 @@
     </ul> -->
     <div class="grid grid-cols-1 gap-2 mt-12 lg:mt-16 xl:gap-16 sm:grid-cols-2 lg:grid-cols-3">
 
-      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
+      <div class="overflow-hidden bg-white rounded shadow transition-all duration-200 bg-white hover:shadow-xl" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;">
         <div class="p-8">
             <div class="flex items-center" >
                 <!-- <img class="flex-shrink-0 w-12 h-auto" src="https://cdn.rareblocks.xyz/collection/celebration/images/integration/3/gmail-logo.png" alt="" /> -->
@@ -129,7 +129,7 @@
             <p class="text-base leading-relaxed text-gray-600 mt-7">{{ professeur?.mail }}</p>
         </div>
     </div>
-      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngFor="let s of structuresrespo">
+      <div class="overflow-hidden bg-white rounded shadow transition-all duration-200 bg-white hover:shadow-xl" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngFor="let s of structuresrespo">
         <a href="javascript:void(0)" (click)="getStructureById(s)">
           <div class="p-8" >
               <div class="flex items-center"  >
@@ -148,7 +148,7 @@
           </div>
         </a>
       </div>
-      <div class="overflow-hidden bg-white rounded shadow" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngFor="let s of structuresmembre">
+      <div class="overflow-hidden bg-white rounded shadow transition-all duration-200 bg-white hover:shadow-xl" style="background-image: url('assets/images/cc.png'); background-size: cover; background-position: center;" *ngFor="let s of structuresmembre">
         <a href="javascript:void(0)" (click)="getStructureById(s)">
         <div class="p-8">
               <div class="flex items-center" >

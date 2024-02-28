@@ -28,7 +28,7 @@ li {
   --poppins: 'Poppins', sans-serif;
   --lato: 'Lato', sans-serif;
   --light: #F9F9F9;
-  --blue: #3C91E6;
+  --blue: #4C86A7;
   --light-blue: #CFE8FF;
   --grey: #eee;
   --dark-grey: #AAAAAA;
@@ -353,7 +353,7 @@ body {
   font-size: 36px;
   font-weight: 600;
   margin-bottom: 10px;
-  color: #004AAD;
+  color: #4C86A7;
 
 }
 #content main .head-title .left .breadcrumb {
