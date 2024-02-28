@@ -15,7 +15,7 @@ export class CommandesService {
     return this.http.get<Commande[]>("http://localhost:1818/COMMANDE-SERVICE/commandes")
   }
 
-  public getCommande(id: any):Observable<Commande>{
+  public getCommandeById(id: any):Observable<Commande>{
     return this.http.get<Commande>("http://localhost:1818/COMMANDE-SERVICE/commandes/"+id)
   }
   addCommande(Commande: any) {

@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import org.sid.structureservice.entities.DroitAcces;
 import org.sid.structureservice.entities.Structure;
 import org.sid.structureservice.enums.structurestype;
-import org.sid.structureservice.feign.BudgetRestClient;
 import org.sid.structureservice.feign.ProfesseurRestClient;
 import org.sid.structureservice.model.Professeur;
-import org.sid.structureservice.repository.DroitAccesRepository;
 import org.sid.structureservice.repository.StructureRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,17 +24,15 @@ public class StructureRestController {
     private StructureRepository structureRepository;
     @Autowired
     private ProfesseurRestClient professeurRestClient;
-    @Autowired
-    private BudgetRestClient budgetRestClient;
+
     @Autowired
     private DroitAccesController droitAccesController;
 
     Logger logger = LoggerFactory.getLogger(StructureRestController.class);
 
     @Autowired
-    public StructureRestController(ProfesseurRestClient professeurRestClient, BudgetRestClient budgetRestClient, DroitAccesController droitAccesController) {
+    public StructureRestController(ProfesseurRestClient professeurRestClient, DroitAccesController droitAccesController) {
         this.professeurRestClient = professeurRestClient;
-        this.budgetRestClient = budgetRestClient;
         this.droitAccesController = droitAccesController;
     }
 

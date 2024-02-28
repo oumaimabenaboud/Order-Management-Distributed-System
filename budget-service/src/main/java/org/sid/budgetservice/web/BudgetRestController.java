@@ -194,7 +194,10 @@ public class BudgetRestController {
         }
 
         // Recalculate the total allocated amount of the budget
-        double totalRestant = existingAllocations.stream().mapToDouble(RubriqueAllocation::getMontantRestant).sum();
+        double totalRestant = existingAllocations.stream()
+                .mapToDouble(RubriqueAllocation::getMontantRestant)
+                .sum();
+        totalRestant = Math.round(totalRestant * 100.0) / 100.0;
         budget.setTotalRestant(totalRestant);
 
         // Save the updated budget

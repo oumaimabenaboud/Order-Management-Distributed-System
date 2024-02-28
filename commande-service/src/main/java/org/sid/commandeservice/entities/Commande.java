@@ -19,7 +19,7 @@ public class Commande {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date commandeDate;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<CommandeLine> commandeLines;
     private Long profId;
     private Long structureId;

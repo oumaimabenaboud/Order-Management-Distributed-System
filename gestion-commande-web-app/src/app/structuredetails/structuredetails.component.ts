@@ -23,7 +23,7 @@ import {Commande, commandestype} from "../model/commande.model";
 })
 export class StructuredetailsComponent implements OnInit{
 
-
+  commandesPerYear: { [year: number]: Commande[] } = {};
   profs: any[] = [];
   status = true;
   enabled: boolean = false;
@@ -45,6 +45,8 @@ export class StructuredetailsComponent implements OnInit{
   selectedBudget:any;
   listCommandes: any;
   professeur:any;
+  selectedYearCommand: number | null = null;
+  listCommandesPerYear: any;
 
   constructor(
     private structureService: StructuresService,
@@ -112,29 +114,49 @@ export class StructuredetailsComponent implements OnInit{
     this.commandeService.getCommandesByStructureId(this.structureId).subscribe({
       next: (commandes) => {
         this.listCommandes = commandes;
+        this.listYearsCommande = []; // Clear the list of years
+
+        // Iterate through each command
         this.listCommandes.forEach((commande: Commande) => {
+          // Extract the year from the commandeDate
+          const year = new Date(commande.commandeDate).getFullYear();
+
+          // Store the year in the list of years if it's not already present
+          if (!this.listYearsCommande.includes(year)) {
+            this.listYearsCommande.push(year);
+          }
+          // Sort the list of years in ascending order
+          this.listYearsCommande.sort((a, b) => a - b);
+
+          // Set the selected year to the latest year in the list
+          if (this.listYearsCommande.length > 0) {
+            this.selectedYearCommand = this.listYearsCommande[this.listYearsCommande.length - 1];
+          }
+        });
+        // Call onYearChangeCommand to filter commands for the latest year
+        this.listCommandesPerYear = this.onYearChangeCommand(this.selectedYearCommand);
+        // Iterate through each command
+        /*this.listCommandesPerYear.forEach((commande: Commande) => {
+          // Extract the year from the commandeDate
+          const year = new Date(commande.commandeDate).getFullYear();
+
+
+
+        // Fetch professor details for each command
+        this.listCommandesPerYear.forEach((commande: Commande) => {
           // @ts-ignore
           commande['year'] = new Date(commande.commandeDate).getFullYear();
-          // @ts-ignore
-          commande["type"] = commande.type;
-          // @ts-ignore
-          this.listYearsCommande.push(commande['year']);
-          console.log(this.listYearsCommande);
           this.profService.getProfessor(commande.profId).subscribe(
             (prof) => {
+              // Update the command object with professor name
               // @ts-ignore
-              commande['profName'] = prof.prenom + ' ' + prof.nom;
-            },
-            (error) => {
-              console.error("Error fetching professor:", error);
-            }
-          );
-        });
+              commande['profName'] = prof.prenom + ' ' + prof.nom;*/
       },
       error: (error) => {
         console.error(error);
       }
     });
+
 
 
     this.structureService.getStructureById(this.structureId).subscribe({
@@ -180,22 +202,49 @@ export class StructuredetailsComponent implements OnInit{
       },
     });
   }
-  getTypeString(type: commandestype): string {
-    console.log(commandestype.toString(type));
-    return commandestype.toString(type);
-  }
-
 
   onYearChange(year: number | null) {
     if (year !== null) {
       // Store the selected year in the selectedYear property
       this.selectedYear = year;
-      console.log('Selected year:', year);
+      console.log('Selected year Budget:', year);
       this.clearRubriqueAllocationsFormArray();
       this.repartitionBudgetForm();
    } else {
+      console.error('Selected year budget is null.');
+    }
+  }
+
+  onYearChangeCommand(year: number | null) {
+    if (year !== null) {
+      // Store the selected year in the selectedYearCommand property
+      this.selectedYearCommand = Number(year);
+      console.log('Selected year command:', year);
+      // Check if commands for the selected year already exist in the object
+      if (!this.commandesPerYear[year]) {
+        // If not, filter commands for the selected year from the listCommandes array
+        this.commandesPerYear[year] = this.listCommandes.filter((commande: Commande) => {
+          return new Date(commande.commandeDate).getFullYear() === this.selectedYearCommand ;
+        });
+      }
+      // Retrieve commands for the selected year from the object
+      this.listCommandesPerYear = this.commandesPerYear[year];
+      this.listCommandesPerYear.forEach((commande: Commande) => {
+        // @ts-ignore
+        commande['year'] = new Date(commande.commandeDate).getFullYear();
+        this.profService.getProfessor(commande.profId).subscribe(
+          (prof) => {
+            // Update the command object with professor name
+            // @ts-ignore
+            commande['profName'] = prof.prenom + ' ' + prof.nom;
+          });
+      });
+      console.log('Commands per year:', this.listCommandesPerYear);
+      return this.listCommandesPerYear;
+    }else {
       // Handle the case when the selected year is null
-      console.error('Selected year is null.');
+      console.error('Selected year command is null.');
+      return null;
     }
   }
 
@@ -291,8 +340,9 @@ export class StructuredetailsComponent implements OnInit{
     allocations.controls.forEach(allocation => {
       total += allocation.get(fieldName)?.value || 0;
     });
-    return total;
+    return Number(total.toFixed(2)); // Round to two decimal places
   }
+
 
 
   toggleAccess(prof: Professeur, droit_daccee: boolean): void {
@@ -475,8 +525,6 @@ export class StructuredetailsComponent implements OnInit{
   }*/
 
 
-
-
   openNewCommandeForm() {
     const structureId = this.route.snapshot.paramMap.get('structureId');
     const selectedBudget = this.listBudgetsStructure.find((budget: Budget) => {
@@ -489,6 +537,10 @@ export class StructuredetailsComponent implements OnInit{
       window.alert("Veuillez ajouter une répartition de budget avant de continuer.");
     }
 
+  }
+
+  getCommandeById(c: any) {
+    this.router.navigateByUrl("/listeproduits/"+c.id);
   }
 
 

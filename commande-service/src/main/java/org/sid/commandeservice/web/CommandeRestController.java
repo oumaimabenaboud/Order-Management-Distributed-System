@@ -34,21 +34,11 @@ public class CommandeRestController {
     @Autowired
     private BudgetRestClient budgetRestClient;
 
-    @GetMapping(path = "{id}")
-    public Commande getCommande(@PathVariable(name="id") Long id){
-        Commande commande= commandeRepository.findById(id).get();
-        System.out.println(commande.getProfId());
-        //System.out.println(commande.getCommandeLines());
-        Professeur professeur = professeurRestClient.getProfesseurById(commande.getProfId());
-        commande.getCommandeLines().forEach(pi->{
-            Product product = productRestClient.getProductById(pi.getId());
-            //pi.setProduct(product);
-            pi.setProductName(product.getNom());
-        });
-        return commande;
-
+    @GetMapping( "{id}")
+    public Commande getCommande(@PathVariable Long id){
+        return commandeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Budget not found with structure id: " + id));
     }
-
     @PostMapping
     public ResponseEntity<?> addCommande(@RequestBody Commande nouvelleCommande) {
         Commande newCommand = new Commande();
@@ -86,7 +76,7 @@ public class CommandeRestController {
                     if(rubriqueAllocation.getMontantRestant()<commandeLine.getPrixTTC()*commandeLine.getQuantity()){
                         return ResponseEntity.badRequest().body("Vous avez dépassé le montant alloué à la rubrique :"+ rubriqueAllocation.getRubriqueName());
                     }else{
-                        rubriqueAllocation.setMontantRestant(rubriqueAllocation.getMontantRestant()-commandeLine.getPrixTTC()*commandeLine.getQuantity());
+                        rubriqueAllocation.setMontantRestant(Math.round((rubriqueAllocation.getMontantRestant() - commandeLine.getPrixTTC() * commandeLine.getQuantity()) * 100.0) / 100.0);
                         commandeLine.setCommandeId(newCommand.getId());
                         commandeLineRepository.save(commandeLine);
                     }

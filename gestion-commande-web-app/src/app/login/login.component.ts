@@ -63,23 +63,24 @@ export class LoginComponent implements OnInit {
         (response) => {
           if (response) {
             console.log('Login response:', response);
-            if (response === 'User connected for the first time') {
+            this.openErrorSnackBar(response);
+            if (response === 'Utilisateur connecté pour la première fois') {
               this.loginService.getUserIdByEmail(email).subscribe(
                 (professor: any) => {
                   const userId = professor && professor.id;
                   if (userId != null) {
                     this.router.navigate(['/change-password', { userId: userId }]);
                   } else {
-                    console.error('User ID not found for professor:', professor);
-                    this.openErrorSnackBar("User ID not found");
+                    console.error('Professeur introuvable', professor);
+                    this.openErrorSnackBar("Professeur introuvable");
                   }
                 },
                 (error) => {
                   console.error('Error fetching user ID:', error);
-                  this.openErrorSnackBar("Error fetching user ID");
+                  this.openErrorSnackBar("Professeur introuvable");
                 }
               );
-            }  else if(response === 'Admin login successful'){
+            }  else if(response === 'Connexion admin réussie'){
               this.loginService.getUserIdByEmail(email).subscribe(
                 (professor: any) => {
                   const userId = professor && professor.id;
@@ -89,17 +90,17 @@ export class LoginComponent implements OnInit {
                     sessionStorage.setItem('isAdmin', JSON.stringify(userIsAdmin));
                     this.router.navigate(['/prof-admin']);
                   } else {
-                    console.error('User ID not found for professor:', professor);
-                    this.openErrorSnackBar("User ID not found");
+                    console.error('Professeur introuvable', professor);
+                    this.openErrorSnackBar("Professeur introuvable");
                   }
                 },
                 (error) => {
                   console.error('Error fetching user ID:', error);
-                  this.openErrorSnackBar("Error fetching user ID");
+                  this.openErrorSnackBar("Professeur introuvable");
                 }
               );
 
-            }else if (response === 'Login successful') {
+            }else if (response === 'Connexion réussie') {
               console.log("Login successful hnaya hh")
               this.loginService.getUserIdByEmail(email).subscribe(
                 (professor: any) => {
@@ -112,12 +113,12 @@ export class LoginComponent implements OnInit {
                     this.router.navigate(['/prof-dash']);
                   } else {
                     console.error('User ID not found for professor:', professor);
-                    this.openErrorSnackBar("User ID not found");
+                    this.openErrorSnackBar("Professeur introuvable");
                   }
                 },
                 (error) => {
                   console.error('Error fetching user ID:', error);
-                  this.openErrorSnackBar("Error fetching user ID");
+                  this.openErrorSnackBar("Professeur introuvable");
                 }
               );
             } else {

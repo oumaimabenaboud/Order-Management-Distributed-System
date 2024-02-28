@@ -5,17 +5,23 @@ import org.sid.commandeservice.entities.CommandeLine;
 import org.sid.commandeservice.enums.commandestype;
 import org.sid.commandeservice.feign.ProductRestClient;
 import org.sid.commandeservice.feign.ProfesseurRestClient;
+import org.sid.commandeservice.model.Budget;
 import org.sid.commandeservice.model.Product;
 import org.sid.commandeservice.model.Professeur;
+import org.sid.commandeservice.model.RubriqueAllocation;
 import org.sid.commandeservice.repository.CommandeRepository;
 import org.sid.commandeservice.repository.CommandeLineRepository;
-import org.sid.commandeservice.web.CommandeRestController;
+import org.sid.commandeservice.feign.BudgetRestClient;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,62 +36,92 @@ public class CommandeServiceApplication {
 	}
 
 	@Bean
-	CommandLineRunner start(CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient, CommandeRestController commandeRestController) {
+	CommandLineRunner start(CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient, BudgetRestClient budgetRestClient) {
 		return args -> {
 			// Generate Commande instances for the year 2023
-			generateCommandes(commandeRepository, commandeLineRepository, professeurRestClient, productRestClient, commandeRestController, 2023, 5, 2L);
+			for (int i = 0; i < 5; i++) { // Generate 5 commandes for the year 2023
+				 generateAndSaveCommande(commandeRepository, commandeLineRepository, professeurRestClient, productRestClient, budgetRestClient, 2023, 2L, commandestype.LIVRÉE);
+			}
 
 			// Generate Commande instances for the year 2024
-			generateCommandes(commandeRepository, commandeLineRepository, professeurRestClient, productRestClient, commandeRestController, 2024, 5, 1L);
+			for (int i = 0; i < 5; i++) { // Generate 5 commandes for the year 2024
+				generateAndSaveCommande(commandeRepository, commandeLineRepository, professeurRestClient, productRestClient, budgetRestClient, 2024, 1L, commandestype.EN_COURS);
+			}
 		};
 	}
 
-	private void generateCommandes(CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient, CommandeRestController commandeRestController, int year, int numberOfCommandes, Long budgetId) {
-		for (int i = 1; i <= numberOfCommandes; i++) {
-			Commande commande = generateCommande(year, budgetId, productRestClient, commandeRepository, commandeLineRepository, i + (numberOfCommandes * (year - 2023)));
-			commandeRestController.addCommande(commande);
-		}
-	}
+	private void generateAndSaveCommande(CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, ProfesseurRestClient professeurRestClient, ProductRestClient productRestClient, BudgetRestClient budgetRestClient, int year , Long BudgetId, commandestype type) {
+		LocalDate localDate = LocalDate.of(year, 1, 1);
+		// Convert LocalDate to Date object
+		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		System.out.println(date);
 
-	private Commande generateCommande(int year, Long budgetId, ProductRestClient productRestClient, CommandeRepository commandeRepository, CommandeLineRepository commandeLineRepository, int commandId) {
 		Commande commande = Commande.builder()
-				.commandeDate(new Date(year - 1900, 0, 1)) // Set the date to January 1st of the specified year
+				.commandeDate(date)
 				.profId(2L)
 				.structureId(1L)
-				.budgetId(budgetId)
-				.type(commandestype.EN_COURS)
+				.budgetId(BudgetId)
+				.type(type)
 				.build();
-		commandeRepository.save(commande);
+		Commande newCommand = commandeRepository.save(commande);
 
 		List<Product> products = productRestClient.getAllProducts();
 		int totalHT = 0;
 		List<CommandeLine> commandeLines = new ArrayList<>();
-		Random random = new Random();
-		// Ensure command lines are generated only for odd-numbered command IDs
-		if (commandId % 2 != 0) {
-			for (Product product : products) {
-				CommandeLine commandeLine = generateCommandeLine(product, random);
-				System.out.println(commandeLine);
-				totalHT += commandeLine.getQuantity() * commandeLine.getPrixHT();
-				commandeLine.setCommandeId(commande.getId());
-				commandeLineRepository.save(commandeLine);
-				commandeLines.add(commandeLine);
+		for (Product product : products) {
+			CommandeLine commandeLine = new CommandeLine();
+			int quantity = (int) (Math.random() * 10) + 1;
+			System.out.println(quantity);
+			int priceht = (int) (Math.random() * 10) + 1;
+			System.out.println(priceht);
+			int totalHTligne = quantity * priceht;
+			commandeLine.setQuantity(quantity);
+			commandeLine.setPrixHT(priceht);
+			commandeLine.setPrixTTC(priceht + priceht * 0.20);
+			commandeLine.setProductName(product.getNom());
+			commandeLine.setProductId(product.getId());
+			commandeLine.setProduitRubriqueId(product.getRubriqueId());
+			commandeLine.setCommandeId(newCommand.getId());
+			totalHT += totalHTligne;
+			commandeLines.add(commandeLine);
+		}
+		commandeLineRepository.saveAll(commandeLines);
+		newCommand.setCommandeLines(commandeLines);
+		newCommand.setPrixTotalHT(totalHT);
+		newCommand.setPrixTotalTTC(totalHT + totalHT * 0.20);
+		commandeRepository.save(newCommand);
+
+		// Update budget after saving Commande
+		Budget budget = budgetRestClient.getBudgetById(BudgetId);
+		List<RubriqueAllocation> rubriquesAllocations = budget.getRubriqueAllocations();
+		for(CommandeLine commandeLine : commandeLines){
+			for(RubriqueAllocation rubriqueAllocation : rubriquesAllocations){
+				if (rubriqueAllocation.getRubriqueId()== commandeLine.getProduitRubriqueId()){
+					if (commandeLine.getQuantity()<= 0 || commandeLine.getPrixHT()<= 0 || commandeLine.getPrixTTC()<= 0){
+						// Handle invalid command line data
+						throw new RuntimeException("Les valeurs de la quantité, du prix hors taxe (HT) ou du prix toutes taxes comprises (TTC) doivent être supérieures à zéro.");
+					}
+					if (commandeLine.getProductId() == null ){
+						// Handle missing product ID
+						throw new RuntimeException("Veuillez choisir un produit parmi la liste des produits disponibles !");
+					}
+					if(rubriqueAllocation.getMontantRestant()<commandeLine.getPrixTTC()*commandeLine.getQuantity()){
+						// Handle exceeded budget allocation
+						throw new RuntimeException("Vous avez dépassé le montant alloué à la rubrique :"+ rubriqueAllocation.getRubriqueName());
+					}else{
+						rubriqueAllocation.setMontantRestant(Math.round((rubriqueAllocation.getMontantRestant() - commandeLine.getPrixTTC() * commandeLine.getQuantity()) * 100.0) / 100.0);
+						commandeLineRepository.save(commandeLine);
+					}
+				}
 			}
 		}
-		commande.setCommandeLines(commandeLines);
-		commande.setPrixTotalHT(totalHT);
-		commande.setPrixTotalTTC(totalHT + totalHT * 0.20);
-		return commandeRepository.save(commande);
-	}
 
-	private CommandeLine generateCommandeLine(Product product, Random random) {
-		CommandeLine commandeLine = new CommandeLine();
-		commandeLine.setQuantity(random.nextInt(9) + 2); // Generate quantity between 2 and 10
-		commandeLine.setPrixHT(random.nextDouble() * 10 + 2); // Generate prixHT between 2 and 12
-		commandeLine.setPrixTTC(commandeLine.getPrixHT() * 1.20); // Assuming TVA is 20%
-		commandeLine.setProductName(product.getNom());
-		commandeLine.setProductId(product.getId());
-		commandeLine.setProduitRubriqueId(product.getRubriqueId());
-		return commandeLine;
-	}
+		if(commandeLines.isEmpty()){
+			// Delete command if no products detected
+			commandeRepository.deleteById(newCommand.getId());
+			throw new RuntimeException("Aucun produit n'a été détecté dans cette commande. La commande est vide.");
+		}
+			budgetRestClient.updateAllocations(BudgetId, rubriquesAllocations);
+		}
+
 }

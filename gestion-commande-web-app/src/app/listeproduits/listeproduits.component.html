@@ -11,13 +11,13 @@
           <span class="text">Retour</span>
         </a>
       </li>
-  
+
     </ul>
       <ul class="side-menu">
         <li>
           <a href="#" class="logout">
-            <i class='bx bxs-log-out-circle'  ></i>
-            <span class="text">Se déconnecter</span>
+            <i class='bx bxs-log-out-circle'  (click)="logout()"></i>
+            <span class="text"(click)="logout()">Se déconnecter</span>
           </a>
         </li>
       </ul>
@@ -46,7 +46,7 @@
           <div class="mt-6 sm:flex sm:items-center sm:justify-between ">
             <div class="text-sm text-gray-500 dark:text-gray-400">
               <div class="card-footer bg-transparent">         <!--(click)="addRubriqueAllocation()"  hna !! -->
-                <button type="button" class="btnp btn-primary" *ngIf="isEditMode" style="color: #4C86A7;"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
+                <button type="button" class="btnp btn-primary" (click)="addCommandeLine()" *ngIf="isEditMode" style="color: #4C86A7;"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
                 &nbsp;
                 <!-- Toggle edit mode button -->
                 <button class="btn btn-outline-primary" (click)="toggleEditMode()" style="color: rgb(88, 88, 88);">
@@ -72,16 +72,16 @@
           <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <!-- [formGroup]="hna!!" -->
-              <div   class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg" style="border: none;">
+              <div  [formGroup]="commandeForm" class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg" style="border: none;">
                 <div style="max-height: 400px; overflow-y: auto;">
                   <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-800">
                       <tr>
                         <th scope="col" class="px-3 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 35%;">
-                          <i class="fa-solid fa-box-open"></i> Produit
+                          <i class="fa-solid fa-box-open"></i> Nom du Produit
                         </th>
                         <th scope="col" class="px-3 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 35%;">
-                          <i class="fa-solid fa-box-open"></i> Rubrique
+                          <i class="fa-solid fa-box-open"></i> Nom de la Rubrique
                         </th>
                         <th scope="col" class="px-2 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" style="width: 10%;">
                           <i class="fa-solid fa-wallet"></i> Prix HT
@@ -98,31 +98,28 @@
                       </tr>
                     </thead>
                     <!-- formArrayName="hna!!" -->
-                    <tbody  class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+                    <tbody formArrayName="commandeLines"  class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
                       <!-- *ngFor="let p of products; let i = index" [formGroupName]="i"!!" -->
-                      <tr>
-                        <td class="px-3 py-4 text-sm font-medium whitespace-nowrap"> 
-                          <input type="text" placeholder="Nom du Produit" class="form-control" style="width: 100%;" id="produitName" list="produitsList"  [readonly]="!isEditMode">
+                      <tr *ngFor="let cmdLine of commandeLines; let i = index" [formGroupName]="i">
+                        <td class="px-3 py-4 text-sm font-medium whitespace-nowrap">
+                          <input type="text" placeholder="Nom du Produit" class="form-control" style="width: 100%;" id="productName" formControlName="productName" list="produitsList"  [readonly]="!isEditMode">
                           <datalist id="produitsList">
                             <option ></option>
                           </datalist>
                         </td>
-                        <td class="px-3 py-4 text-sm font-medium whitespace-nowrap"> 
-                          <input type="text" placeholder="Nom de la Rubrique" class="form-control" style="width: 100%;" id="rubriqueName" list="rubriquesList"  [readonly]="!isEditMode">
-                          <datalist id="rubriquesList">
-                            <option ></option>
-                          </datalist>
+                        <td class="px-3 py-4 text-sm font-medium whitespace-nowrap">
+                          <input type="text"  class="form-control" style="width: 100%;" id="produitRubriqueId" formControlName="produitRubriqueId" [readonly]="!isEditMode">
                         </td>
                         <td class="px-2 py-4 text-sm font-medium whitespace-nowrap">
-                          <input type="number" placeholder="en Dhs" id="prixht" class="form-control" style="width: 100%;" [readonly]="!isEditMode">
+                          <input type="number"  id="prixHT" class="form-control" formControlName="prixHT" style="width: 100%;" [readonly]="!isEditMode">
                         </td>
-                        <td class="px-2 py-4 text-sm font-medium whitespace-nowrap"> 
-                          <input type="number" placeholder="en Dhs" id="prixttc" class="form-control" style="width: 100%;" readonly>
+                        <td class="px-2 py-4 text-sm font-medium whitespace-nowrap">
+                          <input type="number" placeholder="en Dhs" id="prixTTC" class="form-control" formControlName="prixTTC" style="width: 100%;" readonly>
                         </td>
-                        <td class="px-2 py-4 text-sm font-medium whitespace-nowrap"> 
-                          <input type="number" placeholder="" id="quantité" class="form-control" style="width: 100%;" readonly>
+                        <td class="px-2 py-4 text-sm font-medium whitespace-nowrap">
+                          <input type="number" placeholder="" id="quantity" class="form-control" formControlName="quantity" style="width: 100%;" readonly>
                         </td>
-                
+
                         <td *ngIf="isEditMode" class="px-2 py-4 text-sm font-medium whitespace-nowrap"> <!-- (click)="removeRubriqueAllocation(i) hna !!button-->
                           <button type="button" style="color: red" class="btnp btn-primary" ><i class="fa-solid fa-square-minus"></i></button>
                         </td>
@@ -138,13 +135,13 @@
 
       </section>
       <!-- NEW Liste Produit -->
-    
+
 
 
 
 
     </main>
     <!-- MAIN -->
-  
+
 </section>
 <!-- CONTENT -->

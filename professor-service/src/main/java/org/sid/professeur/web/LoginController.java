@@ -39,32 +39,32 @@ public class LoginController {
     public String login(@RequestParam String email, @RequestParam String password) {
             // Check if email and password fields are not empty
             if (email.isEmpty() || password.isEmpty()) {
-                return "Email and password are required";
+                return "L'adresse e-mail et le mot de passe sont nécessaires";
             }
 
             Optional<professeur> optionalProf = ProfesseurRepo.findByMail(email);
             if (optionalProf.isPresent()) {
                 professeur prof = optionalProf.get();
                 if (prof.isAdmin()) {
-                    return "Admin login successful";
+                    return "Connexion admin réussie";
                 } else if (!isValidEmailPattern(email)) {
-                    return "Invalid email format";
+                    return "Format d'email non valide";
                 } else if (passwordEncoder.matches(password, prof.getMdp())) {
                     if (prof.isFirst_cnx()) {
                         // If it's the first connection, set first_cnx to false and return appropriate message
                         prof.setFirst_cnx(false);
                         ProfesseurRepo.save(prof);
-                        return "User connected for the first time";
+                        return "Utilisateur connecté pour la première fois";
                     } else {
                         // If it's not the first connection, return regular login successful message
-                        return "Login successful";
+                        return "Connexion réussie";
                     }
                 } else {
-                    return "Invalid credentials";
+                    return "Informations d'identification incorrectes";
                 }
             } else {
-                logger.error("Professor not found");
-                return "Professor not found";
+                logger.error("Professeur introuvable");
+                return "Professeur introuvable";
             }
 
     }
