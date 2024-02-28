@@ -1,57 +1,27 @@
 <!-- SIDEBAR -->
 <section id="sidebar" [ngClass]="status ? 'hide' : ''">
-    <a href="/prof-dash" class="brand">
-      <i class='bx bxs-smile'></i>
-      <span class="text" >Admin Dashboard</span>
-    </a>
-    <ul class="side-menu top">
-      <li class="active">
-        <a >
-          <i class='bx bxs-info-square' ></i>
-          <span class="text">Information</span>
-        </a>
-      </li>
-      <li>
-        <a >
-          <i class='bx bx-label'></i>
-          <span class="text">Chiffres</span>
-        </a>
-      </li>
-      <li>
-        <a >
-          <i class='bx bxs-dashboard' ></i>
-          <span class="text">Répartition du Budget</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <i class='bx bxs-building-house' ></i>
-          <span class="text">Commandes</span>
-        </a>
-      </li>
-      <li>
-        <a >
-          <i class='bx bxs-user' ></i>
-          <span class="text">Professeurs membres</span>
-        </a>
-      </li>
+  <a href="/prof-dash" class="brand">
+    <i class='bx bxs-smile'></i>
+    <span class="text" >Admin Dashboard</span>
+  </a>
+  <ul class="side-menu top">
+    <li class="active">
+      <a >
+        <i class='bx bx-arrow-back' (click)="goBack()"></i>
+        <span class="text" (click)="goBack()">Retour</span>
+      </a>
+    </li>
 
-    </ul>
-      <ul class="side-menu">
-        <li>
-          <a href="#">
-            <i class='bx bxs-cog' ></i>
-            <span class="text">Paramètres</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="logout">
-            <i class='bx bxs-log-out-circle'  ></i>
-            <span class="text">Se déconnecter</span>
-          </a>
-        </li>
-      </ul>
-    </section>
+  </ul>
+  <ul class="side-menu">
+    <li>
+      <a href="#" class="logout">
+        <i class='bx bxs-log-out-circle'  (click)="logout()"></i>
+        <span class="text"(click)="logout()">Se déconnecter</span>
+      </a>
+    </li>
+  </ul>
+</section>
     <!-- SIDEBAR -->
 
     <!-- CONTENT -->

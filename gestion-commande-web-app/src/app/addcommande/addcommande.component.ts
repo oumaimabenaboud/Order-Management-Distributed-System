@@ -9,7 +9,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Budget} from "../model/budget.model";
 import {Professeur} from "../model/professeur.model";
 import {ProductService} from "../services/product.service";
-import {Commande} from "../model/commande.model";
+import { Location } from '@angular/common';
 import {CommandesService} from "../services/commandes.service";
 
 @Component({
@@ -43,6 +43,7 @@ export class AddcommandeComponent implements OnInit{
     private productService: ProductService,
     private commandesService: CommandesService,
     private snackBar: MatSnackBar,
+    private location: Location,
     private platformLocation: PlatformLocation,
     private formBuilder: FormBuilder) {
     this.structureId=route.snapshot.params['structureId']
@@ -105,6 +106,15 @@ export class AddcommandeComponent implements OnInit{
   isBrowser(): boolean {
     return typeof window !== 'undefined' && this.platformLocation !== null;
   }
+
+  logout() {
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
+  }
+  goBack(): void {
+    this.location.back();
+  }
+
   addToggle() {
     this.status = !this.status;
   }

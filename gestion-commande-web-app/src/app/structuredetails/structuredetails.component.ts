@@ -34,7 +34,6 @@ export class StructuredetailsComponent implements OnInit{
   userId: number | null = null;
   professeurConnecté : Professeur | undefined;
   professeurRespo : Professeur | undefined;
-  loading: boolean = true;
   listrubriques: any[] = [];
   rubriqueAllocations: any[] = [];
   rubriqueAllocationForm!: FormGroup;
@@ -47,6 +46,7 @@ export class StructuredetailsComponent implements OnInit{
   professeur:any;
   selectedYearCommand: number | null = null;
   listCommandesPerYear: any;
+  currentYear!:number;
 
   constructor(
     private structureService: StructuresService,
@@ -135,29 +135,13 @@ export class StructuredetailsComponent implements OnInit{
         });
         // Call onYearChangeCommand to filter commands for the latest year
         this.listCommandesPerYear = this.onYearChangeCommand(this.selectedYearCommand);
-        // Iterate through each command
-        /*this.listCommandesPerYear.forEach((commande: Commande) => {
-          // Extract the year from the commandeDate
-          const year = new Date(commande.commandeDate).getFullYear();
-
-
-
-        // Fetch professor details for each command
-        this.listCommandesPerYear.forEach((commande: Commande) => {
-          // @ts-ignore
-          commande['year'] = new Date(commande.commandeDate).getFullYear();
-          this.profService.getProfessor(commande.profId).subscribe(
-            (prof) => {
-              // Update the command object with professor name
-              // @ts-ignore
-              commande['profName'] = prof.prenom + ' ' + prof.nom;*/
       },
       error: (error) => {
         console.error(error);
       }
     });
 
-
+    this.currentYear = new Date().getFullYear();
 
     this.structureService.getStructureById(this.structureId).subscribe({
       next: (structuredetail) => {
@@ -201,6 +185,15 @@ export class StructuredetailsComponent implements OnInit{
         console.log(err);
       },
     });
+  }
+  getCurrentYearCommandesLength(): number {
+    const currentYear = new Date().getFullYear();
+    if (this.listCommandesPerYear) {
+      return this.listCommandesPerYear.filter((commande: Commande) => {
+        return new Date(commande.commandeDate).getFullYear() === currentYear;
+      }).length;
+    }
+    return 0;
   }
 
   onYearChange(year: number | null) {

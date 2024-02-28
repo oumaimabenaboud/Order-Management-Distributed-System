@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StructuresService } from '../services/structures.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { BudgetService } from '../services/budget.service';
 import { ProfesseurService } from '../services/professeur.service';
 import { CommandesService } from '../services/commandes.service';
@@ -36,7 +37,8 @@ export class ListeproduitsComponent implements OnInit {
     private commandeService: CommandesService,
     private snackBar: MatSnackBar,
     private platformLocation: PlatformLocation,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private location: Location
   ) {
     this.commandeId = route.snapshot.params['commandeId'];
   }
@@ -76,6 +78,10 @@ export class ListeproduitsComponent implements OnInit {
     sessionStorage.clear();
     this.router.navigate(['/login']);
   }
+  goBack(): void {
+    this.location.back();
+  }
+
 
   addToggle() {
     this.status = !this.status;
