@@ -7,6 +7,7 @@ import {StructuresService} from "../services/structures.service";
 import {Structure, structurestype} from "../model/structure.model";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class SettingsComponent implements OnInit{
   professeur: Professeur | undefined;
   passwordUpdateForm: FormGroup = this.fb.group({
     oldPassword: ['', Validators.required],
-    newPassword: ['', [Validators.required, Validators.minLength(6)]],
+    newPassword: ['', [Validators.required, Validators.minLength(4)]],
     confirmPassword: ['', Validators.required],
   });
 
@@ -30,6 +31,7 @@ export class SettingsComponent implements OnInit{
     private profService: ProfesseurService,
     private structureService: StructuresService,
     private platformLocation: PlatformLocation,
+    private snackBar: MatSnackBar,
     private router: Router,
     private fb: FormBuilder,
     private loginService: LoginService
@@ -67,32 +69,71 @@ export class SettingsComponent implements OnInit{
       } else {
         console.error('User ID not found in sessionStorage');
       }
+
+      this.loginService.isSamePassword('bekri_ali', 2).subscribe(
+        (response) => { 
+          console.log(response.status);
+        },
+        (error) => {
+          console.error("An error occurred while updating password:", error.status);
+          if (error.status === 400) {
+            window.alert('Bad request: ' + error.error);
+          } else if (error.status === 200) {
+            window.alert('Success with error: ' + error.error);
+          } else {
+            window.alert("An error occurred while updating password. Please try again later.");
+          }
+        }
+      );
     }
   }
   onPasswordUpdateSubmit(): void {
     if (this.passwordUpdateForm && this.passwordUpdateForm.valid && this.professeur) {
-      // Handle form submission logic here
-      
       const oldPassword = this.passwordUpdateForm.value.oldPassword;
-      const professorPassword = this.professeur.mdp || '';
-      console.log('oldPassword:', oldPassword, 'professorPassword:', professorPassword);
-  
-      this.loginService.isSamePassword(oldPassword, [professorPassword]).subscribe(
+      
+      this.loginService.isSamePassword(oldPassword, this.professeur.id).subscribe(
         (response) => { 
-          window.alert("Le mot de passe est correct" + response);
+          console.log(response); // Log the response
+          
+          if (response === 'Passwords match') {
+            console.log('Passwords match');
+            // Handle success, e.g., display a success message
+            window.alert('Password updated successfully.');
+          } else {
+            console.log('Passwords do not match');
+            // Handle failure, e.g., display an error message
+            window.alert('Password update failed: ' + response);
+          }
         },
-        (error: any) => {
-          console.error('Error:', error.error);
-          // Handle the error accordingly, e.g., show an error message
-          window.alert('Une erreur s\'est produite lors de la vérification du mot de passe.');
+        (error) => {
+          console.error("An error occurred while updating password:", error.status);
+          if (error.status === 400) {
+            // Handle 400 (Bad Request) error, e.g., display an error message from the server
+            window.alert('Bad request: ' + error.error);
+          } else if (error.status === 200) {
+            // Handle 200 (OK) response with error message, e.g., display an error message from the server
+            window.alert('Success with error: ' + error.error);
+          } else {
+            // Handle other errors, e.g., display a generic error message
+            window.alert("An error occurred while updating password. Please try again later.");
+          }
         }
       );
     } else {
-      // Handle the case when this.professeur is undefined or null
       console.error('Professor information is not available.');
-      window.alert('Impossible de vérifier le mot de passe. Les informations du professeur ne sont pas disponibles.');
+      window.alert('Unable to check password. Professor information is not available.');
     }
   }
   
+  
+  openErrorSnackBar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000, // Adjust duration as needed
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar'] // Add custom styling if needed
+    });
+  }
+
 }
 

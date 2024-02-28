@@ -79,25 +79,24 @@ public class LoginController {
         return email.matches("^[a-zA-Z]+\\.[a-zA-Z]+@umi.ac.ma$");
     }
 
-    @GetMapping("/isSamePassword/{formPassword}/{oldPasswordList}")
-    public String isSamePassword(@PathVariable String formPassword, @PathVariable List<String> oldPasswordList) {
-        // Get the BCrypt encoded password from the prof object
-        String oldPassword = oldPasswordList.get(0);
+    @PostMapping("/isSamePassword")
+    public ResponseEntity<?> isSamePassword(@RequestBody Map<String, String> requestBody) {
+        String formPassword = requestBody.get("formPassword");
+        Long idprofesseur = Long.parseLong(requestBody.get("idprofesseur"));
 
-        logger.error(formPassword);
-        logger.error(oldPassword);
-        logger.error(String.valueOf(passwordEncoder.matches(formPassword, oldPassword)));
+        professeur prof = ProfesseurRepo.getReferenceById(idprofesseur);
+        String encodedPasswordFromDB = prof.getMdp();
 
-        // Compare the BCrypt encoded password from the database with the raw form password
-        boolean passwordsMatch = passwordEncoder.matches(formPassword, oldPassword);
+        boolean passwordsMatch = passwordEncoder.matches(formPassword, encodedPasswordFromDB);
 
         if (passwordsMatch) {
             logger.error("LESSGO");
-            return "Passwords match";
+            return ResponseEntity.ok("Passwords match");
         } else {
-            return "Passwords do not match";
+            return ResponseEntity.badRequest().body("Passwords not match");
         }
     }
+
 
     @PutMapping("{id}")
     public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody professeur updatedProfesseur) {
