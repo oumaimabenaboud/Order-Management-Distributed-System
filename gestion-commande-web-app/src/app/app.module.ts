@@ -20,6 +20,7 @@ import { StructuredetailsComponent } from './structuredetails/structuredetails.c
 import { ProductDashComponent } from './product-dash/product-dash.component';
 import {AddcommandeComponent} from "./addcommande/addcommande.component";
 import { ListeproduitsComponent } from './listeproduits/listeproduits.component';
+import {SettingsComponent} from "./settings/settings.component";
 
 // const appRoutes: Routes = [
 //   // { path: 'login', component: LoginComponent },
@@ -59,7 +60,8 @@ import { ListeproduitsComponent } from './listeproduits/listeproduits.component'
     StructuredetailsComponent,
     ProductDashComponent,
     AddcommandeComponent,
-    ListeproduitsComponent
+    ListeproduitsComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

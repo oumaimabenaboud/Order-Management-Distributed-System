@@ -1,57 +1,27 @@
 <!-- SIDEBAR -->
 <section id="sidebar" [ngClass]="status ? 'hide' : ''">
-    <a href="/prof-dash" class="brand">
-      <i class='bx bxs-smile'></i>
-      <span class="text" >Admin Dashboard</span>
-    </a>
-    <ul class="side-menu top">
-      <li class="active">
-        <a >
-          <i class='bx bxs-info-square' ></i>
-          <span class="text">Information</span>
-        </a>
-      </li>
-      <li>
-        <a >
-          <i class='bx bx-label'></i>
-          <span class="text">Chiffres</span>
-        </a>
-      </li>
-      <li>
-        <a >
-          <i class='bx bxs-dashboard' ></i>
-          <span class="text">Répartition du Budget</span>
-        </a>
-      </li>
-      <li>
-        <a>
-          <i class='bx bxs-building-house' ></i>
-          <span class="text">Commandes</span>
-        </a>
-      </li>
-      <li>
-        <a >
-          <i class='bx bxs-user' ></i>
-          <span class="text">Professeurs membres</span>
-        </a>
-      </li>
+  <a href="/prof-dash" class="brand">
+    <i class='bx bxs-smile'></i>
+    <span class="text" >Admin Dashboard</span>
+  </a>
+  <ul class="side-menu top">
+    <li class="active">
+      <a >
+        <i class='bx bx-arrow-back' (click)="goBack()"></i>
+        <span class="text" (click)="goBack()">Retour</span>
+      </a>
+    </li>
 
-    </ul>
-      <ul class="side-menu">
-        <li>
-          <a href="#">
-            <i class='bx bxs-cog' ></i>
-            <span class="text">Paramètres</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="logout">
-            <i class='bx bxs-log-out-circle'  ></i>
-            <span class="text">Se déconnecter</span>
-          </a>
-        </li>
-      </ul>
-    </section>
+  </ul>
+  <ul class="side-menu">
+    <li>
+      <a href="#" class="logout">
+        <i class='bx bxs-log-out-circle'  (click)="logout()"></i>
+        <span class="text"(click)="logout()">Se déconnecter</span>
+      </a>
+    </li>
+  </ul>
+</section>
     <!-- SIDEBAR -->
 
     <!-- CONTENT -->
@@ -91,7 +61,7 @@
                                       formControlName="productName"
                                       placeholder="Exp: Ordinateur portable Dell XPS 15"
                                       class="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
-                                      (change)="updateRubriqueName($event)"
+                                      (change)="updateRubriqueName($event,i)"
                                     />
                                     <datalist id="productList">
                                       <option *ngFor="let s of listproducts" [value]="s.nom" ></option>
@@ -108,7 +78,7 @@
                                       formControlName="produitRubriqueId"
                                       placeholder="Achat de matériel informatique"
                                       class="block w-full p-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
-                                      [value]="selectedProductRubrique"
+                                      [value]="selectedProductRubrique[i]"
                                       readonly
                                     />
                                   </div>

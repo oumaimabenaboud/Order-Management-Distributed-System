@@ -71,9 +71,7 @@ public class CommandeServiceApplication {
 		for (Product product : products) {
 			CommandeLine commandeLine = new CommandeLine();
 			int quantity = (int) (Math.random() * 10) + 1;
-			System.out.println(quantity);
 			int priceht = (int) (Math.random() * 10) + 1;
-			System.out.println(priceht);
 			int totalHTligne = quantity * priceht;
 			commandeLine.setQuantity(quantity);
 			commandeLine.setPrixHT(priceht);

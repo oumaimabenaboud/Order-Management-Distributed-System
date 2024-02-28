@@ -9,7 +9,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Budget} from "../model/budget.model";
 import {Professeur} from "../model/professeur.model";
 import {ProductService} from "../services/product.service";
-import {Commande} from "../model/commande.model";
+import { Location } from '@angular/common';
 import {CommandesService} from "../services/commandes.service";
 
 @Component({
@@ -30,7 +30,7 @@ export class AddcommandeComponent implements OnInit{
   listBudgetsStructure:any;
   newCommandForm!: FormGroup;
   commandLines!: FormArray;
-  selectedProductRubrique: string = '';
+  selectedProductRubrique: any;
   totalTTC: number = 0;
 
 
@@ -43,6 +43,7 @@ export class AddcommandeComponent implements OnInit{
     private productService: ProductService,
     private commandesService: CommandesService,
     private snackBar: MatSnackBar,
+    private location: Location,
     private platformLocation: PlatformLocation,
     private formBuilder: FormBuilder) {
     this.structureId=route.snapshot.params['structureId']
@@ -105,6 +106,15 @@ export class AddcommandeComponent implements OnInit{
   isBrowser(): boolean {
     return typeof window !== 'undefined' && this.platformLocation !== null;
   }
+
+  logout() {
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
+  }
+  goBack(): void {
+    this.location.back();
+  }
+
   addToggle() {
     this.status = !this.status;
   }
@@ -118,21 +128,24 @@ export class AddcommandeComponent implements OnInit{
       this.totalTTC += productTotalTTC;
     });
   }
-  updateRubriqueName(event: any) {
+  updateRubriqueName(event: any, index: number) {
     const productName = event.target.value;
     const selectedProduct = this.listproducts.find(product => product.nom === productName);
     if (selectedProduct) {
-      this.selectedProductRubrique = selectedProduct.rubriqueName;
+      // Update the selectedProductRubrique array at the specified index
+      this.selectedProductRubrique[index] = selectedProduct.rubriqueName;
       console.log(this.selectedProductRubrique);
-      this.newCommandForm.patchValue({
+
+      // Update the produitRubriqueId control for the specific form group
+      // @ts-ignore
+      const ligneGroup = this.newCommandForm.get('newCommandLines').at(index) as FormGroup;
+      ligneGroup.patchValue({
         produitRubriqueId: selectedProduct.rubriqueName
       });
     } else {
       console.log("Product not found");
     }
   }
-
-
 
   createCommandLine(): FormGroup {
     return this.formBuilder.group({
@@ -163,6 +176,7 @@ export class AddcommandeComponent implements OnInit{
     });
 
     this.commandLines = this.newCommandForm.get('newCommandLines') as FormArray;
+    this.selectedProductRubrique = new Array(this.commandLines.length).fill('');
   }
 
   addCommande(){
