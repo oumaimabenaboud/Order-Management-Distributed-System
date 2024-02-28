@@ -51,9 +51,8 @@ export class LoginService {
     );
   }
 
-
-  public isSamePassword(formpassword: any, Professeur: any) {
-    return this.httpClient.get("http://localhost:1818/PROFESSOR-SERVICE/login/matchPasswords/"+formpassword, Professeur)
+  isSamePassword(formPassword: string, oldPasswordList: string[]): Observable<string> {
+    return this.httpClient.get<string>(`http://localhost:1818/PROFESSOR-SERVICE/login/isSamePassword/${formPassword}/${oldPasswordList[0]}`);
   }
 
 }
