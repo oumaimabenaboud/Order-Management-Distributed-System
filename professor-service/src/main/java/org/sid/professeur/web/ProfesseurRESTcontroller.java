@@ -1,5 +1,7 @@
 package org.sid.professeur.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -26,6 +29,8 @@ public class ProfesseurRESTcontroller {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     public ProfesseurRESTcontroller (ProfesseurRepo ProfesseurRepo){
         this.ProfesseurRepo=ProfesseurRepo;
@@ -122,6 +127,23 @@ public class ProfesseurRESTcontroller {
         } else {
             // If no search parameter provided or if it's empty, return all professeurs
             return ProfesseurRepo.findAll();
+        }
+    }
+    @PostMapping("/isSamePassword")
+    public ResponseEntity<?> isSamePassword(@RequestBody Map<String, String> requestBody) {
+        String formPassword = requestBody.get("formPassword");
+        Long idprofesseur = Long.parseLong(requestBody.get("idprofesseur"));
+
+        professeur prof = ProfesseurRepo.getReferenceById(idprofesseur);
+        String encodedPasswordFromDB = prof.getMdp();
+
+        boolean passwordsMatch = passwordEncoder.matches(formPassword, encodedPasswordFromDB);
+
+        if (passwordsMatch) {
+            logger.error("LESSGO");
+            return ResponseEntity.ok("Passwords match");
+        } else {
+            return ResponseEntity.badRequest().body("Passwords not match");
         }
     }
 

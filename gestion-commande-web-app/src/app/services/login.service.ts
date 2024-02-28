@@ -53,7 +53,7 @@ export class LoginService {
   }
 
   isSamePassword(formPassword: string, idprofesseur: number): Observable<any> {
-    return this.httpClient.post('http://localhost:1818/PROFESSOR-SERVICE/login/isSamePassword', { formPassword, idprofesseur });
+    return this.httpClient.post('http://localhost:1818/PROFESSOR-SERVICE/professeurs/isSamePassword', { formPassword, idprofesseur });
   }
   
 

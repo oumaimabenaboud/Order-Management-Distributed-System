@@ -8,6 +8,7 @@ import {Structure, structurestype} from "../model/structure.model";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import e from 'express';
 
 
 @Component({
@@ -69,27 +70,14 @@ export class SettingsComponent implements OnInit{
       } else {
         console.error('User ID not found in sessionStorage');
       }
-
-      this.loginService.isSamePassword('bekri_ali', 2).subscribe(
-        (response) => { 
-          console.log(response.status);
-        },
-        (error) => {
-          console.error("An error occurred while updating password:", error.status);
-          if (error.status === 400) {
-            window.alert('Bad request: ' + error.error);
-          } else if (error.status === 200) {
-            window.alert('Success with error: ' + error.error);
-          } else {
-            window.alert("An error occurred while updating password. Please try again later.");
-          }
-        }
-      );
     }
   }
   onPasswordUpdateSubmit(): void {
     if (this.passwordUpdateForm && this.passwordUpdateForm.valid && this.professeur) {
       const oldPassword = this.passwordUpdateForm.value.oldPassword;
+      const newPassword = this.passwordUpdateForm.value.newPassword;
+      const confirmPassword = this.passwordUpdateForm.value.confirmPassword;
+      const idProfesseur = this.professeur.id;
       
       this.loginService.isSamePassword(oldPassword, this.professeur.id).subscribe(
         (response) => { 
@@ -106,16 +94,28 @@ export class SettingsComponent implements OnInit{
           }
         },
         (error) => {
-          console.error("An error occurred while updating password:", error.status);
+          //console.error("An error occurred while updating password:", error.status);
           if (error.status === 400) {
-            // Handle 400 (Bad Request) error, e.g., display an error message from the server
-            window.alert('Bad request: ' + error.error);
+            window.alert("L'ancien mot de passe est incorrect. Veuillez réessayer.");
           } else if (error.status === 200) {
-            // Handle 200 (OK) response with error message, e.g., display an error message from the server
-            window.alert('Success with error: ' + error.error);
+            if (newPassword === confirmPassword){
+              this.loginService.updatePassword(idProfesseur, { mdp: newPassword }).subscribe(
+                (response) => {
+                  // console.log("Update success",response);
+                  window.alert('Le mot de passe est mit à jour avec succès.');
+                  window.location.reload();
+                },
+                (error) => {
+                  // console.error('Error updating password:', error);
+                  window.alert('Error dans la mise à jour du mot de passe. Essayez plus tard.');
+                }
+                );
+            }else{
+              window.alert("Les mots de passe ne correspondent pas");
+            }
+
           } else {
-            // Handle other errors, e.g., display a generic error message
-            window.alert("An error occurred while updating password. Please try again later.");
+            window.alert('Error dans la mise à jour du mot de passe. Essayez plus tard.');
           }
         }
       );

@@ -79,23 +79,7 @@ public class LoginController {
         return email.matches("^[a-zA-Z]+\\.[a-zA-Z]+@umi.ac.ma$");
     }
 
-    @PostMapping("/isSamePassword")
-    public ResponseEntity<?> isSamePassword(@RequestBody Map<String, String> requestBody) {
-        String formPassword = requestBody.get("formPassword");
-        Long idprofesseur = Long.parseLong(requestBody.get("idprofesseur"));
 
-        professeur prof = ProfesseurRepo.getReferenceById(idprofesseur);
-        String encodedPasswordFromDB = prof.getMdp();
-
-        boolean passwordsMatch = passwordEncoder.matches(formPassword, encodedPasswordFromDB);
-
-        if (passwordsMatch) {
-            logger.error("LESSGO");
-            return ResponseEntity.ok("Passwords match");
-        } else {
-            return ResponseEntity.badRequest().body("Passwords not match");
-        }
-    }
 
 
     @PutMapping("{id}")
