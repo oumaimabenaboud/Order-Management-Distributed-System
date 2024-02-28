@@ -55,12 +55,12 @@ public class CommandeRestController {
         if(nouvelleCommande.getStructureId() !=null){
         newCommand.setStructureId(nouvelleCommande.getStructureId());
         }else{
-            ResponseEntity.badRequest().body("Aucune structure détectée, veuillez réessayer plus tard.");
+            return ResponseEntity.badRequest().body("Aucune structure détectée, veuillez réessayer plus tard.");
         }
         if(nouvelleCommande.getBudgetId() !=null){
             newCommand.setBudgetId(nouvelleCommande.getBudgetId());
         }else{
-            ResponseEntity.badRequest().body("Une erreur s'est produite. Veuillez réessayer plus tard.");
+            return  ResponseEntity.badRequest().body("Une erreur s'est produite. Veuillez réessayer plus tard.");
         }
         // Check if prixTotalHT is less than prixTotalTTC
         if (nouvelleCommande.getPrixTotalTTC() < nouvelleCommande.getPrixTotalHT()) {
@@ -78,10 +78,14 @@ public class CommandeRestController {
                 if (rubriqueAllocation.getRubriqueId()== commandeLine.getProduitRubriqueId()){
                     if (commandeLine.getQuantity()<= 0 || commandeLine.getPrixHT()<= 0 || commandeLine.getPrixTTC()<= 0){
                         return ResponseEntity.badRequest().body("Les valeurs de la quantité, du prix hors taxe (HT) ou du prix toutes taxes comprises (TTC) doivent être supérieures à zéro.");
+
+                    }
+                    if (commandeLine.getProductId() == null ){
+                        return ResponseEntity.badRequest().body("Veuillez choisir un produit parmi la liste des produits disponibles !");
                     }
                     if(rubriqueAllocation.getMontantRestant()<commandeLine.getPrixTTC()*commandeLine.getQuantity()){
-                            return ResponseEntity.badRequest().body("Vous avez dépassé le montant alloué à la rubrique :"+ rubriqueAllocation.getRubriqueName());
-                        }else{
+                        return ResponseEntity.badRequest().body("Vous avez dépassé le montant alloué à la rubrique :"+ rubriqueAllocation.getRubriqueName());
+                    }else{
                         rubriqueAllocation.setMontantRestant(rubriqueAllocation.getMontantRestant()-commandeLine.getPrixTTC()*commandeLine.getQuantity());
                         commandeLine.setCommandeId(newCommand.getId());
                         commandeLineRepository.save(commandeLine);
@@ -89,23 +93,27 @@ public class CommandeRestController {
                 }
             }
         }
-        newCommand.setCommandeLines(commandeLines);
-        if(nouvelleCommande.getPrixTotalHT()>budget.getTotalRestant()){
-            ResponseEntity.badRequest().body("Le montant de la commande dépasse votre budget annuel restant");
-        }else{
-            newCommand.setPrixTotalHT(nouvelleCommande.getPrixTotalHT());
-        }
-        if(nouvelleCommande.getPrixTotalTTC()>budget.getTotalRestant()){
-            ResponseEntity.badRequest().body("Le montant de la commande dépasse votre budget annuel restant");
-        }else{
-            newCommand.setPrixTotalTTC(nouvelleCommande.getPrixTotalTTC());
-        }
+        if(commandeLines.isEmpty()){
+            commandeRepository.deleteById(newCommand.getId());
+            return ResponseEntity.badRequest().body("Aucun produit n'a été détecté dans cette commande. La commande est vide.");
+        }else {
+            newCommand.setCommandeLines(commandeLines);
+            if (nouvelleCommande.getPrixTotalHT() > budget.getTotalRestant()) {
+                return ResponseEntity.badRequest().body("Le montant de la commande dépasse votre budget annuel restant");
+            } else {
+                newCommand.setPrixTotalHT(nouvelleCommande.getPrixTotalHT());
+            }
+            if (nouvelleCommande.getPrixTotalTTC() > budget.getTotalRestant()) {
+                return ResponseEntity.badRequest().body("Le montant de la commande dépasse votre budget annuel restant");
+            } else {
+                newCommand.setPrixTotalTTC(nouvelleCommande.getPrixTotalTTC());
+            }
 
-        newCommand.setType(commandestype.EN_COURS);
-        budgetRestClient.updateAllocations(budgetId,rubriquesAllocations);
-        commandeRepository.save(newCommand);
-        return ResponseEntity.ok("Commande ajoutée avec succès");
-
+            newCommand.setType(commandestype.EN_COURS);
+            budgetRestClient.updateAllocations(budgetId, rubriquesAllocations);
+            commandeRepository.save(newCommand);
+            return ResponseEntity.ok("Commande ajoutée avec succès");
+        }
     }
 
     /*@PutMapping("/{id}")
@@ -201,10 +209,9 @@ public class CommandeRestController {
         return commandes;
     }
 
-    @GetMapping("byStructure/{id}")
-    public List<Commande> getCommandesByStructureId(Long structureId) {
-        List<Commande> commandes = commandeRepository.findByStructureId(structureId);
-        return commandes;
+    @GetMapping("/byStructure/{structureId}")
+    public List<Commande> getCommandesByStructureId(@PathVariable Long structureId) {
+        return commandeRepository.getCommandesByStructureId(structureId);
     }
 
 }

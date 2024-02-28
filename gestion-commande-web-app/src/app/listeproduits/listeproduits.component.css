@@ -1,0 +1,21 @@
+.form-control {
+    color: #6a6c72;
+    transition: all 0.5s;
+    background-color: #f1f5fe;
+    border: 1px solid #f1f5fe;
+    font-size: 12px;
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: unset;
+    border-color: #FB8B03;
+    display: block;
+    height: 40px;
+    width: 70%;
+    outline: 0;
+
+}
+
+    .form-control:focus {
+        border-color: #004AAD;
+        box-shadow: 0 0 5px rgba(#004AAD, 0.5);
+    }

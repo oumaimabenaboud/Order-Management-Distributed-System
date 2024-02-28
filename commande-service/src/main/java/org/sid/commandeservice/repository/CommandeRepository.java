@@ -9,4 +9,6 @@ import java.util.List;
 @RepositoryRestResource
 public interface CommandeRepository extends JpaRepository<Commande,Long> {
     List<Commande> findByStructureId(Long structureId);
+
+    List<Commande> getCommandesByStructureId(Long structureId);
 }

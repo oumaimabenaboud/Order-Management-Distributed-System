@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Commande} from "../model/commande.model";
+import {Structure} from "../model/structure.model";
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,8 @@ export class CommandesService {
 
   constructor(private http: HttpClient) { }
 
-  public getCommandes():Observable<Array<Commande>>{
-    return this.http.get<Array<Commande>>("http://localhost:1818/COMMANDE-SERVICE/commandes")
+  public getCommandes():Observable<Commande[]>{
+    return this.http.get<Commande[]>("http://localhost:1818/COMMANDE-SERVICE/commandes")
   }
 
   public getCommande(id: any):Observable<Commande>{
@@ -27,8 +28,8 @@ export class CommandesService {
     return this.http.put("http://localhost:1818/COMMANDE-SERVICE/commandes/"+commandeId, Commande)
   }
 
-  getCommandesByStructureId(structureId : number):Observable<Array<Commande>>{
-  return this.http.get<Array<Commande>>("http://localhost:1818/COMMANDE-SERVICE/commandes/byStructure/"+structureId)
+  getCommandesByStructureId(structureId : number):Observable<Commande[]>{
+  return this.http.get<Commande[]>("http://localhost:1818/COMMANDE-SERVICE/commandes/byStructure/"+structureId)
   }
 
 }

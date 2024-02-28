@@ -183,6 +183,9 @@ export class AddcommandeComponent implements OnInit{
     formData.newCommandLines.forEach((commandline: any) => {
       const selectedProductName = commandline.productName;
       const selectedProduct = this.listproducts.find(product => product.nom === selectedProductName);
+      if (!selectedProduct){
+        window.alert("Veuillez choisir un produit parmi la liste des produits disponibles !");
+      }
       const prixHT = commandline.prixHT;
       const prixTTC = commandline.prixTTC;
       const produitRubriqueId= selectedProduct.rubriqueId;
