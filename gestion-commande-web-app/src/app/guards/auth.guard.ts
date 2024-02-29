@@ -33,10 +33,10 @@ export class authGuard implements CanActivate {
     if (isAdmin === "true") {
       allowedRoutes = ['/prof-admin', '/structure-admin', '/rubrique-admin', '/product'];
     } else {
-      allowedRoutes = ['/prof-dash', '/structuredetail', '/addcomande', '/settings', '/listeproduits'];
+      allowedRoutes = ['/prof-dash', '/structuredetail', '/product' ,'/addcomande', '/settings', '/listeproduits'];
     }
 
-    // Check if the requested route is allowed for the user's role
+
     if (allowedRoutes.some(route => state.url.startsWith(route))) {
       return true;
     } else if (isAdmin === "false") {
