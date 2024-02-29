@@ -29,7 +29,7 @@ export class authGuard implements CanActivate {
       return this.router.createUrlTree(['/login']);
     }
 
-    const allowedRoutesForAdmin = ['/prof-admin', '/structure-admin', '/rubrique-admin','/product'];
+    const allowedRoutesForAdmin = ['/prof-admin', '/structure-admin', '/rubrique-admin','/product','/settings'];
     const allowedRoutesForNonAdmin = ['/prof-dash', '/structuredetail','/product','/addcomande'];
 
     // console.log(state.url," ",allowedRoutesForNonAdmin.some(route => state.url.startsWith(route))," ",state.url.startsWith('/structuredetail'))
@@ -37,7 +37,7 @@ export class authGuard implements CanActivate {
 
     if (isAdmin == "true" && allowedRoutesForAdmin.includes(state.url)) {
       return true;
-    }else if (isAdmin == "false" && allowedRoutesForNonAdmin.includes(state.url) || state.url.startsWith('/structuredetail')) {
+    }else if (isAdmin == "false" && allowedRoutesForNonAdmin.includes(state.url) || state.url.startsWith('/structuredetail') || state.url.startsWith('/listeproduits')) {
       return true;
     } else {
       const defaultRoute = isAdmin === "true" ? '/prof-admin' : '/prof-dash';

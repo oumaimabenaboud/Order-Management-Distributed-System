@@ -79,25 +79,8 @@ public class LoginController {
         return email.matches("^[a-zA-Z]+\\.[a-zA-Z]+@umi.ac.ma$");
     }
 
-    @GetMapping("/isSamePassword/{formPassword}/{oldPasswordList}")
-    public String isSamePassword(@PathVariable String formPassword, @PathVariable List<String> oldPasswordList) {
-        // Get the BCrypt encoded password from the prof object
-        String oldPassword = oldPasswordList.get(0);
 
-        logger.error(formPassword);
-        logger.error(oldPassword);
-        logger.error(String.valueOf(passwordEncoder.matches(formPassword, oldPassword)));
 
-        // Compare the BCrypt encoded password from the database with the raw form password
-        boolean passwordsMatch = passwordEncoder.matches(formPassword, oldPassword);
-
-        if (passwordsMatch) {
-            logger.error("LESSGO");
-            return "Passwords match";
-        } else {
-            return "Passwords do not match";
-        }
-    }
 
     @PutMapping("{id}")
     public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody professeur updatedProfesseur) {

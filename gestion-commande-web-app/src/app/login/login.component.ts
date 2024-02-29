@@ -143,7 +143,7 @@ export class LoginComponent implements OnInit {
       this.loginService.updatePassword(userId, updatedProfessor).subscribe(
         (response) => {
           console.log('Password updated successfully:', response);
-          this.snackBar.open('Password updated successfully', 'Close', {
+          this.snackBar.open('Le mot de passe est mit à jour avec succès', 'Close', {
             duration: 3000,
           });
           // Redirect the user to the dashboard or any other desired location
