@@ -46,7 +46,11 @@ export class ProfAdminViewComponent implements OnInit {
     if (this.isBrowser()) {
       const id = sessionStorage.getItem('id');
       this.userId = id ? parseInt(id, 10) : null;
+      const isAdmin = sessionStorage.getItem('isAdmin');
 
+      if (isAdmin === "false") {
+        this.router.navigate(['/prof-dash']);
+      }
       if (this.userId) {
         this.profService.getProfessor(this.userId).subscribe(
           (professor: Professeur) => {

@@ -47,8 +47,11 @@ export class ProductDashComponent implements OnInit{
       const id = sessionStorage.getItem('id');
       this.userId = id ? parseInt(id, 10) : null;
       const isAdmin = sessionStorage.getItem('isAdmin');
-      this.isAdmin = isAdmin === "true" ? true : false;
+      // this.isAdmin = isAdmin === "true" ? true : false;
       // console.log(this.isAdmin);
+      if (isAdmin === "true") {
+        this.router.navigate(['/prof-admin']);
+      }
 
       if (this.userId) {
         this.profService.getProfessor(this.userId).subscribe(
