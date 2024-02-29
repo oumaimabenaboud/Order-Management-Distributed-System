@@ -14,10 +14,10 @@ export interface Commande {
   type: commandestype;
 }
 export enum commandestype {
-  EN_COURS = 'En cours',
-  PASSE = 'Passée',
-  ANNULÉE = 'Annulée',
-  LIVRÉE = 'Livrée'
+  EN_COURS,
+  PASSEE,
+  ANNULÉE ,
+  LIVRÉE
 }
 
 

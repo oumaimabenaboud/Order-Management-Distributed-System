@@ -36,14 +36,14 @@
     <main class="main" >
 
       <!-- NEW Liste Produit -->
-      <section class="container px-4 mx-auto" style="background-color: transparent">
+      <section class="container px-4 mx-auto" style="background-color: transparent" >
         <div class="sm:flex sm:items-center sm:justify-between">
           <div>
             <div class="flex items-center gap-x-3">
               <h2 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl" style="color: #4C86A7;"><i class="fa-brands fa-opencart"></i>Détails de la commande</h2>
             </div>
           </div>
-          <div class="mt-6 sm:flex sm:items-center sm:justify-between ">
+          <div  class="mt-6 sm:flex sm:items-center sm:justify-between ">
             <div class="text-sm text-gray-500 dark:text-gray-400">
               <div class="card-footer bg-transparent">         <!--(click)="addRubriqueAllocation()"  hna !! -->
                 <button type="button" class="btnp btn-primary" (click)="addCommandeLine()" *ngIf="isEditMode" style="color: #4C86A7;"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
@@ -58,13 +58,13 @@
                 <button *ngIf="isEditMode" (click)="Modifier()" class="btns btn-outline-success ms-3" style="color: #FB8B03;"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer les modifications</button>
               </div>
             </div>
-            &nbsp;
             <button class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600" style="background-color: #4C86A7;">
-                <label for="dropdown"><i class="fa-solid fa-list"></i> Type de Commande : </label>
-              <select style="background:none; color: white;" id="dropdown" >
-                <option style="color: #4C86A7;" *ngFor="let type of commandesTypes" >{{type}}</option>
-              </select>
-
+              <label><i class="fa-solid fa-list"></i> Type de Commande : </label>
+              <div >
+                <select  style="background:none; color: white;"[(ngModel)]="this.selectedCommandeType"  (change)="onCommandeTypeChange()" [disabled]="!isEditMode">
+                  <option style="color: #4C86A7;" *ngFor="let type of commandesTypes">{{ type}}</option>
+                </select>
+              </div>
             </button>
           </div>
         </div>

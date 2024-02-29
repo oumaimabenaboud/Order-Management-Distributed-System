@@ -166,6 +166,7 @@ public class CommandeRestController {
                 } else {
                     existingCommande.setPrixTotalTTC(updatedCommande.getPrixTotalTTC());
                 }
+                existingCommande.setType(updatedCommande.getType());
                 budgetRestClient.updateAllocations(budgetId, rubriquesAllocations);
                 commandeRepository.save(existingCommande);
                 return ResponseEntity.ok("Commande mise à jour avec succès");

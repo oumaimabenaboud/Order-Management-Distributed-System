@@ -30,9 +30,11 @@ export class ListeproduitsComponent implements OnInit {
   commandeForm!: FormGroup;
   selectedCommande:any;
   selectedProductRubrique: any;
-  commandesTypes: any = Object.values(commandestype);
+  commandesTypes: string[] = Object.values(commandestype)
+  .filter(value => typeof value === 'string') as string[];
+  selectedCommandeType:any;
 
-  constructor(
+constructor(
     private structureService: StructuresService,
     private router: Router,
     private route: ActivatedRoute,
@@ -67,19 +69,33 @@ export class ListeproduitsComponent implements OnInit {
       }
     }
 
+   /* this.commandeService.getCommandeById(this.commandeId).subscribe(
+      (commande) =>{
+        console.log(commande);
+        this.CommandeForm();
+      },
+      (error) => {
+        console.error('Error fetching command:', error);
+      }
+    );*/
     this.commandeService.getCommandeById(this.commandeId).subscribe(
       (commande) =>{
-        this.CommandeForm();
         console.log(commande);
+        this.CommandeForm();
+        this.selectedCommandeType = commande.type;
+        console.log(this.selectedCommandeType);
+      },
+      (error) => {
+        console.error('Error fetching command:', error);
       }
-    )
+    );
+
     this.budgetService.getAllRubriques().subscribe(
       (data)=>{
         this.listrubriques = data;
       },
       (error)=> console.error(error)
     );
-
 
     this.productService.getAllProducts().subscribe(
       (data)=>{
@@ -119,8 +135,9 @@ export class ListeproduitsComponent implements OnInit {
         this.selectedCommande = commande;
         if (this.selectedCommande) {
           this.commandeForm.patchValue({
-            commandeType: this.selectedCommande.type
+            commandeType: this.selectedCommande.type,
           });
+          console.log(this.selectedCommande.type);
           this.selectedCommande.commandeLines.forEach((commandeLine: any) => {
             this.addCommandeLine(commandeLine);
           });
@@ -193,7 +210,10 @@ export class ListeproduitsComponent implements OnInit {
       console.log("Product not found");
     }
   }
-
+  onCommandeTypeChange(): void {
+    //this.selectedCommandeType=this.selectedCommandeType
+    console.log('Dropdown value changed:', this.selectedCommandeType);
+  }
   Modifier() {
     const formData = this.commandeForm.value;
     let totalHT = 0;
@@ -203,7 +223,8 @@ export class ListeproduitsComponent implements OnInit {
     const updatedCommande = {
       prixTotalHT: 0, // Initialize to 0
       prixTotalTTC: 0, // Initialize to 0
-      commandeLines: [] // Initialize as an empty array
+      commandeLines: [], // Initialize as an empty array
+      type :''
     };
     formData.commandeLines.forEach((commandline: any) => {
       const selectedProductName = commandline.productName;
@@ -232,7 +253,8 @@ export class ListeproduitsComponent implements OnInit {
       updatedCommande.commandeLines.push(commandeLine);
       updatedCommande.prixTotalHT=totalHT;
       updatedCommande.prixTotalTTC=totalTTC;
-    });      // Log the new budget
+    });
+    updatedCommande.type = this.selectedCommandeType;
     console.log(updatedCommande);
     this.commandeService.updateCommande(this.commandeId, updatedCommande).subscribe(
       () => {
@@ -243,6 +265,7 @@ export class ListeproduitsComponent implements OnInit {
         console.error("Une erreur s'est produite lors de la mise à jour de la commande.", error);
         if (error.status === 200) {
           window.alert('Commande mise à jour avec succès !');
+          window.location.reload();
         } else if (error.status === 400) {
           // Bad request, display error message from server
           window.alert(error.error);
