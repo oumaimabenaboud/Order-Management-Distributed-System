@@ -567,4 +567,18 @@ export class StructuredetailsComponent implements OnInit{
       }
     }
 }
+
+  deleteCommande(id: any) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette commande ?")) {
+      this.commandeService.deleteCommande(id).subscribe({
+        next: () => {
+          window.alert("Commande supprimée avec succès !");
+          window.location.reload();
+        },
+        error: err => {console.log(err);
+        window.alert(err.error)
+        }
+      });
+    }
+  }
 }

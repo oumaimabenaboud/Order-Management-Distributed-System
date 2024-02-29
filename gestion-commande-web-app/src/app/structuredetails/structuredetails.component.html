@@ -373,7 +373,7 @@
                       <i style="margin-left:2px; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;">&nbsp;{{c.year}}</span>
 
                     </p>
-                    <button class="btnf inline-flex px-4 py-1.5 mx-auto rounded-full bg-white rounded-full p-2 cursor-pointer group " role="button" >
+                    <button [hidden]="!hasAccessProf" (click)="deleteCommande(c.id)" class="btnf inline-flex px-4 py-1.5 mx-auto rounded-full bg-white rounded-full p-2 cursor-pointer group " role="button" >
                       <i class="fa-solid fa-trash"> </i>
                     </button>
 

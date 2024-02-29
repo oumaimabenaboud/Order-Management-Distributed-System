@@ -186,8 +186,31 @@ public class CommandeRestController {
 
 
     @DeleteMapping("{id}")
-    public void deleteCommande(@PathVariable String id){
-        commandeRepository.deleteById(Long.valueOf(id));
+    public ResponseEntity<?> deleteCommande(@PathVariable Long id){
+        Commande existingCommande = commandeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Commande not found with id: " + id));
+        if (existingCommande.getType()==commandestype.LIVRÉE){
+            return ResponseEntity.badRequest().body("Vous ne pouvez pas supprimer une commande déjà livrée");
+        }else if(existingCommande.getType()==commandestype.ANNULÉE) {
+            Long budgetId = existingCommande.getBudgetId();
+            Budget budget = budgetRestClient.getBudgetById(budgetId);
+            List<RubriqueAllocation> rubriquesAllocations = budget.getRubriqueAllocations();
+            List<CommandeLine> oldCommandeLines = existingCommande.getCommandeLines();
+            existingCommande.setCommandeLines(new ArrayList<>());
+            for (CommandeLine oldCommandeLine : oldCommandeLines) {
+                for (RubriqueAllocation rubriqueAllocation : rubriquesAllocations) {
+                    if (rubriqueAllocation.getRubriqueId() == oldCommandeLine.getProduitRubriqueId()) {
+                        rubriqueAllocation.setMontantRestant(Math.round((rubriqueAllocation.getMontantRestant() + oldCommandeLine.getPrixTTC() * oldCommandeLine.getQuantity()) * 100.0) / 100.0);
+                        commandeLineRepository.deleteById(oldCommandeLine.getId());
+                    }
+                }
+            }
+            budgetRestClient.updateAllocations(budgetId, rubriquesAllocations);
+            commandeRepository.deleteById(id);
+            return ResponseEntity.ok("Commande supprimée avec succès");
+        }else{
+            return ResponseEntity.ok("Vous ne pouvez supprimer qu'une commande annulée");
+        }
     }
 
     @GetMapping
