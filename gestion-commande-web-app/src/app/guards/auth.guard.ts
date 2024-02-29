@@ -29,15 +29,15 @@ export class authGuard implements CanActivate {
       return this.router.createUrlTree(['/login']);
     }
 
-    const allowedRoutesForAdmin = ['/prof-admin', '/structure-admin', '/rubrique-admin','/product','/settings'];
-    const allowedRoutesForNonAdmin = ['/prof-dash', '/structuredetail','/product','/addcomande'];
+    const allowedRoutesForAdmin = ['/prof-admin', '/structure-admin', '/rubrique-admin','/product'];
+    const allowedRoutesForNonAdmin = ['/prof-dash', '/structuredetail','/product','/addcomande','/settings','/listeproduits'];
 
     // console.log(state.url," ",allowedRoutesForNonAdmin.some(route => state.url.startsWith(route))," ",state.url.startsWith('/structuredetail'))
 
 
-    if (isAdmin == "true" && allowedRoutesForAdmin.includes(state.url)) {
+     if (isAdmin == "false" && allowedRoutesForNonAdmin.includes(state.url) || state.url.startsWith('/structuredetail') || state.url.startsWith('/listeproduits')){
       return true;
-    }else if (isAdmin == "false" && allowedRoutesForNonAdmin.includes(state.url) || state.url.startsWith('/structuredetail') || state.url.startsWith('/listeproduits')) {
+    }else  if (isAdmin == "true" && allowedRoutesForAdmin.includes(state.url)){
       return true;
     } else {
       const defaultRoute = isAdmin === "true" ? '/prof-admin' : '/prof-dash';
