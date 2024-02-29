@@ -14,26 +14,10 @@ export interface Commande {
   type: commandestype;
 }
 export enum commandestype {
-  EN_COURS = 'En cours',
-  PASSE = 'Passée',
-  ANNULÉE = 'Annulée',
-  LIVRÉE = 'Livrée'
+  EN_COURS,
+  PASSEE,
+  ANNULÉE ,
+  LIVRÉE
 }
 
-export namespace commandestype {
-  export function toString(type: commandestype): string {
-    switch (type) {
-      case commandestype.EN_COURS:
-        return "En cours";
-      case commandestype.PASSE:
-        return "Passée";
-      case commandestype.ANNULÉE:
-        return "Annulée";
-      case commandestype.LIVRÉE:
-        return "Livrée";
-      default:
-        throw new Error("Invalid commandes type");
-    }
-  }
-}
 

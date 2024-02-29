@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Professeur } from '../model/professeur.model';
 
 @Injectable({
   providedIn: 'root',
@@ -51,8 +52,9 @@ export class LoginService {
     );
   }
 
-  isSamePassword(formPassword: string, oldPasswordList: string[]): Observable<string> {
-    return this.httpClient.get<string>(`http://localhost:1818/PROFESSOR-SERVICE/login/isSamePassword/${formPassword}/${oldPasswordList[0]}`);
+  isSamePassword(formPassword: string, idprofesseur: number): Observable<any> {
+    return this.httpClient.post('http://localhost:1818/PROFESSOR-SERVICE/professeurs/isSamePassword', { formPassword, idprofesseur });
   }
+  
 
 }

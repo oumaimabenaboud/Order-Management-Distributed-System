@@ -106,74 +106,71 @@ public class CommandeRestController {
         }
     }
 
-    /*@PutMapping("/{id}")
-    public Commande updateCommande(@PathVariable Long id, @RequestBody Commande updatedCommande) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCommande(@PathVariable Long id, @RequestBody Commande updatedCommande) {
         Commande existingCommande = commandeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Commande not found with id: " + id));
 
-        Professeur professeur = updatedCommande.getProfesseur();
-
-        if (professeur != null && professeur.getId() != null && professeur.isDroit_daccee()) {
-            existingCommande.setProfID(professeur.getId());
-
-            List<CommandeLine> updatedCommandeLines = new ArrayList<>();
-
-            for (CommandeLine updatedCommandeLine : updatedCommande.getCommandeLines()) {
-                String productName = updatedCommandeLine.getProductName();
-                Product product = productRestClient.getProductByName(productName);
-
-                if (product == null) {
-                    throw new RuntimeException("Product '" + productName + "' not found!");
-                }
-
-                CommandeLine existingCommandeLine = existingCommande.getCommandeLines().stream()
-                        .filter(cl -> cl.getId().equals(updatedCommandeLine.getId()))
-                        .findFirst()
-                        .orElse(null);
-
-                if (existingCommandeLine != null) {
-                    // Update existing CommandeLine
-                    existingCommandeLine.setQuantity(updatedCommandeLine.getQuantity());
-                    existingCommandeLine.setTotal_prixHT_ligne(product.getPrixHT() * existingCommandeLine.getQuantity());
-                    existingCommandeLine.setTotal_prixTTC_ligne(product.getPrixTTC() * existingCommandeLine.getQuantity());
-
-                    // Save and add to the updatedCommandeLines list
-                    updatedCommandeLines.add(commandeLineRepository.save(existingCommandeLine));
-                } else {
-                    // Create a new CommandeLine if not found
-                    CommandeLine newCommandeLine = new CommandeLine();
-                    newCommandeLine.setId(product.getId());
-                    newCommandeLine.setQuantity(updatedCommandeLine.getQuantity());
-                    newCommandeLine.setTotal_prixHT_ligne(product.getPrixHT() * newCommandeLine.getQuantity());
-                    newCommandeLine.setTotal_prixTTC_ligne(product.getPrixTTC() * newCommandeLine.getQuantity());
-                    newCommandeLine.setProduct(product);
-                    newCommandeLine.setCommande(existingCommande);
-
-                    // Save and add to the updatedCommandeLines list
-                    updatedCommandeLines.add(commandeLineRepository.save(newCommandeLine));
+        // Check if prixTotalHT is less than prixTotalTTC
+        if (updatedCommande.getPrixTotalTTC() < updatedCommande.getPrixTotalHT()) {
+            return ResponseEntity.badRequest().body("Le montant hors taxe doit être inférieur au montant toutes taxes comprises (TTC).");
+        }
+        if (existingCommande.getType()==commandestype.LIVRÉE){
+            return ResponseEntity.badRequest().body("Vous ne pouvez pas modifier une commande déjà livrée");
+        }else {
+            Long budgetId = existingCommande.getBudgetId();
+            Budget budget = budgetRestClient.getBudgetById(budgetId);
+            List<RubriqueAllocation> rubriquesAllocations = budget.getRubriqueAllocations();
+            List<CommandeLine> oldCommandeLines = existingCommande.getCommandeLines();
+            existingCommande.setCommandeLines(new ArrayList<>());
+            List<CommandeLine> updateCommandeLines = updatedCommande.getCommandeLines();
+            for (CommandeLine oldCommandeLine : oldCommandeLines) {
+                for (RubriqueAllocation rubriqueAllocation : rubriquesAllocations) {
+                    if (rubriqueAllocation.getRubriqueId() == oldCommandeLine.getProduitRubriqueId()) {
+                        rubriqueAllocation.setMontantRestant(Math.round((rubriqueAllocation.getMontantRestant() + oldCommandeLine.getPrixTTC() * oldCommandeLine.getQuantity()) * 100.0) / 100.0);
+                        commandeLineRepository.deleteById(oldCommandeLine.getId());
+                    }
                 }
             }
-
-            // Remove command lines that exist in the current Commande but are not present in the updated version
-            List<CommandeLine> linesToRemove = existingCommande.getCommandeLines().stream()
-                    .filter(cl -> updatedCommandeLines.stream().noneMatch(updatedCL -> updatedCL.getId().equals(cl.getId())))
-                    .collect(Collectors.toList());
-
-            commandeLineRepository.deleteAll(linesToRemove);
-
-            // Calculate the totals after processing all updated command lines
-            double totalHT = updatedCommandeLines.stream().mapToDouble(CommandeLine::getTotal_prixHT_ligne).sum();
-            double totalTTC = updatedCommandeLines.stream().mapToDouble(CommandeLine::getTotal_prixTTC_ligne).sum();
-
-            // Set the updatedCommandeLines and update the total prices
-            existingCommande.setCommandeLines(updatedCommandeLines);
-            existingCommande.setPrix_total_HT(totalHT);
-            existingCommande.setPrix_total_TTC(totalTTC);
-
-            // Save and return the updated Commande
-            return commandeRepository.save(existingCommande);
-        } else {
-            throw new RuntimeException("Invalid Professeur or ID!");
+            budgetRestClient.updateAllocations(budgetId, rubriquesAllocations);
+            for (CommandeLine updateCommandeLine : updateCommandeLines) {
+                for (RubriqueAllocation rubriqueAllocation : rubriquesAllocations) {
+                    if (rubriqueAllocation.getRubriqueId() == updateCommandeLine.getProduitRubriqueId()) {
+                        if (updateCommandeLine.getQuantity() <= 0 || updateCommandeLine.getPrixHT() <= 0 || updateCommandeLine.getPrixTTC() <= 0) {
+                            return ResponseEntity.badRequest().body("Les valeurs de la quantité, du prix hors taxe (HT) ou du prix toutes taxes comprises (TTC) doivent être supérieures à zéro.");
+                        }
+                        if (updateCommandeLine.getProductId() == null) {
+                            return ResponseEntity.badRequest().body("Veuillez choisir un produit parmi la liste des produits disponibles !");
+                        }
+                        if (rubriqueAllocation.getMontantRestant() < updateCommandeLine.getPrixTTC() * updateCommandeLine.getQuantity()) {
+                            return ResponseEntity.badRequest().body("Vous avez dépassé le montant alloué à la rubrique :" + rubriqueAllocation.getRubriqueName());
+                        } else {
+                            rubriqueAllocation.setMontantRestant(Math.round((rubriqueAllocation.getMontantRestant() - updateCommandeLine.getPrixTTC() * updateCommandeLine.getQuantity()) * 100.0) / 100.0);
+                            updateCommandeLine.setCommandeId(existingCommande.getId());
+                            commandeLineRepository.save(updateCommandeLine);
+                        }
+                    }
+                }
+            }
+            if (updateCommandeLines.isEmpty()) {
+                return ResponseEntity.badRequest().body("Aucun produit n'a été détecté dans cette commande. La commande est vide.");
+            } else {
+                existingCommande.setCommandeLines(updateCommandeLines);
+                if (updatedCommande.getPrixTotalHT() > budget.getTotalRestant()) {
+                    return ResponseEntity.badRequest().body("Le montant de la commande dépasse votre budget annuel restant");
+                } else {
+                    existingCommande.setPrixTotalHT(updatedCommande.getPrixTotalHT());
+                }
+                if (updatedCommande.getPrixTotalTTC() > budget.getTotalRestant()) {
+                    return ResponseEntity.badRequest().body("Le montant de la commande dépasse votre budget annuel restant");
+                } else {
+                    existingCommande.setPrixTotalTTC(updatedCommande.getPrixTotalTTC());
+                }
+                existingCommande.setType(updatedCommande.getType());
+                budgetRestClient.updateAllocations(budgetId, rubriquesAllocations);
+                commandeRepository.save(existingCommande);
+                return ResponseEntity.ok("Commande mise à jour avec succès");
+            }
         }
     }
 
