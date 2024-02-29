@@ -36,13 +36,13 @@
 
 <!-- SIDEBAR -->
 <section id="sidebar" [ngClass]="status ? 'hide' : ''">
-  <a href="/prof-dash" class="brand">
+  <a href="'/prof-dash'" class="brand">
     <!-- <i class='bx bxs-smile'></i> -->
     <img src="assets/images/logosider.png" alt="">
   </a>
   <ul class="side-menu top">
     <li class="active">
-      
+
       <a [href]="'/structuredetail/' + structureId">
         <i class='bx bx-arrow-back'></i>
         <span class="text">Acceuil</span>
@@ -82,7 +82,7 @@
   </ul>
     <ul class="side-menu">
       <li>
-        <a href="#">
+        <a href="/settings">
           <i class='bx bxs-cog' ></i>
           <span class="text">Paramètres</span>
         </a>
@@ -196,24 +196,24 @@
 
                 </div>
             </div>
-            <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">      
+            <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
               <div class=" px-4 py-1.5 mx-auto rounded-full" style="margin-top: 4rem; background-color: #4C86A7;">
                 <p class="text-xs text-center font-semibold tracking-widest text-white uppercase"> Chiffres</p>
             </div>
-              <div class="grid grid-cols-1 gap-6 px-6 mt-8 sm:px-0 lg:mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-12">    
+              <div class="grid grid-cols-1 gap-6 px-6 mt-8 sm:px-0 lg:mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-12">
                   <div class="overflow-hidden bg-white border border-gray-200 rounded-lg">
-                    
+
                       <div class="px-4 py-6">
                           <div class="flex items-start">
                             <i style="font-size: 40px; color:#4C86A7" class="fa-solid fa-user-group"></i>
                               <div class="ml-4">
                                   <h4 class="text-4xl font-bold text-gray-900" style="color: #FB8B03;">{{profs.length}}</h4>
-                                  <p class="mt-1.5 text-lg font-medium leading-tight text-gray-500">Nombre de Professeurs Membres</p>
+                                  <p class="mt-1.5 text-lg font-medium leading-tight text-gray-500">Professeurs Membres</p>
                               </div>
                           </div>
                       </div>
                   </div>
-      
+
                   <div class="overflow-hidden bg-white border border-gray-200 rounded-lg">
                       <div class="px-4 py-6">
                           <div class="flex items-start">
@@ -225,14 +225,14 @@
                           </div>
                       </div>
                   </div>
-      
+
                   <div class="overflow-hidden bg-white border border-gray-200 rounded-lg">
                       <div class="px-4 py-6">
                           <div class="flex items-start">
                             <i style="font-size: 40px; color:#4C86A7" class="fa-solid fa-barcode"></i>
                               <div class="ml-4">
                                   <h4 class="text-4xl font-bold text-gray-900" style="color: #FB8B03;">{{ getCurrentYearCommandesLength() }}</h4>
-                                  <p class="mt-1.5 text-lg font-medium leading-tight text-gray-500">Nombre de commandes de l'année en cours : {{currentYear}}</p>
+                                  <p class="mt-1.5 text-lg font-medium leading-tight text-gray-500">Commandes passées au cours de l'année  : {{currentYear}}</p>
                               </div>
                           </div>
                       </div>
@@ -257,12 +257,12 @@
                 <button type="button" class="btnp btn-primary" (click)="addRubriqueAllocation()" *ngIf="isEditMode" style="color: #4C86A7;"><i class="fa-solid fa-square-plus"></i> Ajouter</button>
                 &nbsp;
                 <!-- Toggle edit mode button -->
-                <button class="btn btn-outline-primary" (click)="toggleEditMode()" style="color: rgb(88, 88, 88);">
+                <button  [hidden]="!hasAccessProf" class="btn btn-outline-primary" (click)="toggleEditMode()" style="color: rgb(88, 88, 88);">
                   <i class="fa-solid" [ngClass]="{'fa-rotate-left': isEditMode, 'fa-pen-to-square': !isEditMode}"></i>
                   {{ isEditMode ? 'Annuler' : 'Modifier' }}
                 </button>
                 <!-- Save changes button (visible in edit mode) -->
-                <button *ngIf="isEditMode" (click)="Enregistrer()" class="btns btn-outline-success ms-3" style="color: #FB8B03;"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
+                <button *ngIf="isEditMode"  (click)="Enregistrer()" class="btns btn-outline-success ms-3" style="color: #FB8B03;"><i class="fa-solid fa-bookmark" id="detail-button "></i> Enregistrer</button>
               </div>
             </div>
             &nbsp;
@@ -352,7 +352,7 @@
                   <select style="background:none; color: white;" id="dropdown" [(ngModel)]="selectedYearCommand" (change)="onYearChangeCommand(selectedYearCommand)">
                     <option style="color: #4C86A7;" *ngFor="let year of listYearsCommande" [value]="year">{{ year }}</option>
                   </select>
-      
+
                 </button>
                 <div class="h-px flex-auto bg-gray-100"></div>
               </div>
@@ -362,21 +362,21 @@
                     <img src="assets/images/commande.svg" alt="SVG Image">
                     <p class="absolute left-2 top-2 bg-white rounded-full p-2 cursor-pointer group">
                       <i style="color: #FB8B03;" class="fa-solid fa-user-tie"></i> <span style="color: #FB8B03;">{{c.profName}}</span>
-      
+
                     </p>
-                    
-                    
+
+
                     <div class="inline-flex px-4 py-1.5 mx-auto rounded-full bg-gradient-to-r from-orange-200 to-blue-200" style="margin-top: 1rem;">
                       <p class="text-xs font-semibold tracking-widest text-blue uppercase">{{ c.type }}</p>
                     </div>
                     <p class="inline-flex items-center px-6 py-4 mt-8 bg-white rounded-full p-2 cursor-pointer group">
                       <i style="margin-left:2px; color:#FB8B03" class="fa-solid fa-calendar-days"></i> <span style="color: #FB8B03;">&nbsp;{{c.year}}</span>
-    
+
                     </p>
                     <button class="btnf inline-flex px-4 py-1.5 mx-auto rounded-full bg-white rounded-full p-2 cursor-pointer group " role="button" >
-                      <i class="fa-solid fa-trash"> </i>                   
+                      <i class="fa-solid fa-trash"> </i>
                     </button>
-      
+
                   </div>
                   <div class="mt-4 pl-2 mb-2 flex justify-between " >
                     <div >
@@ -386,18 +386,18 @@
                       <p class="text-md text-blue-800 mt-0" >{{c.prixTotalTTC}} Dhs / TTC</p>
                     </div>
                     <button href="javascript:void(0)" (click)="getCommandeById(c)" title="" class="btna inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-blue1 rounded-lg sm:mt-16 hover:bg-blue2 focus:bg-orange1" role="button">
-                      <p class="voirliste"><i class="fa-solid fa-cart-shopping" style="color: #4C86A7;"></i> Voir liste des produits</p>
+                      <p class="voirliste"><i class="fa-solid fa-cart-shopping" style="color: #4C86A7;"></i> Voir la liste des produits</p>
                     </button>
-                    
-                    
-      
+
+
+
                   </div>
                 </div>
               </ul>
             </div>
-            <div class="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
+            <div [hidden]="!hasAccessProf" class="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
               <div class="rounded-2xl bg-gray-50 py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
-                <div class="mx-auto max-w-xs px-8">
+                <div  class="mx-auto max-w-xs px-8">
                   <!-- <p class="text-base font-semibold text-gray-600">Un, ou plusieurs produits ?</p> -->
                   <p class="mt-6 flex items-baseline justify-center gap-x-2">
                     <!-- <span class="text-sm font-semibold leading-6 tracking-wide text-gray-600">Dans</span> -->
@@ -405,8 +405,8 @@
 
 
                   </p>
-                  <button (click)="openNewCommandeForm()" class="addcom mt-10 block w-full rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" role="button">
-                    <i class="fa-solid fa-circle-plus" ></i> Ajouter nouvelle commande
+                  <button [hidden]="!hasAccessProf" (click)="openNewCommandeForm()" class="addcom mt-10 block w-full rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" role="button">
+                    <i class="fa-solid fa-circle-plus" [hidden]="!hasAccessProf" ></i> Ajouter nouvelle commande
                   </button>
                   <p class="mt-6 text-xs leading-5 text-gray-600">Ajouter un ou plusieurs produits à votre commande</p>
                 </div>
@@ -417,13 +417,14 @@
       </div>
       <!-- Ends New Commandes -->
 
-      
+
       <!-- Starts NEW Profs -->
       <div class="bg-white py-24 sm:py-32">
         <div class="mx-auto grid max-w-7xl gap-x-8 gap-y-20 px-6 lg:px-8 xl:grid-cols-3">
           <div class="max-w-2xl">
             <h2 class="text-1xl font-bold tracking-tight sm:text-3xl" style="color: #4C86A7;"><i class="fa-solid fa-user-group" style="color: #FB8B03;"></i> Professeurs Membres</h2>
-            <p class="mt-6 text-lg leading-8 text-gray-600">Droit d'accées ? <br>Il peut accéder aux informations relatives à la structure dont il est membre, mais sans pouvoir passer des commandes ou modifier le budget.
+            <p class="mt-6 text-lg leading-8 text-gray-600">Autorisations d'accès : <br>
+              Le Professeur est autorisé à consulter les informations concernant la structure à laquelle il est affilié, mais il n'a pas la possibilité de passer des commandes ou de modifier le budget.
             </p>
           </div>
           <ul role="list" class="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2">
@@ -434,7 +435,7 @@
                   <h3 class="text-base font-semibold leading-7 tracking-tight text-gray-900">{{p.nom}} {{p.prenom}}</h3>
                   <p class="text-sm font-semibold leading-6 text-indigo-600" style="color: #4C86A7;"><i class="fa-solid fa-envelope"></i>  {{p.mail}}</p>
                   <p class="mt-2 text-base text-600" style="color: #4C86A7;">
-                    <button class="btnac mt-4 text-base text-gray-600" [class.active]="p.droit_daccee" (click)="toggleAccess(p,p.droit_daccee)">
+                    <button [hidden]="!hasAccessProf" class="btnac mt-4 text-base text-gray-600" [class.active]="p.droit_daccee" (click)="toggleAccess(p,p.droit_daccee)">
                       <ng-container *ngIf="p.droit_daccee; else enableIcon">
                         <i class="fa-solid fa-square-xmark" style="color: red;"></i>
                       </ng-container>
@@ -447,8 +448,8 @@
                 </div>
               </div>
             </li>
-            
-      
+
+
             <!-- More people... -->
           </ul>
         </div>
@@ -456,7 +457,7 @@
       <!-- Ends NEW Profs -->
 
 
-      
+
       <!-- Starts Old Commandes -->
       <!-- <div class="min-h-screen bg-gray-100 flex flex-col justify-center" style="background-color: transparent" id="commandes" >
 
@@ -608,15 +609,15 @@
           </dl>
         </div>
       </div> -->
-      
+
 
       <!-- <section class="py-10 bg-gray-100 sm:py-16 lg:py-24" style="background-color: transparent;" id="chiffres">
         <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="text-center">
                 <h4 class="text-xl font-medium text-gray-900">Quelques chiffres</h4>
             </div>
-    
-            <div class="grid grid-cols-1 gap-6 px-6 mt-8 sm:px-0 lg:mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-12">    
+
+            <div class="grid grid-cols-1 gap-6 px-6 mt-8 sm:px-0 lg:mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-12">
                 <div class="overflow-hidden bg-white border border-gray-200 rounded-lg">
                     <div class="px-4 py-6">
                         <div class="flex items-start">
@@ -630,7 +631,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="overflow-hidden bg-white border border-gray-200 rounded-lg">
                     <div class="px-4 py-6">
                         <div class="flex items-start">
@@ -644,7 +645,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="overflow-hidden bg-white border border-gray-200 rounded-lg">
                     <div class="px-4 py-6">
                         <div class="flex items-start">
@@ -661,9 +662,9 @@
             </div>
         </div>
     </section> -->
-    
-      
-      
+
+
+
     </main>
     <!-- MAIN -->
   </section>

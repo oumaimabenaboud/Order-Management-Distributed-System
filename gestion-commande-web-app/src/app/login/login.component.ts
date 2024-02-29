@@ -162,7 +162,7 @@ export class LoginComponent implements OnInit {
   openErrorSnackBar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 5000, // Adjust duration as needed
-      horizontalPosition: 'center',
+      horizontalPosition: 'start',
       verticalPosition: 'top',
       panelClass: ['error-snackbar'] // Add custom styling if needed
     });

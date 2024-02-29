@@ -25,7 +25,7 @@ export class StructuredetailsComponent implements OnInit{
   commandesPerYear: { [year: number]: Commande[] } = {};
   profs: any[] = [];
   status = true;
-  enabled: boolean = false;
+  hasAccessProf: boolean = false;
   structuredetail : any;
   droit_daccee: boolean = false;
   listBudgetsStructure:any;
@@ -74,6 +74,8 @@ export class StructuredetailsComponent implements OnInit{
         this.profService.getProfessor(this.userId).subscribe(
           (professeurConnecté: Professeur) => {
             this.professeurConnecté = professeurConnecté;
+            this.fetchDataAndCheckAccess();
+
           },
           (error) => {
             console.error('Error fetching professor:', error);
@@ -83,8 +85,6 @@ export class StructuredetailsComponent implements OnInit{
         console.error('User ID not found in sessionStorage');
       }
     }
-
-
 
     this.budgetService.getAllRubriques().subscribe(
       (data)=>{
@@ -109,7 +109,6 @@ export class StructuredetailsComponent implements OnInit{
         console.log(err);
       }
     );
-
     this.commandeService.getCommandesByStructureId(this.structureId).subscribe({
       next: (commandes) => {
         this.listCommandes = commandes;
@@ -354,6 +353,7 @@ export class StructuredetailsComponent implements OnInit{
         console.log('L\'accès a été mis à jour avec succès', updatedDroitAccess);
         // @ts-ignore
         prof['droit_daccee'] = updatedDroitAccess.droitAcces;
+        window.location.reload();
       },
       (error) => {
         console.error('Erreur de mise à jour de l\'accès :', error);
@@ -535,4 +535,36 @@ export class StructuredetailsComponent implements OnInit{
   }
 
 
+  fetchDataAndCheckAccess(): void {
+    this.structureService.getStructureById(this.structureId).subscribe({
+      next: (structuredetail) => {
+        this.structuredetail = structuredetail;
+        // @ts-ignore
+        this.structuredetail['typeAsString'] = this.convertStructureTypes(this.structuredetail);
+        this.checkAccess();
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  checkAccess(): void {
+    if (this.structuredetail) {
+      if (this.userId === this.structuredetail.idResponsable) {
+        this.hasAccessProf = true;
+        console.log("ana prof respo 3ndi acces", this.hasAccessProf);
+      } else if (this.structuredetail.equipeProfIds.includes(this.userId)) {
+        this.structureService.getDroitAccessByProfessorIdAndStructureId(this.userId, this.structureId).subscribe((
+            droitAcces) => {
+            this.hasAccessProf = droitAcces.droitAcces;
+            console.log("ana prof membre", this.hasAccessProf);
+          },
+          (error) => {
+            console.error('Error fetching command:', error);
+          }
+        );
+      }
+    }
+}
 }
