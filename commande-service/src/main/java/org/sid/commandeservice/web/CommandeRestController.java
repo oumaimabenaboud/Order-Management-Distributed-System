@@ -209,7 +209,7 @@ public class CommandeRestController {
             commandeRepository.deleteById(id);
             return ResponseEntity.ok("Commande supprimée avec succès");
         }else{
-            return ResponseEntity.ok("Vous ne pouvez supprimer qu'une commande annulée");
+            return ResponseEntity.badRequest().body("Vous ne pouvez supprimer qu'une commande annulée");
         }
     }
 

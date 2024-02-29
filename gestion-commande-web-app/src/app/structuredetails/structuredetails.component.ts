@@ -575,10 +575,19 @@ export class StructuredetailsComponent implements OnInit{
           window.alert("Commande supprimée avec succès !");
           window.location.reload();
         },
-        error: err => {console.log(err);
-        window.alert(err.error)
+        error: err => {
+          console.log(err);
+          if (err.status === 400) {
+            window.alert(err.error);
+          } else if (err.status === 200) {
+            window.alert("Commande supprimée avec succès !");
+            window.location.reload();
+          } else {
+            window.alert("Une erreur s'est produite lors de la suppression de la commande.");
+          }
         }
       });
     }
   }
+
 }

@@ -267,7 +267,6 @@ constructor(
           window.alert('Commande mise à jour avec succès !');
           window.location.reload();
         } else if (error.status === 400) {
-          // Bad request, display error message from server
           window.alert(error.error);
         } else {
           // Other errors, display generic error message
