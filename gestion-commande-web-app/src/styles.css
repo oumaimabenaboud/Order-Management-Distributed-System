@@ -38,10 +38,12 @@ li {
   --light-yellow: #FFF2C6;
   --orange: #FD7238;
   --light-orange: #FFE0D3;
+  background-color: #f2f2f2 !important;
 }
 
 html {
   overflow-x: hidden !important;
+  
 }
 
 body.dark {
