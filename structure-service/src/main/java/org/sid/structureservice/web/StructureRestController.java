@@ -54,7 +54,7 @@ public class StructureRestController {
             return ResponseEntity.badRequest().body("Le champ 'type' ne peut pas être vide.");
         }
 
-        if (addedStructure.getNomResponsable() == null  || addedStructure.getNomResponsable().isEmpty()) {
+        if (addedStructure.getIdResponsable() == null) {
             return ResponseEntity.badRequest().body("Le champ 'Nom du Responsable' ne peut pas être vide.");
         }
 
