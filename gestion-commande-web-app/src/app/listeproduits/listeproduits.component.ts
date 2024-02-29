@@ -10,6 +10,8 @@ import { PlatformLocation } from '@angular/common';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Professeur } from '../model/professeur.model';
 import {ProductService} from "../services/product.service";
+import {structurestype} from "../model/structure.model";
+import {commandestype} from "../model/commande.model";
 
 @Component({
   selector: 'app-listeproduits',
@@ -28,6 +30,7 @@ export class ListeproduitsComponent implements OnInit {
   commandeForm!: FormGroup;
   selectedCommande:any;
   selectedProductRubrique: any;
+  commandesTypes: any = Object.values(commandestype);
 
   constructor(
     private structureService: StructuresService,
@@ -107,6 +110,7 @@ export class ListeproduitsComponent implements OnInit {
   }
   CommandeForm() {
     this.commandeForm = this.formBuilder.group({
+      commandeType :['', [Validators.required]],
       commandeLines: this.formBuilder.array([]) // Initialize as an empty FormArray
     });
     this.selectedProductRubrique = new Array(this.commandeLines.length).fill('');
@@ -114,6 +118,9 @@ export class ListeproduitsComponent implements OnInit {
       (commande) => { // Assuming Budget is the correct type
         this.selectedCommande = commande;
         if (this.selectedCommande) {
+          this.commandeForm.patchValue({
+            commandeType: this.selectedCommande.type
+          });
           this.selectedCommande.commandeLines.forEach((commandeLine: any) => {
             this.addCommandeLine(commandeLine);
           });
@@ -150,7 +157,7 @@ export class ListeproduitsComponent implements OnInit {
       prixHT: [commandeLine ? commandeLine.prixHT : '', [Validators.required]],
       prixTTC: [commandeLine ? commandeLine.prixTTC : '', [Validators.required]],
       quantity: [commandeLine ? commandeLine.quantity : '', [Validators.required]],
-      rubriqueName: this.getRubriqueName(commandeLine ? commandeLine.produitRubriqueId : '') // Add rubriqueName control
+      rubriqueName: this.getRubriqueName(commandeLine ? commandeLine.produitRubriqueId : '')
     });
   }
 
@@ -227,7 +234,31 @@ export class ListeproduitsComponent implements OnInit {
       updatedCommande.prixTotalTTC=totalTTC;
     });      // Log the new budget
     console.log(updatedCommande);
-
+    this.commandeService.updateCommande(this.commandeId, updatedCommande).subscribe(
+      () => {
+        window.alert('Commande mise à jour avec succès !');
+        window.location.reload();
+      },
+      error => {
+        console.error("Une erreur s'est produite lors de la mise à jour de la commande.", error);
+        if (error.status === 200) {
+          window.alert('Commande mise à jour avec succès !');
+        } else if (error.status === 400) {
+          // Bad request, display error message from server
+          window.alert(error.error);
+        } else {
+          // Other errors, display generic error message
+          window.alert("Une erreur s'est produite lors de la mise à jour de la commande. Veuillez réessayer plus tard.");
+        }
+      }
+    );
   }
-
+  calculateTotal(field1: string, field2: string): number {
+    const commandLines = this.commandeForm.get('commandeLines') as FormArray;
+    let total = 0;
+    commandLines.controls.forEach(commandLine => {
+      total += commandLine.get(field1)?.value * commandLine.get(field2)?.value || 0;
+    });
+    return total;
+  }
 }

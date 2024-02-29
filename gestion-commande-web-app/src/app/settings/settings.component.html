@@ -34,24 +34,24 @@
     </ul>
 </section>
 <!-- SIDEBAR -->
-  
+
 <!-- CONTENT -->
 <section id="content">
     <!-- NAVBAR -->
     <nav>
       <i (click)="addToggle()" class='bx bx-menu' ></i>
-  
+
       <!-- <div *ngIf="userId != -1">
         <a class="">Bonjour, cc</a>
       </div>
-  
+
       <div *ngIf="userId === -1">
         <a class="">Bonjour, ADMIN</a>
       </div> -->
-  
+
     </nav>
     <!-- NAVBAR -->
-  
+
     <!-- MAIN -->
     <!-- <main class="main">
         <div class="head-title">
@@ -65,7 +65,7 @@
                 <div class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
                     <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
                         <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Modification</h2>
-        
+
                         <form action="#" method="POST" class="mt-8">
                             <div class="space-y-5">
                                 <div>
@@ -82,7 +82,7 @@
                                         />
                                     </div>
                                 </div>
-        
+
                                 <div>
                                     <div class="flex items-center justify-between">
                                         <label for="" class="text-base font-medium text-gray-900"> Nouveau Mot de passe </label>
@@ -111,7 +111,7 @@
                                         />
                                     </div>
                                 </div>
-        
+
                                 <div>
                                     <button type="submit" class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700">Changer mot de passe</button>
                                 </div>
@@ -119,13 +119,13 @@
                         </form>
                     </div>
                 </div>
-        
+
                 <div class="flex items-center justify-center px-4 py-10 sm:py-16 lg:py-24 bg-gray-50 sm:px-6 lg:px-8">
-                    
+
                 </div>
             </div>
         </section>
-    
+
     </main> -->
     <body>
         <div class="main-content" >
@@ -133,7 +133,7 @@
             <!-- Mask -->
             <span class="mask bg-gradient-default opacity-8"></span>
             <!-- Header container -->
-            
+
           </div>
           <!-- Page content -->
           <div class="container-fluid mt--7">
@@ -150,7 +150,7 @@
                     </div>
                   </div>
                   <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                    
+
                   </div>
                   <div class="card-body pt-0 pt-md-4">
                     <div class="row">
@@ -161,15 +161,15 @@
                       </div>
                     </div>
                     <div class="text-center">
-                      <h3 style="color: #4C86A7; font-weight:600;"> 
+                      <h3 style="color: #4C86A7; font-weight:600;">
                         <i class="fa-solid fa-user-tie"></i> {{ professeur?.prenom }} {{ professeur?.nom }}<span class="font-weight-light"></span>
                       </h3>
-                      
+
                       <div class="h5 mt-4" style="color: #FB8B03; font-weight:600;">
                         <i class="fa-solid fa-envelope"></i> {{ professeur?.mail }}
                       </div>
                       <div>
-                        <i class="fa-solid fa-location-dot"></i> &nbsp; University of Moulay Ismail,FSM
+                        <i class="fa-solid fa-location-dot"></i> &nbsp; Université Moulay Ismail,FSM
                       </div>
                     </div>
                   </div>
@@ -183,7 +183,7 @@
                         <!-- Replace 'image-url.jpg' with the URL of your desired image -->
                         <img src="assets/images/settings.svg" alt="Image" class="w-full h-full">
                       </div>
-                      
+
                       <!-- Form container -->
                       <div class="w-1/3 ml-4">
                         <form [formGroup]="passwordUpdateForm" (ngSubmit)="onPasswordUpdateSubmit()" class="mt-8">
@@ -205,7 +205,7 @@
                                 <i class="fa-solid fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                               </div>
                             </div>
-                        
+
                             <div>
                               <div class="flex items-center justify-between">
                                 <label for="" class="text-base font-medium text-gray-900" style="color: #4C86A7; font-weight:600;"> Nouveau Mot de passe </label>
@@ -221,7 +221,7 @@
                                 <i class="fa-solid fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                               </div>
                             </div>
-                            
+
                             <div>
                               <div class="flex items-center justify-between">
                                 <label for="" class="text-base font-medium text-gray-900" style="color: #4C86A7; font-weight:600;"> Confirmer Mot de passe </label>
@@ -236,7 +236,7 @@
                                 />
                                 <i class="fa-solid fa-check absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                               </div>
-                            </div>                        
+                            </div>
                             <div>
                               <button type="submit" [disabled]="passwordUpdateForm.invalid" class="sub inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md focus:outline-none">
                                 <i class="fa-solid fa-pen-to-square"></i> &nbsp;Changer mot de passe
@@ -244,11 +244,11 @@
                             </div>
                           </div>
                         </form>
-                        
+
                       </div>
                     </div>
                   </div>
-                  
+
               </div>
             </div>
           </div>

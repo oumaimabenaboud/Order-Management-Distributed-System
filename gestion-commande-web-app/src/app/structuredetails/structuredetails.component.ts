@@ -65,7 +65,7 @@ export class StructuredetailsComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    
+
     if (this.isBrowser()) {
       const id = sessionStorage.getItem('id');
       this.userId = id ? parseInt(id, 10) : null;
@@ -461,8 +461,7 @@ export class StructuredetailsComponent implements OnInit{
     }else{
       console.log('there is budget put');
       const selectedBudget = this.listBudgetsStructure.find((budget: Budget) => {
-        // Convert selectedYear to number before comparison
-        return budget.budgetYear === newBudget.budgetYear;
+       return budget.budgetYear === newBudget.budgetYear;
       });
       this.budgetService.updateBudget(selectedBudget.id, newBudget).subscribe(
         () => {
@@ -472,7 +471,7 @@ export class StructuredetailsComponent implements OnInit{
         error => {
           console.error("Une erreur s'est produite lors de la mise à jour du budget.", error);
           if (error.status === 200) {
-            window.alert('Budget ajouté avec succès !');
+            window.alert('Budget mis à jour avec succès !');
           } else if (error.status === 400) {
             // Bad request, display error message from server
             window.alert(error.error);

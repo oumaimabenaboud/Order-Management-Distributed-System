@@ -20,20 +20,4 @@ export enum commandestype {
   LIVRÉE = 'Livrée'
 }
 
-export namespace commandestype {
-  export function toString(type: commandestype): string {
-    switch (type) {
-      case commandestype.EN_COURS:
-        return "En cours";
-      case commandestype.PASSE:
-        return "Passée";
-      case commandestype.ANNULÉE:
-        return "Annulée";
-      case commandestype.LIVRÉE:
-        return "Livrée";
-      default:
-        throw new Error("Invalid commandes type");
-    }
-  }
-}
 
