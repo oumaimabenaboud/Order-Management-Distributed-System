@@ -112,6 +112,16 @@ th {
     border-radius: 20px;
   }
 
+  .addcom{
+    background-color: #FB8B03;
+    color: #f2f2f2;
+    transition: all ease-in 0.2s;
+  }
+  .addcom:hover {
+    background-color: #4C86A7;
+    color: #f2f2f2;
+  }
+
   .form-control {
     color: #6a6c72;
     transition: all 0.5s;
@@ -129,6 +139,9 @@ th {
 
 }
 
+.voirliste {
+    font-size: 12px;    
+}
     .form-control:focus {
         border-color: #004AAD;
         box-shadow: 0 0 5px rgba(#004AAD, 0.5);
